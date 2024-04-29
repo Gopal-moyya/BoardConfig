@@ -5,35 +5,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "pin")
 public class Pin {
-    private String name;
-    private String defaultValue;
-    private String values;
-
     @XmlAttribute(name = "name")
+    String name;
+    @XmlAttribute(name = "defaultValue")
+    String defaultValue;
+    @XmlAttribute(name = "values")
+    String values;
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @XmlAttribute(name = "defaultValue")
     public String getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    @XmlAttribute(name = "values")
     public String getValues() {
         return values;
-    }
-
-    public void setValues(String values) {
-        this.values = values;
     }
 
     @Override

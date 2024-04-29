@@ -4,38 +4,40 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import java.util.Objects;
 
 @XmlRootElement(name = "IP")
 public class Ip {
-    private String name;
-    private Integer noOfInstances;
-    private List<Instance> instanceList;
-
     @XmlAttribute(name = "name")
+    String name;
+    @XmlAttribute(name = "noOfInstances")
+    Integer noOfInstances;
+    @XmlElement(name = "Instance")
+    List<Instance> instanceList;
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @XmlAttribute(name = "noOfInstances")
     public Integer getNoOfInstances() {
         return noOfInstances;
     }
 
-    public void setNoOfInstances(Integer noOfInstances) {
-        this.noOfInstances = noOfInstances;
-    }
-
-    @XmlElement(name = "Instance")
     public List<Instance> getInstanceList() {
         return instanceList;
     }
 
-    public void setInstanceList(List<Instance> instanceList) {
-        this.instanceList = instanceList;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ip ip = (Ip) o;
+        return Objects.equals(name, ip.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override

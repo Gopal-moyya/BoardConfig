@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui;
 
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.IpConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
+import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+    private static final InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -24,23 +27,23 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-//        launch();
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(IpConfig.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            IpConfig ipConfig = (IpConfig) unmarshaller.unmarshal(new File("src/main/assets/hardware_configuration.xml"));
-            System.out.println(ipConfig);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
+        initialize();
+        launch();
+    }
 
+    private static void initialize() {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(PinConfig.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            PinConfig pinConfig = (PinConfig) unmarshaller.unmarshal(new File("src/main/assets/pin_muxing.xml"));
-            System.out.println(pinConfig);
+            JAXBContext ipConfigContext = JAXBContext.newInstance(IpConfig.class);
+            Unmarshaller ipConfigUnmarshaller = ipConfigContext.createUnmarshaller();
+            IpConfig ipConfig = (IpConfig) ipConfigUnmarshaller.unmarshal(new File("src/main/assets/hardware_configuration.xml"));
+            inputConfigRepo.setIpConfig(ipConfig);
+
+            JAXBContext pinConfigContext = JAXBContext.newInstance(PinConfig.class);
+            Unmarshaller pinConfigUnmarshaller = pinConfigContext.createUnmarshaller();
+            PinConfig pinConfig = (PinConfig) pinConfigUnmarshaller.unmarshal(new File("src/main/assets/pin_muxing.xml"));
+            inputConfigRepo.setPinConfig(pinConfig);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            System.out.println("Initialization failed" + e);
         }
     }
 }

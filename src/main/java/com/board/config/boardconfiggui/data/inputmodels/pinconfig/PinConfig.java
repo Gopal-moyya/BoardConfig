@@ -2,29 +2,25 @@ package com.board.config.boardconfiggui.data.inputmodels.pinconfig;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement(name = "root")
 public class PinConfig {
-    private String chipltetName;
-    private Ports ports;
-
     @XmlAttribute(name = "chipltetName")
+    String chipltetName;
+
+    @XmlElementWrapper(name="ports")
+    @XmlElement(name = "port")
+    List<Port> ports;
+
     public String getChipltetName() {
         return chipltetName;
     }
 
-    public void setChipltetName(String chipltetName) {
-        this.chipltetName = chipltetName;
-    }
-
-    @XmlElement(name = "ports")
-    public Ports getPorts() {
+    public List<Port> getPorts() {
         return ports;
-    }
-
-    public void setPorts(Ports ports) {
-        this.ports = ports;
     }
 
     @Override

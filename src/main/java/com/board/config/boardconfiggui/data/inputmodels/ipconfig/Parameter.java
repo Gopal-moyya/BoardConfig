@@ -2,28 +2,34 @@ package com.board.config.boardconfiggui.data.inputmodels.ipconfig;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 @XmlRootElement(name = "param")
 public class Parameter {
-    private String name;
-    private String value;
+    @XmlAttribute(name = "name")
+    String name;
+    @XmlAttribute(name = "value")
+    String value;
 
-    @XmlAttribute
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @XmlAttribute
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Parameter parameter = (Parameter) o;
+        return Objects.equals(name, parameter.name) && Objects.equals(value, parameter.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, value);
     }
 
     @Override

@@ -7,25 +7,17 @@ import java.util.List;
 
 @XmlRootElement(name = "port")
 public class Port {
-    private String name;
-    private List<Pin> pinList;
-
     @XmlAttribute(name = "name")
+    String name;
+    @XmlElement(name = "pin")
+    List<Pin> pinList;
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @XmlElement(name = "pin")
     public List<Pin> getPinList() {
         return pinList;
-    }
-
-    public void setPinList(List<Pin> pinList) {
-        this.pinList = pinList;
     }
 
     @Override
