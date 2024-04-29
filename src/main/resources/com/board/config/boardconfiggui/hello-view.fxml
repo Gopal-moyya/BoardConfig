@@ -5,12 +5,20 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.board.config.boardconfiggui.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TreeView?>
+
+<HBox spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.board.config.boardconfiggui.HelloController">
+  <TreeView fx:id="treeView"/>
+  <VBox alignment="CENTER" spacing="20.0">
+    <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label fx:id="welcomeText"/>
+    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+
+  </VBox>
+</HBox>
