@@ -1,0 +1,5 @@
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      prefWidth="600" prefHeight="400">
+</VBox>

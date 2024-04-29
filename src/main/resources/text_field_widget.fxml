@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox prefHeight="50" prefWidth="400" spacing="40" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.board.config.boardconfiggui.controllers.LabelTextFieldWidgetController">
+    <children>
+        <Label fx:id="txtFieldLabel" prefWidth="100.0" wrapText="true">
+            <HBox.margin>
+                <Insets top="5.0" />
+            </HBox.margin>
+        </Label>
+        <TextField fx:id="txtInformation" onKeyReleased="#textFieldTextChanged"/>
+    </children>
+    <padding>
+        <Insets left="10.0" top="10.0" />
+    </padding>
+</HBox>
