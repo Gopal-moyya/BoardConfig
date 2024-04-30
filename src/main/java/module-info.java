@@ -8,4 +8,7 @@ module com.board.config.boardconfiggui {
     opens com.board.config.boardconfiggui.data.inputmodels.ipconfig to java.xml.bind;
     opens com.board.config.boardconfiggui.data.inputmodels.pinconfig to java.xml.bind;
     exports com.board.config.boardconfiggui;
+
+    exports com.board.config.boardconfiggui.controllers;
+    opens com.board.config.boardconfiggui.controllers to javafx.fxml;
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox prefHeight="50" prefWidth="400" spacing="40" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.board.config.boardconfiggui.controllers.LabelRadioButtonWidgetController">
+    <children>
+        <Label fx:id="radioButtonLabel" prefWidth="100.0" wrapText="true">
+        </Label>
+        <RadioButton fx:id="rbTrue" mnemonicParsing="false" onAction="#onSelection" text="True">
+            <toggleGroup>
+                <ToggleGroup fx:id="toggleBoolean" />
+            </toggleGroup></RadioButton>
+        <RadioButton fx:id="rbFalse" mnemonicParsing="false" onAction="#onSelection" text="False" toggleGroup="$toggleBoolean" />
+    </children>
+    <padding>
+        <Insets left="10.0" top="10.0" />
+    </padding>
+</HBox>
