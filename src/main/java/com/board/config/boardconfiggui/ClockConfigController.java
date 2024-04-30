@@ -1,5 +1,9 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
+import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
+import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfigParam;
+import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.ui.models.ClockConfigModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,13 +26,14 @@ import java.util.ResourceBundle;
 
 public class ClockConfigController implements Initializable {
 
+    private List<ClockConfigModel> viewsData;
+
     @FXML
     private Pane clockConfigGridPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        List<ClockConfigModel> dataModel = new ArrayList<>();
-        List<ClockConfigModel> viewsData = new ArrayList<>();
+        viewsData = new ArrayList<>();
 
         viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "FREF_BYPASS", ""));
         viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "DAC_EN", ""));
@@ -53,7 +58,7 @@ public class ClockConfigController implements Initializable {
         viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV4", ""));
         viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV5", ""));
 
-        dataModel.addAll(viewsData);
+        prefillData();
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -114,6 +119,42 @@ public class ClockConfigController implements Initializable {
         }
 
         clockConfigGridPane.getChildren().add(gridPane);
+
+    }
+
+    private void prefillData() {
+        BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
+        BoardResult boardResult = boardResultsRepo.getBoardResult();
+        ClockConfig clockConfig = boardResult.getClockConfig();
+
+        if (clockConfig == null || clockConfig.getConfigParams().isEmpty()) {
+            return;
+        }
+
+        clockConfig.getConfigParams().forEach(clockConfigParam -> {
+            if (!clockConfigParam.getValue().isEmpty()) {
+                viewsData.forEach(data -> {
+                    if (data.getLabel().equals(clockConfigParam.getName())) {
+                        data.setResult(clockConfigParam.getValue());
+                    }
+                });
+            }
+        });
+    }
+
+    public void saveData() {
+        List<ClockConfigParam> clockConfigParams = new ArrayList<>();
+        viewsData.forEach(data -> {
+            if (!data.getResult().isEmpty()) {
+                clockConfigParams.add(new ClockConfigParam(data.getLabel(), data.getResult()));
+            }
+        });
+
+        BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
+        BoardResult boardResult = boardResultsRepo.getBoardResult();
+        ClockConfig clockConfig = new ClockConfig();
+        clockConfig.setConfigParams(clockConfigParams);
+        boardResult.setClockConfig(clockConfig);
 
     }
 }

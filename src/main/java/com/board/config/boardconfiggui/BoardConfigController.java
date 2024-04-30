@@ -26,6 +26,7 @@ public class BoardConfigController implements Initializable{
 
     private final List<String> ipNames = new ArrayList<>();
     private final Map<String, Map<String, Pin>> portPinsMap = new HashMap<>();
+    private Object currentController;
 
     @FXML
     public TreeView<String> treeView;
@@ -106,6 +107,7 @@ public class BoardConfigController implements Initializable{
         treeView.setOnMouseClicked(event -> {
             TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
             if (item != null && item.isLeaf()) {
+                saveCurrentControllerData();
                 loadContentArea(item);
             }
         });
@@ -118,19 +120,26 @@ public class BoardConfigController implements Initializable{
         String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
 
         Parent fxml = null;
+        FXMLLoader loader;
 
         try {
             if (item.getValue().equals(CLOCK_CONFIG_NAME)) {
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(CLOCK_CONFIG_FXML_NAME)));
+                loader = new FXMLLoader(getClass().getResource(CLOCK_CONFIG_FXML_NAME));
+                ClockConfigController clockConfigController = new ClockConfigController();
+                currentController = clockConfigController;
+                loader.setController(clockConfigController);
+                fxml = loader.load();
             } else if (item.getParent().getValue().equals(IP_CONFIG_NAME)) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
+                loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
                 IpConfigController ipConfigController = new IpConfigController(item.getValue());
+                currentController = ipConfigController;
                 loader.setController(ipConfigController);
                 fxml = loader.load();
             }else{
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
+                loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
                 Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
                 PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
+                currentController = pinConfigController;
                 loader.setController(pinConfigController);
                 fxml = loader.load();
             }
@@ -141,6 +150,12 @@ public class BoardConfigController implements Initializable{
         if(fxml != null){
             contentArea.getChildren().removeAll();
             contentArea.getChildren().setAll(fxml);
+        }
+    }
+
+    private void saveCurrentControllerData() {
+        if (currentController instanceof ClockConfigController) {
+            ((ClockConfigController) currentController).saveData();
         }
     }
 
