@@ -13,7 +13,7 @@ public class SlaveWidgetConfiguration extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("slave-widget.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(SlaveWidgetConfiguration.class.getResource("slave-widget.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
         stage.setTitle("Slave Widget");
         stage.setScene(scene);
