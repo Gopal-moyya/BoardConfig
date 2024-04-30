@@ -24,5 +24,15 @@ public class Constants {
      * Constant representing the QSPI IP name
      */
     public static final String QSPI_IP_NAME = "QSPI";
+
+    /**
+     * Constant representing the write completion config name
+     */
+    public static final String WRITE_COMPLETION_CONFIG_NAME = "writeCompletionConfig";
+
+    /**
+     * Constant representing the device descriptor
+     */
+    public static final String DEVICE_DESCRIPTOR_NAME = "deviceDescriptor";
 }
 

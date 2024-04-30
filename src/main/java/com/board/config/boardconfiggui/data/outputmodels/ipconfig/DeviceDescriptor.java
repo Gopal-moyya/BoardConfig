@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
+import com.board.config.boardconfiggui.data.Constants;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
@@ -9,16 +11,12 @@ import java.util.Objects;
 public class DeviceDescriptor {
 
     @XmlAttribute(name = "Name")
-    String name;
+    final static String name = Constants.DEVICE_DESCRIPTOR_NAME;
 
     @XmlElement(name = "deviceConfiguration")
     List<DeviceConfiguration> deviceConfigurations;
 
     public DeviceDescriptor() {
-    }
-
-    public DeviceDescriptor(String name) {
-        this.name = name;
     }
 
     public String getName() {
@@ -36,7 +34,6 @@ public class DeviceDescriptor {
     @Override
     public String toString() {
         return "DeviceDescriptor{" +
-                "name='" + name + '\'' +
                 ", deviceConfiguration=" + deviceConfigurations +
                 '}';
     }
@@ -46,11 +43,11 @@ public class DeviceDescriptor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeviceDescriptor that = (DeviceDescriptor) o;
-        return Objects.equals(name, that.name) && Objects.equals(deviceConfigurations, that.deviceConfigurations);
+        return Objects.equals(deviceConfigurations, that.deviceConfigurations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, deviceConfigurations);
+        return Objects.hash(deviceConfigurations);
     }
 }
