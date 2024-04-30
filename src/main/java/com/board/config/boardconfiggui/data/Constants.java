@@ -19,5 +19,10 @@ public class Constants {
      * Constant representing the development role.
      */
     public static final String DEV_ROLE = "devRole";
+
+    /**
+     * Constant representing the QSPI IP name
+     */
+    public static final String QSPI_IP_NAME = "QSPI";
 }
 

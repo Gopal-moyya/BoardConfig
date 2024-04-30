@@ -1,5 +1,11 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.data.Constants;
+import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
+import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
+import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
+import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
+import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,18 +16,16 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class BoardConfigController implements Initializable{
 
-    private final String[] ports = {"Port1", "Port2"};
-    private final String[] pins = {"Pin1", "Pin2","pin3"};
-    private final String[] Ips = {"Ip1", "Ip2","Ip3"};
+    private final String PIN_CONFIG_NAME = "Pin Config";
+    private final String IP_CONFIG_NAME = "Ip Config";
+    private final String CLOCK_CONFIG_NAME = "Clock Config";
 
-    private final Map<String, String[]> pinsMap = new HashMap<>();
+    private final List<String> ipNames = new ArrayList<>();
+    private final Map<String, Map<String, Pin>> portPinsMap = new HashMap<>();
 
     @FXML
     public TreeView<String> treeView;
@@ -31,35 +35,74 @@ public class BoardConfigController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        for(String port : ports){
-            pinsMap.put(port, pins);
+        clearData();
+        initializeData();
+        setTreeView();
+    }
+
+    private void clearData() {
+        portPinsMap.clear();
+        ipNames.clear();
+    }
+
+    private void initializeData() {
+        InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
+        List<Port> ports = inputConfigRepo.getPinConfig().getPorts();
+
+        for(Port port : ports){
+            Map<String, Pin> pinsMap = new HashMap<>();
+            for(Pin pin : port.getPinList()) {
+                pinsMap.put(pin.getName(), pin);
+            }
+            portPinsMap.put(port.getName(), pinsMap);
         }
 
-        setTreeView();
+        List<Ip> ipList = inputConfigRepo.getIpConfig().getIpList();
+        for(Ip ip : ipList){
+            if(ip.getName().equals(Constants.QSPI_IP_NAME)){ //For now we are not adding QSPI IP name in UI
+                continue;
+            }
+            List<Instance> instanceList = ip.getInstanceList();
+            for(Instance instance: instanceList){
+                ipNames.add(instance.getName());
+            }
+        }
     }
 
     private void setTreeView() {
 
         TreeItem<String> root = new TreeItem<>();
-        TreeItem<String> pinConfig = new TreeItem<>("Pin Config");
-        for(String port : pinsMap.keySet()){
+
+        //Creating Pin config tree view
+        TreeItem<String> pinConfig = new TreeItem<>(PIN_CONFIG_NAME);
+        for(String port : portPinsMap.keySet()){
             TreeItem<String> portTree = new TreeItem<>(port);
-            for(String pin : pinsMap.get(port)){
+            List<String> pinNames = new ArrayList<>(portPinsMap.get(port).keySet().stream().toList());
+            Collections.sort(pinNames);
+            for(String pin : pinNames){
                 TreeItem<String> pinTree = new TreeItem<>(pin);
                 portTree.getChildren().add(pinTree);
             }
             pinConfig.getChildren().add(portTree);
             pinConfig.setExpanded(true);
         }
-        TreeItem<String> ipConfig = new TreeItem<>("Ip Config");
-        for(String ip : Ips){
+
+        //Creating Ip config tree view
+        TreeItem<String> ipConfig = new TreeItem<>(IP_CONFIG_NAME);
+        for(String ip : ipNames){
             ipConfig.getChildren().add(new TreeItem<>(ip));
         }
-        TreeItem<String> clockConfig = new TreeItem<>("Clock Config");
+
+        //Creating Clock config tree view
+        TreeItem<String> clockConfig = new TreeItem<>(CLOCK_CONFIG_NAME);
         ipConfig.setExpanded(true);
+
+        //Adding all tree views to root view
         root.getChildren().addAll(pinConfig, ipConfig, clockConfig);
         treeView.setRoot(root);
         treeView.setShowRoot(false);
+
+        //Handling mouse click events
         treeView.setOnMouseClicked(event -> {
             TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
             if (item != null && item.isLeaf()) {
@@ -70,15 +113,26 @@ public class BoardConfigController implements Initializable{
 
     private void loadContentArea(TreeItem<String> item) {
 
+        String PIN_CONFIG_FXML_NAME = "pin-config.fxml";
+        String IP_CONFIG_FXML_NAME = "ip-config.fxml";
+        String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
+
         Parent fxml = null;
 
         try {
-            if (item.getValue().equals("Clock Config")) {
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("clock-config.fxml")));
-            } else if (item.getParent().getValue().equals("Ip Config")) {
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ip-config.fxml")));
+            if (item.getValue().equals(CLOCK_CONFIG_NAME)) {
+                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(CLOCK_CONFIG_FXML_NAME)));
+            } else if (item.getParent().getValue().equals(IP_CONFIG_NAME)) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
+                IpConfigController ipConfigController = new IpConfigController(item.getValue());
+                loader.setController(ipConfigController);
+                fxml = loader.load();
             }else{
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("pin-config.fxml")));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
+                Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
+                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
+                loader.setController(pinConfigController);
+                fxml = loader.load();
             }
         }catch (IOException e) {
             e.printStackTrace();
