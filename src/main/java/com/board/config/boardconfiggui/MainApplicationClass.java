@@ -3,10 +3,12 @@ package com.board.config.boardconfiggui;
 import com.board.config.boardconfiggui.controllers.LabelComboBoxWidgetController;
 import com.board.config.boardconfiggui.controllers.LabelRadioButtonWidgetController;
 import com.board.config.boardconfiggui.controllers.LabelTextFieldWidgetController;
+import com.board.config.boardconfiggui.controllers.SlaveWidgetController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainApplicationClass extends Application {
-    private Map<String, FXMLLoader> loaderDataMap = new HashMap<>();
+    private final Map<String, FXMLLoader> loaderDataMap = new HashMap<>();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -45,7 +47,7 @@ public class MainApplicationClass extends Application {
         FXMLLoader labelComboBoxLoader = new FXMLLoader(getClass().getResource("/dropdown_widget.fxml"));
         root.getChildren().add(labelComboBoxLoader.load());
         LabelComboBoxWidgetController labelComboBoxController = labelComboBoxLoader.getController();
-        labelComboBoxController.setComboBoxLabel("Label for Combo Box:");
+        labelComboBoxController.setComboBoxLabel("Label for Combo Box:","");
         labelComboBoxController.setCmbInfo(FXCollections.observableArrayList("Option 1", "Option 2", "Option 3"));
         loaderDataMap.put("combo", labelComboBoxLoader);
 

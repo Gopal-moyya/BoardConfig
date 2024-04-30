@@ -1,6 +1,7 @@
 module com.board.config.boardconfiggui {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.net.http;
 
     opens com.board.config.boardconfiggui to javafx.fxml;
     exports com.board.config.boardconfiggui;
