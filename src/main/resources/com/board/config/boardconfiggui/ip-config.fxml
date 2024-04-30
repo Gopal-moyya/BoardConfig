@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<Pane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.board.config.boardconfiggui.IpConfigController">
-   <Label fx:id="textView" layoutX="200.0" layoutY="180.0"/>
+<Pane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.board.config.boardconfiggui.IpConfigController">
+  <GridPane layoutX="8.0" layoutY="10.0" maxWidth="580.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="380.0">
+    <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="310.0" minWidth="10.0" prefWidth="228.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+    </rowConstraints>
+    <children>
+      <Label text="SCL Pin" />
+      <Label text="SDA Pin" GridPane.columnIndex="3" />
+      <Label text="sysClk" GridPane.rowIndex="2" />
+      <Label text="i2cFreq" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <Label text="sdrFreq" GridPane.rowIndex="3" />
+      <TextField fx:id="sysClockField" onKeyTyped="#onSysClockUpdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField fx:id="i2cFreqField" onKeyTyped="#onI2CFreqUpdate" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+      <TextField fx:id="sdrFreqField" onKeyTyped="#onSDSRFreqUpdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <ChoiceBox fx:id="sclChoiceBox" maxWidth="1.7976931348623157E308" onMouseClicked="#onSCLPinUpdate" GridPane.columnIndex="1" />
+      <ChoiceBox fx:id="sdaChoiceBox" maxWidth="1.7976931348623157E308" onMouseClicked="#onSDAPinUpdate" GridPane.columnIndex="4" />
+      <Label text="SCL disabled pins" GridPane.rowIndex="1" />
+      <Label text="SDA disabled pins" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+      <Label prefHeight="15.0" prefWidth="170.0" text="Number of slaves" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+      <TextField fx:id="noOfSlavesField" onKeyTyped="#onNoOfSlavesUpdate" text="0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+    </children>
+      <padding>
+         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      </padding>
+  </GridPane>
 </Pane>
