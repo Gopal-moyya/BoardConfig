@@ -20,6 +20,20 @@ public class Constants {
      */
     public static final String DEV_ROLE = "devRole";
 
+    /**
+     * Constant representing the QSPI IP name
+     */
+    public static final String QSPI_IP_NAME = "QSPI";
+
+    /**
+     * Constant representing the write completion config name
+     */
+    public static final String WRITE_COMPLETION_CONFIG_NAME = "writeCompletionConfig";
+
+    /**
+     * Constant representing the device descriptor
+     */
+    public static final String DEVICE_DESCRIPTOR_NAME = "deviceDescriptor";
 
     // Slave Device configuration strings
     public static final String DEVICE_NAME = "Device Name";
@@ -34,6 +48,5 @@ public class Constants {
     public static final String IBI_PAYLOAD_SIZE = "ibiPayloadSize";
     public static final String IBI_PAYLOAD_SPEED_LIMIT = "ibiPayloadSpeedLimit";
     public static final String SELECT_DEVICE_ROLE = "Select Device Role";
-
 }
 
