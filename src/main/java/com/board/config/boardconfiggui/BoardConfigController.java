@@ -8,7 +8,7 @@ import javafx.scene.control.TreeView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HelloController {
+public class BoardConfigController {
 
     private final String[] ports = {"Port1", "Port2"};
     private final String[] pins = {"Pin1", "Pin2","pin3"};
