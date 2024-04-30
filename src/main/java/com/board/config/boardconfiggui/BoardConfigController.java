@@ -25,7 +25,8 @@ public class BoardConfigController implements Initializable{
     private final String CLOCK_CONFIG_NAME = "Clock Config";
 
     private final List<String> ipNames = new ArrayList<>();
-    private final Map<String, List<String>> pinsMap = new HashMap<>();
+    private final Map<String, Pin> pinsMap = new HashMap<>();
+    private final Map<String, List<String>> portPinsMap = new HashMap<>();
 
     @FXML
     public TreeView<String> treeView;
@@ -35,19 +36,28 @@ public class BoardConfigController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        clearData();
         initializeData();
         setTreeView();
+    }
+
+    private void clearData() {
+        pinsMap.clear();
+        portPinsMap.clear();
+        ipNames.clear();
     }
 
     private void initializeData() {
         InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
         List<Port> ports = inputConfigRepo.getPinConfig().getPorts();
+
         for(Port port : ports){
             List<String> pins = new ArrayList<>();
             for(Pin pin : port.getPinList()) {
                 pins.add(pin.getName());
+                pinsMap.put(pin.getName(), pin);
             }
-            pinsMap.put(port.getName(), pins);
+            portPinsMap.put(port.getName(), pins);
         }
 
         List<Ip> ipList = inputConfigRepo.getIpConfig().getIpList();
@@ -68,9 +78,9 @@ public class BoardConfigController implements Initializable{
 
         //Creating Pin config tree view
         TreeItem<String> pinConfig = new TreeItem<>(PIN_CONFIG_NAME);
-        for(String port : pinsMap.keySet()){
+        for(String port : portPinsMap.keySet()){
             TreeItem<String> portTree = new TreeItem<>(port);
-            for(String pin : pinsMap.get(port)){
+            for(String pin : portPinsMap.get(port)){
                 TreeItem<String> pinTree = new TreeItem<>(pin);
                 portTree.getChildren().add(pinTree);
             }
@@ -114,9 +124,15 @@ public class BoardConfigController implements Initializable{
             if (item.getValue().equals(CLOCK_CONFIG_NAME)) {
                 fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(CLOCK_CONFIG_FXML_NAME)));
             } else if (item.getParent().getValue().equals(IP_CONFIG_NAME)) {
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(IP_CONFIG_FXML_NAME)));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
+                IpConfigController ipConfigController = new IpConfigController(item.getValue());
+                loader.setController(ipConfigController);
+                fxml = loader.load();
             }else{
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(PIN_CONFIG_FXML_NAME)));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
+                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pinsMap.get(item.getValue()));
+                loader.setController(pinConfigController);
+                fxml = loader.load();
             }
         }catch (IOException e) {
             e.printStackTrace();
