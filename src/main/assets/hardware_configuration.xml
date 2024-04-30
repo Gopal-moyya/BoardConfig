@@ -1,0 +1,92 @@
+<root>
+    <IP name= "I3C" noOfInstances="4">
+        <Instance name="I3C0">
+            <!-- Ip related params-->
+			<param name="sclLowPeriod" value = "200"/>
+			<param name="maxSclFreq" value = "8000000"/>
+			<param name="devRole" value = "master"/>
+			<param name="staticAddress" value = "0x0"/>
+			<param name="hdrCapable" value = "1"/>
+            <param name="CmdFIFOSize" value = "128"/>  <!--interms of bytes-->
+            <param name="TxFIFOSize" value = "124"/>
+            <param name="RxFIFOSize" value = "100"/>
+        </Instance>                      
+        <Instance name="I3C1">
+			<param name="sclLowPeriod" value = "100"/>
+			<param name="maxSclFreq" value = "8000000"/>
+			<param name="devRole" value = "master"/>
+			<param name="staticAddress" value = "0x1"/>
+			<param name="hdrCapable" value = "0"/>
+            <param name="CmdFIFOSize" value = "132"/>
+            <param name="TxFIFOSize" value = "128"/>
+            <param name="RxFIFOSize" value = "160"/>
+        </Instance>
+        <Instance name="I3C2">
+			<param name="sclLowPeriod" value = "100"/>
+			<param name="maxSclFreq" value = "8000000"/>
+			<param name="devRole" value = "secondary_master"/>
+			<param name="hasStaticAddress" value = "1"/>
+			<param name="staticAddress" value = "0x20"/>
+			<param name ="dynamic_address" value = "0x42" />
+			<param name ="i2cFmPlusSpeed" value = "1" />
+			<param name="legacyI2CDev" value = "0"/>
+			<param name="i2c10bAddr" value = "0"/>
+			<param name="hdrCapable" value = "0"/>
+			<param name="ibiPayloadSize" value = "16"/>
+			<param name="ibiPayloadSpeedLimit" value = "1"/>
+            <param name="CmdFIFOSize" value = "128"/>
+            <param name="TxFIFOSize" value = "192"/>
+            <param name="RxFIFOSize" value = "112"/>
+        </Instance>
+        <Instance name="I3C3">
+			<param name="sclLowPeriod" value = "200"/>
+			<param name="maxSclFreq" value = "8000000"/>
+			<param name="devRole" value = "slave"/>
+			<param name="hasStaticAddress" value = "0"/>
+			<param name="staticAddress" value = "0x20"/>
+			<param name="dynamicAddress" value = "0x40"/>
+			<param name ="i2cFmPlusSpeed" value = "1" />
+			<param name="legacyI2CDev" value = "1"/>
+			<param name="i2c10bAddr" value = "1"/>
+			<param name="hdrCapable" value = "0"/>
+			<param name="ibiPayloadSize" value = "32"/>
+			<param name="ibiPayloadSpeedLimit" value = "1"/>
+			<param name="CmdFIFOSize" value = "128"/>
+            <param name="TxFIFOSize" value = "192"/>
+            <param name="RxFIFOSize" value = "112"/>
+        </Instance>
+    </IP>
+    <IP name= "QSPI" noOfInstances="1">
+        <Instance name="QSPI">
+        </Instance>       
+    </IP>
+	<Cache name= "CacheDetails" >
+        <param name = "Instruction" isEnable = "True"/>
+		<param name = "Data" isEnable = "True"/>
+		<param name = "Prefech" isEnable = "True"/>
+    </Cache>
+	<Memory name= "MemoryDetails" >
+        <param name = "RAM" address = "0x08000000" size = "0x1000000"/>
+		<param name = "Flash" address = "0x09000000" size = "0x1000000"/>
+    </Memory>
+	<Interrupt name= "InterruptDetails" >  <!--Interrupt line numbers to be registered with Interrupt controller-->
+        <param name = "I3C0" value = "30"/>
+		<param name = "I3C1" value = "31"/>
+		<param name = "I3C2" value = "40"/>
+		<param name = "I3C3" value = "41"/>
+		<param name = "QSPI" value = "32"/>
+		<param name = "EXTI1" value = "33"/>
+		<param name = "EXTI2" value = "34"/>
+    </Interrupt>
+	<RegBaseAddress name= "IPRegBaseAddressDetails" >
+        <param name = "I3C0" address = "0xFD0B0000" size = "0x1000"/>
+        <param name = "I3C1" address = "0xFD0B1000" size = "0x1000"/>
+        <param name = "I3C2" address = "0xFD0B0000" size = "0x1000"/>
+        <param name = "I3C3" address = "0xFD0B1000" size = "0x1000"/>
+        <param name = "QSPI" address = "0xFD0B2000" size = "0x1000"/>
+		<param name = "GPIOA" address = "0xFD0B3000" size = "0x100"/>
+		<param name = "GPIOB" address = "0xFD0B3100" size = "0x100"/>
+		<param name = "GPIOC" address = "0xFD0B3200" size = "0x100"/>
+    </RegBaseAddress>
+
+</root>

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class BoardConfigController implements Initializable{
 
     private final String[] ports = {"Port1", "Port2"};
     private final String[] pins = {"Pin1", "Pin2","pin3"};
