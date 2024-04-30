@@ -5,6 +5,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents an IP configuration containing a list of IPs.
+ */
 @XmlRootElement(name = "root")
 public class IpConfig {
     @XmlElement(name = "IP")

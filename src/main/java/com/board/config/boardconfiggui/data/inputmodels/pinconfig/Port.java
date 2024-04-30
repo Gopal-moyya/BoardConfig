@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a port configuration.
+ */
 @XmlRootElement(name = "port")
 public class Port {
     @XmlAttribute(name = "name")

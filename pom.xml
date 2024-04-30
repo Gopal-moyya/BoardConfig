@@ -68,7 +68,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.board.config.boardconfiggui/com.board.config.boardconfiggui.HelloApplication</mainClass>
+              <mainClass>com.board.config.boardconfiggui/com.board.config.boardconfiggui.BoardConfigApplication</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

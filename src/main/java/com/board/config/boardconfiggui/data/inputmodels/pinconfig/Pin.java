@@ -4,6 +4,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
+/**
+ * Represents a pin configuration for each port.
+ */
 @XmlRootElement(name = "pin")
 public class Pin {
     @XmlAttribute(name = "name")

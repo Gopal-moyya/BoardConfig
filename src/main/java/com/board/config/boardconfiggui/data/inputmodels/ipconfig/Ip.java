@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents an IP with list of instances.
+ */
 @XmlRootElement(name = "IP")
 public class Ip {
     @XmlAttribute(name = "name")

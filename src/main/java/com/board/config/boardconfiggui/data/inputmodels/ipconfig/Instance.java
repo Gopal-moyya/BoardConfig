@@ -1,11 +1,15 @@
 package com.board.config.boardconfiggui.data.inputmodels.ipconfig;
 
+import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents an IP instance with list of parameters.
+ */
 @XmlRootElement(name = "Instance")
 public class Instance {
     @XmlAttribute(name = "name")
@@ -23,7 +27,7 @@ public class Instance {
 
     public DeviceRole getDeviceRole() {
         for (Parameter parameter : parameters) {
-            if ("devRole".equals(parameter.getName())) {
+            if (Constants.DEV_ROLE.equals(parameter.getName())) {
                 return DeviceRole.valueOf(parameter.getValue().toUpperCase());
             }
         }

@@ -4,6 +4,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
+/**
+ * Represents a parameter for IP instance.
+ */
 @XmlRootElement(name = "param")
 public class Parameter {
     @XmlAttribute(name = "name")

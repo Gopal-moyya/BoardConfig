@@ -7,6 +7,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a pin configuration.
+ */
 @XmlRootElement(name = "root")
 public class PinConfig {
     @XmlAttribute(name = "chipltetName")
