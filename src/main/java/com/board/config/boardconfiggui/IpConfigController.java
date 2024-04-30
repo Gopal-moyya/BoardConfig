@@ -3,14 +3,15 @@ package com.board.config.boardconfiggui;
 import com.board.config.boardconfiggui.ui.models.IpConfigModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class IpConfigController implements Initializable {
 
+    private String ipName;
   @FXML
   private ChoiceBox<String> sclChoiceBox;
   @FXML
@@ -62,10 +63,16 @@ public class IpConfigController implements Initializable {
     ipConfigModel.setNoOfSlaves(noOfSlaves);
   }
 
-  @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-      ipConfigModel = new IpConfigModel();
+    public IpConfigController(String ipName) {
+        this.ipName = ipName;
     }
+
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    ipConfigModel = new IpConfigModel();
+  }
+
 
 
   private boolean validate() {

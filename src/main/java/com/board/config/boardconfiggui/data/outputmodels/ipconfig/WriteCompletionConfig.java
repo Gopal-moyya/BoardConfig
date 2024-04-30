@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
+import com.board.config.boardconfiggui.data.Constants;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
@@ -9,16 +11,12 @@ import java.util.Objects;
 public class WriteCompletionConfig {
 
     @XmlAttribute(name = "name")
-    String name;
+    final static String name = Constants.WRITE_COMPLETION_CONFIG_NAME;
 
     @XmlElement(name = "configParam")
     List<WriteCompletionConfigParam> configParams;
 
     public WriteCompletionConfig() {
-    }
-
-    public WriteCompletionConfig(String name) {
-        this.name = name;
     }
 
     public String getName() {
@@ -36,7 +34,6 @@ public class WriteCompletionConfig {
     @Override
     public String toString() {
         return "WriteCompletionConfig{" +
-                "name='" + name + '\'' +
                 ", configParam=" + configParams +
                 '}';
     }
@@ -46,11 +43,11 @@ public class WriteCompletionConfig {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WriteCompletionConfig that = (WriteCompletionConfig) o;
-        return Objects.equals(name, that.name) && Objects.equals(configParams, that.configParams);
+        return Objects.equals(configParams, that.configParams);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, configParams);
+        return Objects.hash(configParams);
     }
 }
