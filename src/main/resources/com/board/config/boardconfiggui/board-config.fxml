@@ -10,7 +10,7 @@
 <?import javafx.scene.control.TreeView?>
 
 <HBox spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.board.config.boardconfiggui.HelloController">
+      fx:controller="com.board.config.boardconfiggui.BoardConfigController">
   <TreeView fx:id="treeView"/>
   <VBox alignment="CENTER" spacing="20.0">
     <padding>
