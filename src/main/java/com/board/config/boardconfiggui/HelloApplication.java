@@ -15,8 +15,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
-    private static final InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -33,6 +31,7 @@ public class HelloApplication extends Application {
 
     private static void initialize() {
         try {
+            InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
             JAXBContext ipConfigContext = JAXBContext.newInstance(IpConfig.class);
             Unmarshaller ipConfigUnmarshaller = ipConfigContext.createUnmarshaller();
             IpConfig ipConfig = (IpConfig) ipConfigUnmarshaller.unmarshal(new File("src/main/assets/hardware_configuration.xml"));
