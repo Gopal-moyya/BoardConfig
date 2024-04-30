@@ -1,4 +1,4 @@
-package com.board.config.boardconfiggui.datamodels;
+package com.board.config.boardconfiggui.ui.models;
 
 public class ClockConfigModel {
     private ViewType viewType;
