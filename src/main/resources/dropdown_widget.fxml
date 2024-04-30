@@ -11,7 +11,7 @@
                 <Insets top="5.0" />
             </HBox.margin>
         </Label>
-        <ComboBox fx:id="cmbInfo" onAction="#comboBoxSelectionChanged" prefWidth="150.0" promptText="select" />
+        <ComboBox fx:id="comboBox" onAction="#onSelectionChanged" prefWidth="150.0" promptText="select" />
     </children>
     <padding>
         <Insets left="10.0" top="10.0" />

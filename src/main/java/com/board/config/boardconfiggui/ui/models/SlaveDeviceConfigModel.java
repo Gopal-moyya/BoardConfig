@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class SlaveDeviceConfigModel {
-    private final String deviceName;
+    private String deviceName;
     private String i2cFmPlusSpeed;
     private String i2c10bAddr;
     private String hdrCapable;
@@ -17,8 +17,7 @@ public class SlaveDeviceConfigModel {
     private String ibiPayloadSize;
     private String ibiPayloadSpeedLimit;
 
-
-    public SlaveDeviceConfigModel(String deviceName) {
+    public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
     }
 
@@ -153,7 +152,7 @@ public class SlaveDeviceConfigModel {
     }
 
     public boolean hasNullFields() {
-        return Stream.of(i2cFmPlusSpeed, i2c10bAddr, hdrCapable, legacyI2CDev, staticAddress, dynamicAddress, isIbiDevice, devRole, ibiPayloadSize, ibiPayloadSpeedLimit)
-                .anyMatch(Objects::isNull);
+        return Stream.of(deviceName, i2cFmPlusSpeed, i2c10bAddr, hdrCapable, legacyI2CDev, staticAddress,
+                dynamicAddress, isIbiDevice, devRole, ibiPayloadSize, ibiPayloadSpeedLimit).anyMatch(Objects::isNull);
     }
 }

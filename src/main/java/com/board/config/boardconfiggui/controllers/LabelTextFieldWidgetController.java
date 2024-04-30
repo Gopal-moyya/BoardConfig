@@ -17,23 +17,22 @@ public class LabelTextFieldWidgetController {
     private final StringProperty stringProperty = new SimpleStringProperty();
 
 
-    public void setTxtFieldLabel(String text) {
+    public void setLabel(String text) {
         txtFieldLabel.setText(text);
     }
 
-    public StringProperty getTxtInformation() {
+    public StringProperty getText() {
         return stringProperty;
     }
 
-    public void setTxtInformation(String information){
+    public void setText(String information){
         txtInformation.setText(information);
         stringProperty.setValue(information);
     }
 
     @FXML
-    private void textFieldTextChanged() {
+    private void onTextChanged() {
         enteredText = txtInformation.getText();
-        System.out.println("Entered text: " + enteredText);
         stringProperty.setValue(enteredText);
     }
 }

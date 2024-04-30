@@ -12,25 +12,24 @@ public class LabelComboBoxWidgetController {
     private Label comboBoxLabel;
 
     @FXML
-    private ComboBox<String> cmbInfo;
+    private ComboBox<String> comboBox;
 
     private final StringProperty selectedItem = new SimpleStringProperty();
 
     public void setComboBoxLabel(String text, String promptText) {
         comboBoxLabel.setText(text);
-        cmbInfo.setPromptText(promptText);
+        comboBox.setPromptText(promptText);
     }
 
-    public void setCmbInfo(ObservableList<String> items) {
-        cmbInfo.setItems(items);
+    public void setItems(ObservableList<String> items) {
+        comboBox.setItems(items);
     }
 
     public StringProperty getCmbInfoItem() {
         return selectedItem;
     }
     @FXML
-    private void comboBoxSelectionChanged() {
-        selectedItem.setValue(cmbInfo.getSelectionModel().getSelectedItem());
-        System.out.println("Selected item: " + selectedItem);
+    private void onSelectionChanged() {
+        selectedItem.setValue(comboBox.getSelectionModel().getSelectedItem());
     }
 }
