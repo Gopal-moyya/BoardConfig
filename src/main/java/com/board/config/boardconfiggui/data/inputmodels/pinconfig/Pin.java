@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui.data.inputmodels.pinconfig;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 @XmlRootElement(name = "pin")
 public class Pin {
@@ -22,6 +23,19 @@ public class Pin {
 
     public String getValues() {
         return values;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pin pin = (Pin) o;
+        return Objects.equals(name, pin.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 
     @Override
