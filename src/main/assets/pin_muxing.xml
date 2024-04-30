@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<root chipltetName="INV Chiplet">
+   <ports name="Ports">
+      <port name="Port 0" >
+         <pin name="P000" defaultValue="GPIO:output_high" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C1_SDA,QSPI_IO0]" />
+         <pin name="P001" defaultValue="Bypass:QSPI_SCLK" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_SCLK,I3C0_SCL]" />
+         <pin name="P002" defaultValue="GPIO:input"       values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P003" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_SS, I3C0_SDA]" />
+         <pin name="P004" defaultValue="GPIO:output_high" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO1,I3C1_SCL]" />
+         <pin name="P005" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO0]" />           
+         <pin name="P006" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />   
+         <pin name="P007" defaultValue="Bypass:QSPI_IO1"  values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO1,I3C1_SCL]" />         
+         <pin name="P008" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />            
+         <pin name="P009" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO2]" />            
+         <pin name="P010" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />         
+         <pin name="P011" defaultValue="Bypass:QSPI_IO3"  values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO3]" />
+         <pin name="P012" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />            
+         <pin name="P013" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />          
+         <pin name="P014" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />          
+         <pin name="P015" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C0_SCL]" />
+         <pin name="P016" defaultValue="GPIO:output_low"  values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C1_SDA,QSPI_IO0]" />
+         <pin name="P017" defaultValue="GPIO:output_high" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_SCLK,I3C0_SCL]" />
+         <pin name="P018" defaultValue="EXTI0:Edge_trigger_any" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P019" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_SS, I3C0_SDA]" />
+         <pin name="P020" defaultValue="GPIO:output_high" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO1,I3C1_SCL]" />
+         <pin name="P021" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO0]" />           
+         <pin name="P022" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />   
+         <pin name="P023" defaultValue="GPIO:output_high" values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO1,I3C1_SCL]" />         
+         <pin name="P024" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />            
+         <pin name="P025" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO2]" />            
+         <pin name="P026" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />         
+         <pin name="P027" defaultValue="GPIO:output_low"  values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO3]" />
+         <pin name="P028" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />            
+         <pin name="P029" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />          
+         <pin name="P030" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />          
+         <pin name="P031" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI0:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C0_SCL]" />
+      </port>
+
+      <port  name="Port 1">
+         <pin name="P100" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P101" defaultValue="Bypass:QSPI_IO2"  values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO2]" />
+         <pin name="P102" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P103" defaultValue="GPIO:output_high" values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P104" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P105" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C1_SDA]" />         
+         <pin name="P106" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />         
+         <pin name="P107" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P108" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO3]" />            
+         <pin name="P109" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />           
+         <pin name="P110" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P111" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />            
+         <pin name="P112" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C0_SDA]" />
+         <pin name="P113" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]"  />
+         <pin name="P114" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]"  /> 
+         <pin name="P115" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]"  />
+         <pin name="P116" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P117" defaultValue="Bypass:QSPI_IO0"  values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO0]" />
+         <pin name="P118" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P119" defaultValue="GPIO:output_low"  values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P120" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P121" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C1_SDA]" />         
+         <pin name="P122" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />         
+         <pin name="P123" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P124" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[QSPI_IO3]" />            
+         <pin name="P125" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />           
+         <pin name="P126" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />
+         <pin name="P127" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]" />            
+         <pin name="P128" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any], Bypass:[I3C0_SDA]" />
+         <pin name="P129" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]"  />
+         <pin name="P130" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]"  /> 
+         <pin name="P131" defaultValue=""                 values="GPIO:[input, output_high, output_low], EXTI1:[Edge_trig_rise, Edge_trig_fall, Level_trig_high, Level_trig_low, Edge_trigger_any]"  />
+      </port>
+   </ports>
+</root>
