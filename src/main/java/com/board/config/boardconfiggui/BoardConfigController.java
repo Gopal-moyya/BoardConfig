@@ -25,8 +25,7 @@ public class BoardConfigController implements Initializable{
     private final String CLOCK_CONFIG_NAME = "Clock Config";
 
     private final List<String> ipNames = new ArrayList<>();
-    private final Map<String, Pin> pinsMap = new HashMap<>();
-    private final Map<String, List<String>> portPinsMap = new HashMap<>();
+    private final Map<String, Map<String, Pin>> portPinsMap = new HashMap<>();
 
     @FXML
     public TreeView<String> treeView;
@@ -42,7 +41,6 @@ public class BoardConfigController implements Initializable{
     }
 
     private void clearData() {
-        pinsMap.clear();
         portPinsMap.clear();
         ipNames.clear();
     }
@@ -52,12 +50,11 @@ public class BoardConfigController implements Initializable{
         List<Port> ports = inputConfigRepo.getPinConfig().getPorts();
 
         for(Port port : ports){
-            List<String> pins = new ArrayList<>();
+            Map<String, Pin> pinsMap = new HashMap<>();
             for(Pin pin : port.getPinList()) {
-                pins.add(pin.getName());
                 pinsMap.put(pin.getName(), pin);
             }
-            portPinsMap.put(port.getName(), pins);
+            portPinsMap.put(port.getName(), pinsMap);
         }
 
         List<Ip> ipList = inputConfigRepo.getIpConfig().getIpList();
@@ -80,7 +77,9 @@ public class BoardConfigController implements Initializable{
         TreeItem<String> pinConfig = new TreeItem<>(PIN_CONFIG_NAME);
         for(String port : portPinsMap.keySet()){
             TreeItem<String> portTree = new TreeItem<>(port);
-            for(String pin : portPinsMap.get(port)){
+            List<String> pinNames = new ArrayList<>(portPinsMap.get(port).keySet().stream().toList());
+            Collections.sort(pinNames);
+            for(String pin : pinNames){
                 TreeItem<String> pinTree = new TreeItem<>(pin);
                 portTree.getChildren().add(pinTree);
             }
@@ -130,7 +129,8 @@ public class BoardConfigController implements Initializable{
                 fxml = loader.load();
             }else{
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
-                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pinsMap.get(item.getValue()));
+                Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
+                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
                 loader.setController(pinConfigController);
                 fxml = loader.load();
             }
