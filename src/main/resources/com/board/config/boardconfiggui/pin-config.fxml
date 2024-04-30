@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.board.config.boardconfiggui.PinConfigController"
       prefHeight="400.0" prefWidth="600.0">
 
     <Label fx:id="textView" layoutX="200.0" layoutY="180.0"/>

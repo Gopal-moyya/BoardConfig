@@ -3,6 +3,7 @@ package com.board.config.boardconfiggui;
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.IpConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
+import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -70,5 +71,7 @@ public class BoardConfigApplication extends Application {
         } catch (JAXBException e) {
             logger.warning("Initialization failed" + e);
         }
+
+        BoardResultsRepo.getInstance().createBoardResult();
     }
 }
