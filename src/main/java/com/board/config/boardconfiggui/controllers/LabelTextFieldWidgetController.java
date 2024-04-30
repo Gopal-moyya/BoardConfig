@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,20 +14,25 @@ public class LabelTextFieldWidgetController {
     private TextField txtInformation;
     private String enteredText;
 
-    public void setTxtFieldLabel(String text) {
+    private final StringProperty stringProperty = new SimpleStringProperty();
+
+
+    public void setLabel(String text) {
         txtFieldLabel.setText(text);
     }
 
-    public String getTxtInformation() {
-        return txtInformation.getText();
+    public StringProperty getText() {
+        return stringProperty;
     }
-    public void setTxtInformation(String information){
+
+    public void setText(String information){
         txtInformation.setText(information);
+        stringProperty.setValue(information);
     }
 
     @FXML
-    private void textFieldTextChanged() {
+    private void onTextChanged() {
         enteredText = txtInformation.getText();
-        System.out.println("Entered text: " + enteredText);
+        stringProperty.setValue(enteredText);
     }
 }

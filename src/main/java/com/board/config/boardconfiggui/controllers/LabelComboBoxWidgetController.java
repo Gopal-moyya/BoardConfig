@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -10,22 +12,24 @@ public class LabelComboBoxWidgetController {
     private Label comboBoxLabel;
 
     @FXML
-    private ComboBox<String> cmbInfo;
-    private String selectedItem;
-    public void setComboBoxLabel(String text) {
+    private ComboBox<String> comboBox;
+
+    private final StringProperty selectedItem = new SimpleStringProperty();
+
+    public void setComboBoxLabel(String text, String promptText) {
         comboBoxLabel.setText(text);
+        comboBox.setPromptText(promptText);
     }
 
-    public void setCmbInfo(ObservableList<String> items) {
-        cmbInfo.setItems(items);
+    public void setItems(ObservableList<String> items) {
+        comboBox.setItems(items);
     }
 
-    public String getCmbInfoItem() {
-        return cmbInfo.getSelectionModel().getSelectedItem();
+    public StringProperty getCmbInfoItem() {
+        return selectedItem;
     }
     @FXML
-    private void comboBoxSelectionChanged() {
-        selectedItem = cmbInfo.getSelectionModel().getSelectedItem();
-        System.out.println("Selected item: " + selectedItem);
+    private void onSelectionChanged() {
+        selectedItem.setValue(comboBox.getSelectionModel().getSelectedItem());
     }
 }
