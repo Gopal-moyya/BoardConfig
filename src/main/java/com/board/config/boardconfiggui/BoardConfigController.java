@@ -1,14 +1,21 @@
 package com.board.config.boardconfiggui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class BoardConfigController {
+public class BoardConfigController implements Initializable{
 
     private final String[] ports = {"Port1", "Port2"};
     private final String[] pins = {"Pin1", "Pin2","pin3"};
@@ -17,21 +24,22 @@ public class BoardConfigController {
     private final Map<String, String[]> pinsMap = new HashMap<>();
 
     @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
-
-    @FXML
     public TreeView<String> treeView;
 
     @FXML
-    private void initialize() {
+    public StackPane contentArea;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         for(String port : ports){
             pinsMap.put(port, pins);
         }
+
+        setTreeView();
+    }
+
+    private void setTreeView() {
+
         TreeItem<String> root = new TreeItem<>();
         TreeItem<String> pinConfig = new TreeItem<>("Pin Config");
         for(String port : pinsMap.keySet()){
@@ -54,10 +62,33 @@ public class BoardConfigController {
         treeView.setShowRoot(false);
         treeView.setOnMouseClicked(event -> {
             TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
-            if (item.isLeaf()) {
-                // Display the item text
-                welcomeText.setText(item.getValue() + "is clicked");
+            if (item != null && item.isLeaf()) {
+                loadContentArea(item);
             }
         });
     }
+
+    private void loadContentArea(TreeItem<String> item) {
+
+        Parent fxml = null;
+
+        try {
+            if (item.getValue().equals("Clock Config")) {
+                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("clock-config.fxml")));
+            } else if (item.getParent().getValue().equals("Ip Config")) {
+                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ip-config.fxml")));
+            }else{
+                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("pin-config.fxml")));
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(fxml != null){
+            contentArea.getChildren().removeAll();
+            contentArea.getChildren().setAll(fxml);
+        }
+    }
+
+
 }

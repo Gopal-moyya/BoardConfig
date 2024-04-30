@@ -7,6 +7,7 @@ import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBContext;
@@ -19,6 +20,10 @@ import java.util.logging.Logger;
 public class BoardConfigApplication extends Application {
     private static final Logger logger = Logger.getLogger(BoardConfigApplication.class.getName());
 
+    //TODO : Need to check these screen sizes
+    int screenWidth = (int) Screen.getPrimary().getBounds().getWidth()-100;
+    int screenHeight = (int) Screen.getPrimary().getBounds().getHeight()-100;
+
     @Override
     public void init() {
         initialize();
@@ -27,7 +32,10 @@ public class BoardConfigApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BoardConfigApplication.class.getResource("board-config.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 820, 740);
+        //TODO : Need to check these screen sizes
+//        int sceneWidth = Math.max(screenWidth, 800);
+//        int sceneHeight = Math.max(screenHeight, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1368, 1000);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
