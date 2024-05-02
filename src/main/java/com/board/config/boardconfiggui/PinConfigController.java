@@ -14,7 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.*;
@@ -54,7 +55,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             PinConfigParam pinConfigParam = pinConfig.getPinConfigParamsData(portName, currentPin.getName());
 
             if (Objects.nonNull(pinConfigParam)) {
-                if (pinConfigParam.isByPassMode()) {
+                if (BooleanUtils.isTrue(pinConfigParam.isByPassMode())) {
                     pinConfigUiModel.setSelectedMode(BY_PASS);
                     inPutOutPutWidget.setVisible(false);
                 } else {

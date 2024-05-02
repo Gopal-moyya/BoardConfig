@@ -145,7 +145,7 @@ public class BoardConfigController implements Initializable{
     private void generateOutput() {
         saveCurrentControllerData();
         String message = ValidationUtils.validateData();
-        if (StringUtils.isNotEmpty(message)) {
+        if (Utils.saveData(xmlFolderPath)) {
             new CustomAlert(
                     Alert.AlertType.ERROR,
                     "Validation Failed",

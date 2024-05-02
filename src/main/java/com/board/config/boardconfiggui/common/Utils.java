@@ -1,5 +1,6 @@
 package com.board.config.boardconfiggui.common;
 
+import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityConfig;
@@ -88,5 +89,12 @@ public class Utils {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public static boolean validateXmlFolder(String xmlFolderPath) {
+        File hardwareConfigFile = new File(xmlFolderPath, Constants.HARDWARE_CONFIG_FILE_NAME);
+        File pinMuxingConfigFile = new File(xmlFolderPath, Constants.PIN_CONFIG_FILE_NAME);
+
+        return hardwareConfigFile.exists() && pinMuxingConfigFile.exists();
     }
 }
