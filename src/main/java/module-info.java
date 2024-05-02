@@ -4,7 +4,10 @@ module com.board.config.boardconfiggui {
     requires java.xml.bind;
     requires java.logging;
     requires com.sun.xml.bind;
-    requires CodeGeneration;
+    requires java.desktop;
+    requires commons.lang3;
+    requires commons.collections;
+    requires com.sun.istack.runtime;
 
     opens com.board.config.boardconfiggui to javafx.fxml;
     opens com.board.config.boardconfiggui.data.inputmodels.ipconfig to java.xml.bind;

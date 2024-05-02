@@ -48,5 +48,21 @@ public class Constants {
     public static final String IBI_PAYLOAD_SIZE = "ibiPayloadSize";
     public static final String IBI_PAYLOAD_SPEED_LIMIT = "ibiPayloadSpeedLimit";
     public static final String SELECT_DEVICE_ROLE = "Select Device Role";
+
+    //Strings related to the Pin configuration
+    public static final String INPUT = "input";
+    public static final String OUTPUT_HIGH = "output_high";
+    public static final String OUTPUT_LOW = "output_low";
+    public static final String EDGE_TRIG_RISE = "Edge_trig_rise";
+    public static final String EDGE_TRIG_FALL = "Edge_trig_fall";
+    public static final String EDGE_TRIG_ANY = "Edge_trigger_any";
+    public static final String LEVEL_TRIG_HIGH = "Level_trig_high";
+    public static final String LEVEL_TRIG_LOW = "Level_trig_low";
+    public static final String LEVEL = "Level";
+    public static final String LEVEL_TRIGGERED = "LevelTriggered";
+    public static final String EDGE_TRIGGERED = "EdgeTriggered";
+    public static final String BY_PASS = "Bypass";
+    public static final String GPIO = "GPIO";
+    public static final String EXTI = "EXTI";
 }
 
