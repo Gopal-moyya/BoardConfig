@@ -1,6 +1,5 @@
 package com.board.config.boardconfiggui.ui.models;
 
-import com.board.config.boardconfiggui.data.outputmodels.ipconfig.SignalParam;
 
 import java.util.List;
 import java.util.Objects;
@@ -80,28 +79,28 @@ public class IpConfigModel {
     if (Objects.isNull(sclPin)) {
       return "";
     }
-    return getSdaPin().split(" Pin: ")[0];
+    return sclPin.split(" Pin: ")[0];
   }
 
   public String getSCLPinName() {
     if (Objects.isNull(sclPin)) {
       return "";
     }
-    return getSdaPin().split(" Pin: ")[1];
+    return sclPin.split(" Pin: ")[1];
   }
 
   public String getSDAPortName() {
     if (Objects.isNull(sdaPin)) {
       return "";
     }
-    return getSdaPin().split(" Pin: ")[0];
+    return sdaPin.split(" Pin: ")[0];
   }
 
   public String getSDAPinName() {
     if (Objects.isNull(sdaPin)) {
       return "";
     }
-    return getSdaPin().split(" Pin: ")[1];
+    return sdaPin.split(" Pin: ")[1];
   }
 
   @Override

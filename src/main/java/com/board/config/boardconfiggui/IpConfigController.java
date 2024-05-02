@@ -22,12 +22,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,6 +53,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   private Label slavesInfoLabel;
   @FXML
   private VBox ipConfigVBox;
+
+  @FXML
+  private TextArea disabledPinsTextArea;
 
   @FXML
   private IpConfigModel ipConfigModel;
@@ -104,9 +105,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       int count = Integer.parseInt(noOfSlaves);
       for (int i = 0; i < count; i++) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
+        ipConfigVBox.getChildren().add(loader.load());
         SlaveWidgetController slaveWidgetController = loader.getController();
         slaveWidgetControllers.add(slaveWidgetController);
-        ipConfigVBox.getChildren().add(loader.load());
       }
     } else {
       slavesInfoLabel.setVisible(false);
@@ -180,20 +181,21 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
         for (IpConfigPort ipConfigPort: ip.getPorts()) {
           String portName = ipConfigPort.getName();
           for (SignalParam SignalParam : ipConfigPort.getSignalParams()) {
-            if (Objects.equals(SignalParam.getName(), getSDAParam())) {
+            if (StringUtils.equals(SignalParam.getName(), getSDAParam())) {
               ipConfigModel.setSdaPin(portName + " Pin: " + SignalParam.getPin());
-            } else if (Objects.equals(SignalParam.getName(), getSCLParam())) {
+            } else if (StringUtils.equals(SignalParam.getName(), getSCLParam())) {
               ipConfigModel.setSclPin(portName + " Pin: " + SignalParam.getPin());
             }
           }
         }
 
         for (Param param : ip.getParams()) {
-          if (Objects.equals(param.getName(), Constants.SYS_CLK_PARAM)) {
+          if (StringUtils.equals(param.getName(), Constants.SYS_CLK_PARAM)) {
             ipConfigModel.setSysClock(param.getValue());
-          } else if (Objects.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
+            sysClockField.setText(param.getValue());
+          } else if (StringUtils.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
             ipConfigModel.setI2cFreq(param.getValue());
-          } else if (Objects.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
+          } else if (StringUtils.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
             ipConfigModel.setSdrFreq(param.getValue());
           }
         }
@@ -241,26 +243,26 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       SignalParam sclParam = new SignalParam(ipConfigModel.getSCLPinName(), getSCLParam());
 
       List<IpConfigPort> ipConfigPortsList = new ArrayList<>();
-      if (!ipConfigModel.getSDAPortName().isEmpty() && Objects.equals(ipConfigModel.getSCLPortName(), ipConfigModel.getSDAPortName())) {
+      if (StringUtils.isNotBlank(ipConfigModel.getSDAPortName()) && StringUtils.equals(ipConfigModel.getSCLPortName(), ipConfigModel.getSDAPortName())) {
         IpConfigPort ipConfigPort = new IpConfigPort(ipConfigModel.getSCLPortName());
         ipConfigPort.setSignalParams(List.of(sclParam, sdaParam));
         ipConfigPortsList.add(ipConfigPort);
       } else {
-        if (!ipConfigModel.getSDAPortName().isEmpty()) {
+        if (StringUtils.isNotBlank(ipConfigModel.getSDAPortName())) {
           IpConfigPort sdaConfigPort = new IpConfigPort(ipConfigModel.getSDAPortName());
           sdaConfigPort.setSignalParams(List.of(sdaParam));
           ipConfigPortsList.add(sdaConfigPort);
         }
-        if (!ipConfigModel.getSCLPortName().isEmpty()) {
+        if (StringUtils.isNotBlank(ipConfigModel.getSCLPortName())) {
           IpConfigPort sclConfigPort = new IpConfigPort(ipConfigModel.getSCLPortName());
           sclConfigPort.setSignalParams(List.of(sclParam));
           ipConfigPortsList.add(sclConfigPort);
         }
       }
 
-      Param sysClock = new Param(ipConfigModel.getSysClock(), Constants.SYS_CLK_PARAM);
-      Param i2cFreq = new Param(ipConfigModel.getI2cFreq(), Constants.I2C_FREQ_PARAM);
-      Param sdrFreq = new Param(ipConfigModel.getSdrFreq(), Constants.SDR_FREQ_PARAM);
+      Param sysClock = new Param(Constants.SYS_CLK_PARAM, ipConfigModel.getSysClock());
+      Param i2cFreq = new Param(Constants.I2C_FREQ_PARAM, ipConfigModel.getI2cFreq());
+      Param sdrFreq = new Param(Constants.SDR_FREQ_PARAM, ipConfigModel.getSdrFreq());
 
       DeviceDescriptor deviceDescriptor = new DeviceDescriptor();
       List<DeviceConfiguration> deviceConfigurations = new ArrayList<>();

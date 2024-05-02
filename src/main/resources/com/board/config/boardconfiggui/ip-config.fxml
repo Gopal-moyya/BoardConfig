@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.text.Font?>
-<Pane prefHeight="810.0" prefWidth="1080.0" maxHeight="810.0" maxWidth="1080.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="810.0" maxWidth="1080.0" prefHeight="810.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
   <ScrollPane style="-fx-background-color: #ffffff;">
     <AnchorPane prefHeight="810.0" prefWidth="1080.0">
       <children>
@@ -31,6 +22,7 @@
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
+                  <RowConstraints />
           </rowConstraints>
           <children>
             <Label text="SCL Pin" />
@@ -41,19 +33,18 @@
             <TextField fx:id="sysClockField" onKeyTyped="#onSysClockUpdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="i2cFreqField" onKeyTyped="#onI2CFreqUpdate" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <TextField fx:id="sdrFreqField" onKeyTyped="#onSDSRFreqUpdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ComboBox fx:id="sclChoiceBox" maxWidth="1.7976931348623157E308" onMouseClicked="#onSCLPinUpdate" promptText="select" GridPane.columnIndex="1" />
-            <ComboBox fx:id="sdaChoiceBox" maxWidth="1.7976931348623157E308" onMouseClicked="#onSDAPinUpdate" promptText="select" GridPane.columnIndex="4" />
-            <Label text="SCL disabled pins" GridPane.rowIndex="1" />
-            <Label text="SDA disabled pins" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <ComboBox maxWidth="1.7976931348623157E308" promptText="show" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ComboBox maxWidth="1.7976931348623157E308" promptText="show" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <ComboBox fx:id="sclChoiceBox" maxWidth="1.7976931348623157E308" onAction="#onSCLPinUpdate" promptText="select" GridPane.columnIndex="1" />
+            <ComboBox fx:id="sdaChoiceBox" maxWidth="1.7976931348623157E308" onAction="#onSDAPinUpdate" promptText="select" GridPane.columnIndex="4" />
+            <Label text="Disabled pins : " GridPane.rowIndex="1" />
+            <Label GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Label fx:id="noOfSlavesLabel" prefHeight="15.0" prefWidth="170.0" text="Number of slaves" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <TextField fx:id="noOfSlavesField" onKeyTyped="#onNoOfSlavesUpdate" visible="false" text="0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <TextField fx:id="noOfSlavesField" onKeyTyped="#onNoOfSlavesUpdate" text="0" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                   <Label fx:id="slavesInfoLabel" text="Slaves information :" visible="false" GridPane.rowIndex="4">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
+                  <TextArea fx:id="disabledPinsTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           </children>
           <padding>
             <Insets left="60.0" right="60.0" top="40.0" />
