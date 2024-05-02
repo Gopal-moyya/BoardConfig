@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.ui.models;
 
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.SignalParam;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -72,6 +74,34 @@ public class IpConfigModel {
 
   public void setSlaveDeviceConfigModelList(List<SlaveDeviceConfigModel> slaveDeviceConfigModelList) {
     this.slaveDeviceConfigModelList = slaveDeviceConfigModelList;
+  }
+
+  public String getSCLPortName() {
+    if (Objects.isNull(sclPin)) {
+      return "";
+    }
+    return getSdaPin().split(" Pin: ")[0];
+  }
+
+  public String getSCLPinName() {
+    if (Objects.isNull(sclPin)) {
+      return "";
+    }
+    return getSdaPin().split(" Pin: ")[1];
+  }
+
+  public String getSDAPortName() {
+    if (Objects.isNull(sdaPin)) {
+      return "";
+    }
+    return getSdaPin().split(" Pin: ")[0];
+  }
+
+  public String getSDAPinName() {
+    if (Objects.isNull(sdaPin)) {
+      return "";
+    }
+    return getSdaPin().split(" Pin: ")[1];
   }
 
   @Override

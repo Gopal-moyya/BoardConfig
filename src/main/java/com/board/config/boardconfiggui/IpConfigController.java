@@ -5,7 +5,6 @@ import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
-import com.board.config.boardconfiggui.data.inputmodels.ipconfig.IpConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
@@ -28,6 +27,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -236,23 +236,26 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     }
 
     private IpConfigIp prepareIpConfigData() {
-      List<String> sdaPinData = List.of(ipConfigModel.getSdaPin().split(" Pin: "));
-      SignalParam sdaParam = new SignalParam(sdaPinData.get(1), ipName + "_SDA");
-      List<String> sclPinData = List.of(ipConfigModel.getSclPin().split(" Pin: "));
-      SignalParam sclParam = new SignalParam(sclPinData.get(1), ipName + "_SCL");
+
+      SignalParam sdaParam = new SignalParam(ipConfigModel.getSDAPinName(), getSDAParam());
+      SignalParam sclParam = new SignalParam(ipConfigModel.getSCLPinName(), getSCLParam());
 
       List<IpConfigPort> ipConfigPortsList = new ArrayList<>();
-      if (sdaPinData.get(0) == sclPinData.get(0)) {
-        IpConfigPort ipConfigPort = new IpConfigPort(sdaPinData.get(0));
+      if (!ipConfigModel.getSDAPortName().isEmpty() && Objects.equals(ipConfigModel.getSCLPortName(), ipConfigModel.getSDAPortName())) {
+        IpConfigPort ipConfigPort = new IpConfigPort(ipConfigModel.getSCLPortName());
         ipConfigPort.setSignalParams(List.of(sclParam, sdaParam));
         ipConfigPortsList.add(ipConfigPort);
       } else {
-        IpConfigPort sdaConfigPort = new IpConfigPort(sdaPinData.get(0));
-        sdaConfigPort.setSignalParams(List.of(sdaParam));
-        IpConfigPort sclConfigPort = new IpConfigPort(sclPinData.get(0));
-        sclConfigPort.setSignalParams(List.of(sclParam));
-        ipConfigPortsList.add(sdaConfigPort);
-        ipConfigPortsList.add(sclConfigPort);
+        if (!ipConfigModel.getSDAPortName().isEmpty()) {
+          IpConfigPort sdaConfigPort = new IpConfigPort(ipConfigModel.getSDAPortName());
+          sdaConfigPort.setSignalParams(List.of(sdaParam));
+          ipConfigPortsList.add(sdaConfigPort);
+        }
+        if (!ipConfigModel.getSCLPortName().isEmpty()) {
+          IpConfigPort sclConfigPort = new IpConfigPort(ipConfigModel.getSCLPortName());
+          sclConfigPort.setSignalParams(List.of(sclParam));
+          ipConfigPortsList.add(sclConfigPort);
+        }
       }
 
       Param sysClock = new Param(ipConfigModel.getSysClock(), Constants.SYS_CLK_PARAM);
@@ -275,18 +278,14 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
     private void checkForEmptyIps(BoardResult boardResult) {
       com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfig ipConfig = boardResult.getIpConfig();
-      if (ipConfig.getIps().isEmpty()) {
+      if (Objects.isNull(ipConfig)) {
+        boardResult.setIpConfig(new IpConfig());
+        boardResult.getIpConfig().setIps(new ArrayList<>());
+        return;
+      }
+      if (CollectionUtils.isEmpty(ipConfig.getIps())) {
         ipConfig.setIps(new ArrayList<>());
       }
-    }
-
-    private boolean checkIpAvailabilityInResult(BoardResult boardResult) {
-      for (IpConfigIp ip : boardResult.getIpConfig().getIps()) {
-        if (ip.getName().equals(ipName)) {
-          return true;
-        }
-      }
-      return false;
     }
 
     private void updateIpType() {
