@@ -83,6 +83,8 @@ public class IpConfigController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
         ipConfigVBox.getChildren().add(loader.load());
       }
+    } else {
+      ipConfigVBox.getChildren().clear();
     }
   }
 
