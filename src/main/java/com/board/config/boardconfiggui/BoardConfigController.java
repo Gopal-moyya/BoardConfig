@@ -128,6 +128,7 @@ public class BoardConfigController implements Initializable{
 
     @FXML
     private void generateOutput() {
+        saveCurrentControllerData();
         if(Utils.saveData(xmlFolderPath))
             homeViewController.onOutputGenerateClick();
     }
