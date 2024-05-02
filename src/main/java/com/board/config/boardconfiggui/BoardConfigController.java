@@ -6,6 +6,7 @@ import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
+import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,8 +18,11 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BoardConfigController implements Initializable{
+
+    private static final Logger logger = Logger.getLogger(BoardConfigController.class.getName());
 
     private final String PIN_CONFIG_NAME = "Pin Config";
     private final String IP_CONFIG_NAME = "Ip Config";
@@ -144,7 +148,7 @@ public class BoardConfigController implements Initializable{
                 fxml = loader.load();
             }
         }catch (IOException e) {
-            e.printStackTrace();
+            logger.warning("IOException is occurred while loading content area data" + e);
         }
 
         if(fxml != null){
@@ -154,10 +158,8 @@ public class BoardConfigController implements Initializable{
     }
 
     private void saveCurrentControllerData() {
-        if (currentController instanceof ClockConfigController) {
-            ((ClockConfigController) currentController).saveData();
+        if (currentController instanceof BoardPageDataSaverInterface) {
+            ((BoardPageDataSaverInterface) currentController).saveData();
         }
     }
-
-
 }

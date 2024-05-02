@@ -4,6 +4,7 @@ import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfigParam;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
+import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.models.ClockConfigModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ClockConfigController implements Initializable {
+public class ClockConfigController implements Initializable, BoardPageDataSaverInterface {
 
     private List<ClockConfigModel> viewsData;
 
