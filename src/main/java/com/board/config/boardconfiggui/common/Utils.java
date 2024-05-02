@@ -2,14 +2,22 @@ package com.board.config.boardconfiggui.common;
 
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
+import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityConfig;
+import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityIp;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfig;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfigIp;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
 import javafx.scene.control.Alert;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * Utility class containing helper methods.
@@ -35,6 +43,23 @@ public class Utils {
         try {
             BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
             BoardResult boardResult = boardResultsRepo.getBoardResult();
+
+            IpConfig ipConfig = boardResult.getIpConfig();
+            if(Objects.nonNull(ipConfig)) {
+
+                List<IpConfigIp> ipConfigIps = ipConfig.getIps();
+
+                if(CollectionUtils.isNotEmpty(ipConfigIps)) {
+                    List<ConnectivityIp> connectivityIps = new ArrayList<>();
+                    for (IpConfigIp ipConfigIp : ipConfigIps) {
+                        connectivityIps.add(new ConnectivityIp(ipConfigIp.getName()));
+                    }
+
+                    ConnectivityConfig connectivityConfig = new ConnectivityConfig(connectivityIps, CollectionUtils.size(connectivityIps));
+                    boardResult.setConnectivityConfig(connectivityConfig);
+                }
+
+            }
 
             JAXBContext context = JAXBContext.newInstance(BoardResult.class);
             Marshaller marshaller = context.createMarshaller();

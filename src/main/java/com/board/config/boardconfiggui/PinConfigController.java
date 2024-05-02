@@ -27,14 +27,12 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
     private final String portName;
     private final Pin currentPin;
     private final PinConfigModel pinConfigUiModel;
-
     @FXML
     private OnOffButtonWidgetController onOffWidgetController;
     @FXML
     private LabelComboBoxWidgetController dropDownWidgetController;
-
     @FXML
-    private LabelComboBoxWidgetController ioWidgetController;
+    private LabelComboBoxWidgetController inPutOutPutWidgetController;
 
     @FXML
     HBox dropDownWidget;
@@ -79,16 +77,16 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             dropDownWidgetController.setComboBoxLabel("Mode Type:", "select");
             dropDownWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
             dropDownWidgetController.setSelectedMode(pinConfigUiModel.getSelectedMode());
-            ioWidgetController.setComboBoxLabel("I/O Type:", "select");
-            ioWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
-            ioWidgetController.setSelectedMode(pinConfigUiModel.getSelectedValue());
+            inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", "select");
+            inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
+            inPutOutPutWidgetController.setSelectedMode(pinConfigUiModel.getSelectedValue());
         } else {
             onOffWidgetController.setButtonText(OnOffButtonWidgetController.OFF_TXT);
             onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
             dropDownWidget.setVisible(false);
             inPutOutPutWidget.setVisible(false);
             dropDownWidgetController.setItems(null);
-            ioWidgetController.setItems(null);
+            inPutOutPutWidgetController.setItems(null);
         }
         onOffWidgetController.setButtonLabel("PIN Status:");
 
@@ -118,9 +116,9 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         dropDownWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
             if (GPIO.equals(newValue)) {
                 inPutOutPutWidget.setVisible(true);
-                ioWidgetController.setComboBoxLabel("I/O Type:", "select");
-                ioWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
-                pinConfigUiModel.setSelectedMode(ioWidgetController.getCmbInfoItem().getValue());
+                inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", "select");
+                inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
+                pinConfigUiModel.setSelectedMode(inPutOutPutWidgetController.getCmbInfoItem().getValue());
             } else {
                 inPutOutPutWidget.setVisible(false);
             }
@@ -128,8 +126,8 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
 
         });
 
-        ioWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
-            pinConfigUiModel.setSelectedValue(ioWidgetController.getCmbInfoItem().getValue());
+        inPutOutPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedValue(inPutOutPutWidgetController.getCmbInfoItem().getValue());
         });
 
     }

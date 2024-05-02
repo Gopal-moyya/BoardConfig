@@ -12,9 +12,11 @@
         <fx:include fx:id="dropDownWidget" source="dropdown_widget.fxml" />
 
         <fx:include fx:id="inPutOutPutWidget" source="dropdown_widget.fxml" />
+
         <padding>
             <Insets left="30.0" />
         </padding>
     </VBox>
+
 
 </Pane>

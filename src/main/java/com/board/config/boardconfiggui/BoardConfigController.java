@@ -146,7 +146,7 @@ public class BoardConfigController implements Initializable{
 
     private void loadContentArea(TreeItem<String> item) {
 
-        String PIN_CONFIG_FXML_NAME = "com/board/config/boardconfiggui/pin-config.fxml";
+        String PIN_CONFIG_FXML_NAME = "pin-config.fxml";
         String IP_CONFIG_FXML_NAME = "ip-config.fxml";
         String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
 
