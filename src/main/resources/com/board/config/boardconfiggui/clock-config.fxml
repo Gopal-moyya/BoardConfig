@@ -5,9 +5,7 @@
 <?import javafx.scene.control.Label?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.board.config.boardconfiggui.ClockConfigController"
-      prefHeight="400.0" prefWidth="600.0">
-
-    <Label fx:id="textView" layoutX="200.0" layoutY="180.0"/>
+      fx:id="clockConfigGridPane"
+      prefHeight="600.0" prefWidth="900.0">
 
 </Pane>

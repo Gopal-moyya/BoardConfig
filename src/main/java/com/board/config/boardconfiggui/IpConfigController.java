@@ -1,9 +1,9 @@
 package com.board.config.boardconfiggui;
 
-
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
+import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.models.IpConfigModel;
 import com.board.config.boardconfiggui.ui.models.SlaveDeviceConfigModel;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class IpConfigController implements Initializable {
+public class IpConfigController implements Initializable, BoardPageDataSaverInterface {
 
   private String ipName;
   @FXML
@@ -98,6 +98,11 @@ public class IpConfigController implements Initializable {
     ipConfigModel = new IpConfigModel();
     initializeData();
   }
+
+    @Override
+    public void saveData() {
+        //Todo:- Need to implement save data
+    }
 
   private void initializeData() {
     InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();

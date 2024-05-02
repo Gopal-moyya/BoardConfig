@@ -1,11 +1,13 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.common.Utils;
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
+import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,8 +19,11 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BoardConfigController implements Initializable{
+
+    private static final Logger logger = Logger.getLogger(BoardConfigController.class.getName());
 
     private final String PIN_CONFIG_NAME = "Pin Config";
     private final String IP_CONFIG_NAME = "Ip Config";
@@ -26,12 +31,21 @@ public class BoardConfigController implements Initializable{
 
     private final List<String> ipNames = new ArrayList<>();
     private final Map<String, Map<String, Pin>> portPinsMap = new HashMap<>();
+    private Object currentController;
 
     @FXML
     public TreeView<String> treeView;
 
     @FXML
     public StackPane contentArea;
+
+    private final HomeViewController homeViewController;
+    private final String xmlFolderPath;
+
+    public BoardConfigController(String xmlFolderPath, HomeViewController homeViewController) {
+        this.xmlFolderPath = xmlFolderPath;
+        this.homeViewController = homeViewController;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -106,9 +120,16 @@ public class BoardConfigController implements Initializable{
         treeView.setOnMouseClicked(event -> {
             TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
             if (item != null && item.isLeaf()) {
+                saveCurrentControllerData();
                 loadContentArea(item);
             }
         });
+    }
+
+    @FXML
+    private void generateOutput() {
+        if(Utils.saveData(xmlFolderPath))
+            homeViewController.onOutputGenerateClick();
     }
 
     private void loadContentArea(TreeItem<String> item) {
@@ -118,24 +139,31 @@ public class BoardConfigController implements Initializable{
         String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
 
         Parent fxml = null;
+        FXMLLoader loader;
 
         try {
             if (item.getValue().equals(CLOCK_CONFIG_NAME)) {
-                fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(CLOCK_CONFIG_FXML_NAME)));
+                loader = new FXMLLoader(getClass().getResource(CLOCK_CONFIG_FXML_NAME));
+                ClockConfigController clockConfigController = new ClockConfigController();
+                currentController = clockConfigController;
+                loader.setController(clockConfigController);
+                fxml = loader.load();
             } else if (item.getParent().getValue().equals(IP_CONFIG_NAME)) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
+                loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
                 IpConfigController ipConfigController = new IpConfigController(item.getValue());
+                currentController = ipConfigController;
                 loader.setController(ipConfigController);
                 fxml = loader.load();
             }else{
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
+                loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
                 Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
                 PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
+                currentController = pinConfigController;
                 loader.setController(pinConfigController);
                 fxml = loader.load();
             }
         }catch (IOException e) {
-            e.printStackTrace();
+            logger.warning("IOException is occurred while loading content area data" + e);
         }
 
         if(fxml != null){
@@ -144,5 +172,9 @@ public class BoardConfigController implements Initializable{
         }
     }
 
-
+    private void saveCurrentControllerData() {
+        if (currentController instanceof BoardPageDataSaverInterface) {
+            ((BoardPageDataSaverInterface) currentController).saveData();
+        }
+    }
 }
