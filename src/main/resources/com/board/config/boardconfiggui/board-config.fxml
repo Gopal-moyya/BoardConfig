@@ -7,27 +7,22 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<?import javafx.scene.control.ScrollPane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0"
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1300.0"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
   <left>
-    <TreeView fx:id="treeView" prefHeight="800.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    <TreeView fx:id="treeView" prefHeight="850.0" prefWidth="200.0"/>
   </left>
   <bottom>
     <Button fx:id="generateOutput" mnemonicParsing="false" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER" onAction="#generateOutput">
       <BorderPane.margin>
-        <Insets top="15.0" />
+        <Insets top="10.0" />
       </BorderPane.margin>
     </Button>
   </bottom>
   <center>
-      <ScrollPane>
-          <content>
-              <AnchorPane prefHeight="800.0" prefWidth="900.0" BorderPane.alignment="CENTER">
-                  <StackPane fx:id="contentArea" prefHeight="800.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-              </AnchorPane>
-          </content>
-      </ScrollPane>
+    <AnchorPane prefHeight="850.0" prefWidth="1100.0">
+        <StackPane fx:id="contentArea" prefHeight="810.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+    </AnchorPane>
   </center>
    <padding>
       <Insets left="5.0" top="5.0" />

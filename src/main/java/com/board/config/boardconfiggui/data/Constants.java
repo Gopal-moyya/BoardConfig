@@ -64,5 +64,7 @@ public class Constants {
     public static final String BY_PASS = "Bypass";
     public static final String GPIO = "GPIO";
     public static final String EXTI = "EXTI";
+
+    public static final String BOARD_NAME = "Board Name";
 }
 

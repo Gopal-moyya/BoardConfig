@@ -17,11 +17,11 @@ public class HomeViewController {
         loadDataView();
     }
 
-    public void onConfigureClick(String xmlFolderPath) {
+    public void onConfigureClick(String xmlFolderPath, String boardName) {
         if(validateXmlFolder()){
             Parent fxml = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("board-config.fxml"));
-            BoardConfigController boardConfigController = new BoardConfigController(xmlFolderPath, this);
+            BoardConfigController boardConfigController = new BoardConfigController(xmlFolderPath, boardName, this);
             loader.setController(boardConfigController);
             try {
                 fxml = loader.load();

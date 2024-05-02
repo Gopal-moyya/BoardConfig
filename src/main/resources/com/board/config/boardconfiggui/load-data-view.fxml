@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <GridPane alignment="CENTER" hgap="5.0" prefHeight="725.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml">
@@ -23,31 +22,17 @@
         <RowConstraints maxHeight="25.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label text="Xml">
-            <font>
-                <Font name="Times New Roman" size="12.0" />
-            </font></Label>
+        <Label text="Xml" />
         <TextField focusTraversable="false" promptText="Choose the xnls folder path*" GridPane.columnIndex="1" fx:id="xmlPathField" />
         <Button onAction="#onButtonClick" styleClass="btn-bg" text="browse" userData="xmlBtn" GridPane.columnIndex="2" />
         <Button onAction="#onConfigureClick" styleClass="btn-bg" text="Configure" GridPane.columnIndex="3" />
-        <Label text="Repository" GridPane.rowIndex="1">
-            <font>
-                <Font name="Times New Roman" size="12.0" />
-            </font></Label>
+        <Label text="Repository" GridPane.rowIndex="1" />
         <TextField fx:id="repoPathField" layoutX="232.0" layoutY="13.0" promptText="Choose the repository folder path*" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Button onAction="#onButtonClick" styleClass="btn-bg" text="browse" userData="repoBtn" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-        <Label layoutX="10.0" layoutY="47.0" text="Tool chain" GridPane.rowIndex="2">
-            <font>
-                <Font name="Times New Roman" size="12.0" />
-            </font>
-        </Label>
+        <Label layoutX="10.0" layoutY="47.0" text="Tool chain" GridPane.rowIndex="2" />
         <TextField fx:id="toolChainPathField" layoutX="232.0" layoutY="43.0" promptText="Choose the arm tool chain bin folder path*" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Button onAction="#onButtonClick" styleClass="btn-bg" text="browse" userData="toolChainBtn" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Label layoutX="10.0" layoutY="77.0" text="Output location" GridPane.rowIndex="3">
-            <font>
-                <Font name="Times New Roman" size="12.0" />
-            </font>
-        </Label>
+        <Label layoutX="10.0" layoutY="77.0" text="Output location" GridPane.rowIndex="3" />
         <TextField fx:id="outputPathField" layoutX="232.0" layoutY="73.0" promptText="Choose the output folder path" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <Button onAction="#onButtonClick" styleClass="btn-bg" text="browse" userData="outputBtn" GridPane.columnIndex="2" GridPane.rowIndex="3" />
         <Button fx:id="submitBtn" onAction="#onSubmit" prefHeight="25.0" prefWidth="104.0" styleClass="btn-bg" text="Generate code" GridPane.columnIndex="1" GridPane.rowIndex="6">

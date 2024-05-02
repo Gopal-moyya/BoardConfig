@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
-  <ScrollPane style="-fx-background-color: 000000;">
-    <AnchorPane>
+<Pane prefHeight="810.0" prefWidth="1080.0" maxHeight="810.0" maxWidth="1080.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+  <ScrollPane style="-fx-background-color: #ffffff;">
+    <AnchorPane prefHeight="810.0" prefWidth="1080.0">
       <children>
-        <GridPane layoutX="8.0" layoutY="10.0" maxWidth="580.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="380.0">
+        <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0" AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="7.0">
           <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="310.0" minWidth="10.0" prefWidth="228.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
           </rowConstraints>
           <children>
             <Label text="SCL Pin" />
@@ -41,10 +49,10 @@
             <TextField fx:id="noOfSlavesField" onKeyTyped="#onNoOfSlavesUpdate" text="0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
           </children>
           <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets left="60.0" right="60.0" top="40.0" />
           </padding>
         </GridPane>
-        <VBox fx:id="ipConfigVBox" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+        <VBox fx:id="ipConfigVBox" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="1075.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="320.0" />
       </children>
     </AnchorPane>
   </ScrollPane>
