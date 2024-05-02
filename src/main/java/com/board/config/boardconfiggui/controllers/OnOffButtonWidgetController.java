@@ -5,8 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
+import org.apache.commons.codec.binary.StringUtils;
 
 public class OnOffButtonWidgetController {
+
+    public static final String ON_TXT = "ON";
+    public static final String OFF_TXT = "OFF";
+
     @FXML
     private Label buttonLabel;
 
@@ -23,13 +28,13 @@ public class OnOffButtonWidgetController {
         return button;
     }
 
-    public void setButton(String buttonText) {
+    public void setButtonText(String buttonText) {
         button.setText(buttonText);
     }
 
     @FXML
     private void buttonSelectionChanged(ActionEvent e){
-        if("ON".equals(e.toString())) {
+        if(StringUtils.equals(ON_TXT, e.toString())) {
             button.setStyle("-fx-background-color: #ff0000");
         } else {
             button.setStyle("-fx-background-color: #0000ff");

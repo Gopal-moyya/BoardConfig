@@ -1,5 +1,6 @@
 package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.xml.bind.annotation.*;
@@ -51,10 +52,10 @@ public class PinConfigPort {
         this.configParams = configParams;
     }
 
-    public PinConfigParam getPinConfigParamData(int pinNumber) {
+    public PinConfigParam getPinConfigParamData(String pinNumber) {
         if (configParams != null) {
             for (PinConfigParam pinConfigParam : configParams) {
-                if (pinConfigParam.pin == pinNumber) {
+                if (StringUtils.equals(pinConfigParam.pin, pinNumber)) {
                     return pinConfigParam;
                 }
             }
@@ -62,13 +63,13 @@ public class PinConfigPort {
         return null;
     }
 
-    public void setPinConfigParamData(int pinNumber, PinConfigParam pinConfigParam) {
+    public void setPinConfigParamData(String pinNumber, PinConfigParam pinConfigParam) {
 
         if (CollectionUtils.isEmpty(configParams)) {
             addPinConfigParam(pinConfigParam);
         } else {
             PinConfigParam pinConfigParam1 = configParams.stream()
-                    .filter(x -> x.getPin() == pinNumber)
+                    .filter(x -> StringUtils.equals(x.getPin(), pinNumber))
                     .findFirst()
                     .orElse(null);
 
