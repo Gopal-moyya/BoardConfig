@@ -32,4 +32,8 @@ public class LabelComboBoxWidgetController {
     private void onSelectionChanged() {
         selectedItem.setValue(comboBox.getSelectionModel().getSelectedItem());
     }
+
+    public void setSelectedMode(String selectedMode){
+        comboBox.valueProperty().setValue(selectedMode);
+    }
 }

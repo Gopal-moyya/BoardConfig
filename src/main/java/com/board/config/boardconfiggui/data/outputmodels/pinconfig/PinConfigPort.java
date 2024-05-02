@@ -1,6 +1,10 @@
 package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +17,21 @@ public class PinConfigPort {
 
     @XmlElement(name = "configParam")
     List<PinConfigParam> configParams;
+
+    public void addPinConfigParam(PinConfigParam pinConfigParam) {
+        if (Objects.isNull(configParams)) {
+            configParams = new ArrayList<>();
+        }
+        configParams.add(pinConfigParam);
+    }
+
+
+    public void removePinConfigParam(PinConfigParam pinConfigParam) {
+        if (Objects.isNull(configParams)) {
+            return;
+        }
+        configParams.remove(pinConfigParam);
+    }
 
     public PinConfigPort() {
     }
@@ -31,6 +50,50 @@ public class PinConfigPort {
 
     public void setConfigParams(List<PinConfigParam> configParams) {
         this.configParams = configParams;
+    }
+
+    public PinConfigParam getPinConfigParamData(String pinNumber) {
+        if (configParams != null) {
+            for (PinConfigParam pinConfigParam : configParams) {
+                if (StringUtils.equals(pinConfigParam.pin, pinNumber)) {
+                    return pinConfigParam;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setPinConfigParamData(String pinNumber, PinConfigParam pinConfigParam) {
+
+        if (CollectionUtils.isEmpty(configParams)) {
+            addPinConfigParam(pinConfigParam);
+        } else {
+            PinConfigParam pinConfigParam1 = configParams.stream()
+                    .filter(x -> StringUtils.equals(x.getPin(), pinNumber))
+                    .findFirst()
+                    .orElse(null);
+
+            if (Objects.isNull(pinConfigParam1)) {
+                addPinConfigParam(pinConfigParam);
+            } else {
+                removePinConfigParam(pinConfigParam1);
+                addPinConfigParam(pinConfigParam);
+
+            }
+        }
+    }
+
+    public void removePinConfigParamData(String pinNumber) {
+
+        if (CollectionUtils.isNotEmpty(configParams)) {
+            PinConfigParam pinConfigParam = configParams.stream()
+                    .filter(x -> StringUtils.equals(x.getPin(), pinNumber))
+                    .findFirst()
+                    .orElse(null);
+            if (Objects.nonNull(pinConfigParam)) {
+                removePinConfigParam(pinConfigParam);
+            }
+        }
     }
 
     @Override

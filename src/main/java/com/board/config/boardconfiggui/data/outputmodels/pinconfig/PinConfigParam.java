@@ -107,10 +107,11 @@ public class PinConfigParam {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PinConfigParam that = (PinConfigParam) o;
-        return Objects.equals(pin, that.pin) && byPassMode == that.byPassMode && intEnable == that.intEnable && Objects.equals(direction, that.direction) && Objects.equals(value, that.value) && Objects.equals(intType, that.intType) && Objects.equals(intValue, that.intValue);
+        return byPassMode == that.byPassMode && intEnable == that.intEnable && Objects.equals(pin, that.pin) && Objects.equals(direction, that.direction) && Objects.equals(value, that.value) && Objects.equals(intType, that.intType) && Objects.equals(intValue, that.intValue);
     }
 
     @Override

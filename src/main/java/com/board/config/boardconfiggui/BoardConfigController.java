@@ -131,11 +131,13 @@ public class BoardConfigController implements Initializable{
 
         //Handling mouse click events
         treeView.setOnMouseClicked(event -> {
+
             TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
             if (item != null && item.isLeaf()) {
                 saveCurrentControllerData();
                 loadContentArea(item);
             }
+
         });
     }
 
