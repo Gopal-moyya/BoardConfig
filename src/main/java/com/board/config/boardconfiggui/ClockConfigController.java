@@ -143,6 +143,7 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
         });
     }
 
+    @Override
     public void saveData() {
         List<ClockConfigParam> clockConfigParams = new ArrayList<>();
         viewsData.forEach(data -> {

@@ -42,7 +42,7 @@ public class PinConfig {
         this.ports = ports;
     }
 
-    public PinConfigParam getPinConfigParamsData(String portNumber, int pinNumber) {
+    public PinConfigParam getPinConfigParamsData(String portNumber, String pinNumber) {
         if (ports != null) {
             for (PinConfigPort pinConfigPort : ports) {
                 if (portNumber.equals(pinConfigPort.name)) {
@@ -73,7 +73,7 @@ public class PinConfig {
         return Objects.hashCode(ports);
     }
 
-    public void savePinConfig(String portNumber, int pinNumber, @NotNull PinConfigParam pinConfigParam) {
+    public void savePinConfig(String portNumber, String pinNumber, @NotNull PinConfigParam pinConfigParam) {
 
         if (CollectionUtils.isEmpty(ports)) {
             PinConfigPort pinConfigPort1 = new PinConfigPort(portNumber);

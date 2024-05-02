@@ -8,7 +8,7 @@ import java.util.Objects;
 public class PinConfigParam {
 
     @XmlAttribute(name = "Pin")
-    int pin;
+    String pin;
 
     @XmlAttribute(name = "ByPassMode")
     boolean byPassMode;
@@ -31,11 +31,11 @@ public class PinConfigParam {
     public PinConfigParam() {
     }
 
-    public PinConfigParam(int pin) {
+    public PinConfigParam(String pin) {
         this.pin = pin;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
@@ -102,10 +102,11 @@ public class PinConfigParam {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PinConfigParam that = (PinConfigParam) o;
-        return pin == that.pin && byPassMode == that.byPassMode && intEnable == that.intEnable && Objects.equals(direction, that.direction) && Objects.equals(value, that.value) && Objects.equals(intType, that.intType) && Objects.equals(intValue, that.intValue);
+        return byPassMode == that.byPassMode && intEnable == that.intEnable && Objects.equals(pin, that.pin) && Objects.equals(direction, that.direction) && Objects.equals(value, that.value) && Objects.equals(intType, that.intType) && Objects.equals(intValue, that.intValue);
     }
 
     @Override
