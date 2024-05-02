@@ -6,6 +6,7 @@ import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,6 +33,14 @@ public class BoardConfigController implements Initializable{
 
     @FXML
     public StackPane contentArea;
+
+    private final HomeViewController homeViewController;
+    private final String xmlFolderPath;
+
+    public BoardConfigController(String xmlFolderPath, HomeViewController homeViewController) {
+        this.xmlFolderPath = xmlFolderPath;
+        this.homeViewController = homeViewController;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -144,5 +153,8 @@ public class BoardConfigController implements Initializable{
         }
     }
 
-
+    public void outputGenerateClick(ActionEvent actionEvent) {
+        //TODO : Need to generate XML file and save in the xmlFolderPath
+        homeViewController.onOutputGenerateClick();
+    }
 }

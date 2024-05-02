@@ -7,24 +7,24 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.board.config.boardconfiggui.BoardConfigController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
   <left>
-    <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    <TreeView fx:id="treeView" prefHeight="800.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
   </left>
   <bottom>
-    <Button mnemonicParsing="false" text="Generate output" BorderPane.alignment="CENTER">
+    <Button mnemonicParsing="false" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER" onAction="#outputGenerateClick">
       <BorderPane.margin>
-        <Insets bottom="5.0" top="5.0" />
+        <Insets top="15.0" />
       </BorderPane.margin>
     </Button>
   </bottom>
   <center>
-    <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-      <StackPane fx:id="contentArea" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+    <AnchorPane prefHeight="800.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+      <StackPane fx:id="contentArea" prefHeight="800.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     </AnchorPane>
   </center>
+   <padding>
+      <Insets left="5.0" top="5.0" />
+   </padding>
 </BorderPane>
-
-
-

@@ -32,12 +32,12 @@ public class BoardConfigApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(BoardConfigApplication.class.getResource("board-config.fxml"));
+//        FXMLLoader fxmlLoader = new FXMLLoader(BoardConfigApplication.class.getResource("board-config.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(BoardConfigApplication.class.getResource("home-view.fxml"));
         //TODO : Need to check these screen sizes
 //        int sceneWidth = Math.max(screenWidth, 800);
 //        int sceneHeight = Math.max(screenHeight, 600);
         Scene scene = new Scene(fxmlLoader.load(), 1368, 1000);
-        stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
     }
