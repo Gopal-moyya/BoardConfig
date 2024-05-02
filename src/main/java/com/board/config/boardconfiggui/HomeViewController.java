@@ -33,18 +33,12 @@ public class HomeViewController {
         loadDataView("");
     }
 
-    public void onConfigureClick(String xmlFolderPath) {
-
-        if (ObjectUtils.isEmpty(xmlFolderPath)) {
-            logger.warning("the Selected folder path is null or empty" + xmlFolderPath);
-            Utils.alertDialog(Alert.AlertType.INFORMATION, "Select Directory", "Please select the Directory.");
-            return;
-        }
+    public void onConfigureClick(String xmlFolderPath , String boardName) {
 
         if (validateXmlFolder(xmlFolderPath)) {
             Parent fxml = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("board-config.fxml"));
-            BoardConfigController boardConfigController = new BoardConfigController(xmlFolderPath, this);
+            BoardConfigController boardConfigController = new BoardConfigController(xmlFolderPath, boardName, this);
             loader.setController(boardConfigController);
             try {
                 fxml = loader.load();

@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Option {
 
     @XmlAttribute(name = "Name")
-    String name;
+    String name = "Board";
 
     @XmlAttribute(name = "value")
     String value;
@@ -21,6 +21,10 @@ public class Option {
 
     public Option(String name, String value) {
         this.name = name;
+        this.value = value;
+    }
+
+    public Option(String value) {
         this.value = value;
     }
 

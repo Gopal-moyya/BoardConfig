@@ -6,6 +6,9 @@ import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
+import com.board.config.boardconfiggui.data.outputmodels.genralconfig.GeneralConfig;
+import com.board.config.boardconfiggui.data.outputmodels.genralconfig.Option;
+import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import javafx.fxml.FXML;
@@ -41,9 +44,11 @@ public class BoardConfigController implements Initializable{
 
     private final HomeViewController homeViewController;
     private final String xmlFolderPath;
+    private final String boardName;
 
-    public BoardConfigController(String xmlFolderPath, HomeViewController homeViewController) {
+    public BoardConfigController(String xmlFolderPath, String boardName, HomeViewController homeViewController) {
         this.xmlFolderPath = xmlFolderPath;
+        this.boardName = boardName;
         this.homeViewController = homeViewController;
     }
 
@@ -81,6 +86,10 @@ public class BoardConfigController implements Initializable{
                 ipNames.add(instance.getName());
             }
         }
+
+        //set the board name information
+        GeneralConfig generalConfig = new GeneralConfig(new Option(boardName));
+        BoardResultsRepo.getInstance().getBoardResult().setGeneralConfig(generalConfig);
     }
 
     private void setTreeView() {
@@ -128,6 +137,7 @@ public class BoardConfigController implements Initializable{
 
     @FXML
     private void generateOutput() {
+        saveCurrentControllerData();
         if(Utils.saveData(xmlFolderPath))
             homeViewController.onOutputGenerateClick(xmlFolderPath);
     }
