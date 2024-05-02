@@ -39,7 +39,6 @@
          <padding>
             <Insets top="10.0" />
          </padding>
-<!--      </HBox>-->
       </Pane>
    </center>
 </BorderPane>
