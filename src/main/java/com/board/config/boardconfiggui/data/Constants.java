@@ -6,14 +6,14 @@ package com.board.config.boardconfiggui.data;
 public class Constants {
 
     /**
-     * File path for the hardware configuration XML file.
+     * File path for the hardware configuration XML file name.
      */
-    public static final String HARDWARE_CONFIG_FILE = "src/main/assets/hardware_configuration.xml";
+    public static final String HARDWARE_CONFIG_FILE_NAME = "hardware_configuration.xml";
 
     /**
-     * File path for the PIN configuration XML file.
+     * File path for the PIN configuration XML file name.
      */
-    public static final String PIN_CONFIG_FILE = "src/main/assets/pin_muxing.xml";
+    public static final String PIN_CONFIG_FILE_NAME = "pin_muxing.xml";
 
     /**
      * Constant representing the development role.

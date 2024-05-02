@@ -28,15 +28,17 @@ public class LoadDataController {
     private Button submitBtn;
 
     private final HomeViewController homeViewController;
+    private final String xmlFolderPath;
 
     public LoadDataController(HomeViewController homeViewController, String xmlFolderPath) {
         this.homeViewController = homeViewController;
-        xmlPathField.setText(xmlFolderPath);
+        this.xmlFolderPath = xmlFolderPath;
     }
 
     @FXML
     public void initialize(){
         submitBtn.setDisable(true);
+        xmlPathField.setText(xmlFolderPath);
     }
 
     @FXML
