@@ -1,5 +1,6 @@
 package com.board.config.boardconfiggui.ui.models;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -12,7 +13,7 @@ public class IpConfigModel {
   String i2cFreq;
   String sdrFreq;
   String noOfSlaves;
-//  List<SlaveDeviceConfigModel> slaveDeviceConfigModelList;
+  List<SlaveDeviceConfigModel> slaveDeviceConfigModelList;
 
   public IpConfigModel() {
   }
@@ -65,20 +66,26 @@ public class IpConfigModel {
     this.noOfSlaves = noOfSlaves;
   }
 
-//  public List<SlaveDeviceConfigModel> getSlaveDeviceConfigModelList() {
-//    return slaveDeviceConfigModelList;
-//  }
-//
-//  public void setSlaveDeviceConfigModelList(List<SlaveDeviceConfigModel> slaveDeviceConfigModelList) {
-//    this.slaveDeviceConfigModelList = slaveDeviceConfigModelList;
-//  }
+  public List<SlaveDeviceConfigModel> getSlaveDeviceConfigModelList() {
+    return slaveDeviceConfigModelList;
+  }
+
+  public void setSlaveDeviceConfigModelList(List<SlaveDeviceConfigModel> slaveDeviceConfigModelList) {
+    this.slaveDeviceConfigModelList = slaveDeviceConfigModelList;
+  }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     IpConfigModel that = (IpConfigModel) o;
-    return Objects.equals(sclPin, that.sclPin) && Objects.equals(sdaPin, that.sdaPin) && Objects.equals(sysClock, that.sysClock) && Objects.equals(i2cFreq, that.i2cFreq) && Objects.equals(sdrFreq, that.sdrFreq) && Objects.equals(noOfSlaves, that.noOfSlaves) ;
+    return Objects.equals(sclPin, that.sclPin) &&
+            Objects.equals(sdaPin, that.sdaPin) &&
+            Objects.equals(sysClock, that.sysClock) &&
+            Objects.equals(i2cFreq, that.i2cFreq) &&
+            Objects.equals(sdrFreq, that.sdrFreq) &&
+            Objects.equals(noOfSlaves, that.noOfSlaves) &&
+            Objects.equals(slaveDeviceConfigModelList, that.slaveDeviceConfigModelList) ;
   }
 
   @Override
@@ -95,7 +102,7 @@ public class IpConfigModel {
       ", i2cFreq='" + i2cFreq + '\'' +
       ", sdrFreq='" + sdrFreq + '\'' +
       ", noOfSlaves='" + noOfSlaves + '\'' +
-//      ", slaveDeviceConfigModelList=" + slaveDeviceConfigModelList +
+      ", slaveDeviceConfigModelList=" + slaveDeviceConfigModelList +
       '}';
   }
 
