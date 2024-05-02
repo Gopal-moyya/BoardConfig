@@ -183,8 +183,8 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         PinConfig pinConfig = BoardResultsRepo.getInstance().getBoardResult().getPinConfig();
 
         if (Objects.isNull(pinConfigUiModel.getSelectedMode())) {
-           //  pinConfig.removePinConfig(portName, Integer.parseInt(currentPin.getName()));
-           // return;
+            pinConfig.removePinConfig(portName, Integer.parseInt(currentPin.getName()));
+            return;
         }
         if (pinConfigUiModel.getSelectedMode().equals(BY_PASS)) {
             pinConfigParam.setByPassMode(true);

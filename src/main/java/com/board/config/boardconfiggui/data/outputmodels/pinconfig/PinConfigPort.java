@@ -75,9 +75,22 @@ public class PinConfigPort {
             if (Objects.isNull(pinConfigParam1)) {
                 addPinConfigParam(pinConfigParam);
             } else {
-                removePinConfigParam(pinConfigParam);
+                removePinConfigParam(pinConfigParam1);
                 addPinConfigParam(pinConfigParam);
 
+            }
+        }
+    }
+
+    public void removePinConfigParamData(int pinNumber) {
+
+        if (CollectionUtils.isNotEmpty(configParams)) {
+            PinConfigParam pinConfigParam = configParams.stream()
+                    .filter(x -> x.getPin() == pinNumber)
+                    .findFirst()
+                    .orElse(null);
+            if (Objects.nonNull(pinConfigParam)) {
+                removePinConfigParam(pinConfigParam);
             }
         }
     }

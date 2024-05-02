@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -97,23 +96,15 @@ public class PinConfig {
         }
     }
 
-    public void removePinConfig(String portNumber, int pinNumber) {
+    public void removePinConfig(String portNumber, String pinNumber) {
 
-        if (CollectionUtils.isEmpty(ports)) {
-          return;
-        } else {
+        if (CollectionUtils.isNotEmpty(ports)) {
             PinConfigPort pinConfigPort = ports.stream()
                     .filter(x -> x.getName().equals(portNumber))
                     .findFirst()
                     .orElse(null);
-            if (Objects.isNull(pinConfigPort)) {
-                PinConfigPort pinConfigPort1 = new PinConfigPort(portNumber);
-                pinConfigPort1.setPinConfigParamData(pinNumber, pinConfigParam);
-                addPort(pinConfigPort1);
-            } else {
-                if (portNumber.equals(pinConfigPort.name)) {
-                    pinConfigPort.setPinConfigParamData(pinNumber, pinConfigParam);
-                }
+            if (Objects.nonNull(pinConfigPort)) {
+                pinConfigPort.removePinConfigParamData(pinNumber);
             }
 
         }
