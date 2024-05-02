@@ -5,6 +5,7 @@ module com.board.config.boardconfiggui {
     requires java.logging;
     requires com.sun.xml.bind;
     requires CodeGeneration;
+    requires org.apache.commons.lang3;
 
     opens com.board.config.boardconfiggui to javafx.fxml;
     opens com.board.config.boardconfiggui.data.inputmodels.ipconfig to java.xml.bind;

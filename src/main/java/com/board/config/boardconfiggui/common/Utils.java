@@ -57,7 +57,7 @@ public class Utils {
      * @param title     The title of the alert dialog.
      * @param content   The content text to be displayed in the alert dialog.
      */
-    private static void alertDialog(Alert.AlertType alertType, String title, String content){
+    public static void alertDialog(Alert.AlertType alertType, String title, String content){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);

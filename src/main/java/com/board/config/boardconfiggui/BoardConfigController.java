@@ -129,7 +129,7 @@ public class BoardConfigController implements Initializable{
     @FXML
     private void generateOutput() {
         if(Utils.saveData(xmlFolderPath))
-            homeViewController.onOutputGenerateClick();
+            homeViewController.onOutputGenerateClick(xmlFolderPath);
     }
 
     private void loadContentArea(TreeItem<String> item) {

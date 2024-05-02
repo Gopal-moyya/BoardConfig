@@ -29,8 +29,9 @@ public class LoadDataController {
 
     private final HomeViewController homeViewController;
 
-    public LoadDataController(HomeViewController homeViewController) {
+    public LoadDataController(HomeViewController homeViewController, String xmlFolderPath) {
         this.homeViewController = homeViewController;
+        xmlPathField.setText(xmlFolderPath);
     }
 
     @FXML
