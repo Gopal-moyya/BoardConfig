@@ -6,6 +6,6 @@
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:id="clockConfigGridPane"
-      prefHeight="600.0" prefWidth="900.0">
+      prefHeight="810.0" prefWidth="1080.0">
 
 </Pane>
