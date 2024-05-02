@@ -35,7 +35,7 @@ public class HomeViewController {
 
     public void onConfigureClick(String xmlFolderPath , String boardName) {
 
-        if (validateXmlFolder(xmlFolderPath)) {
+        if (parseInputXmlFiles(xmlFolderPath)) {
             Parent fxml = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("board-config.fxml"));
             BoardConfigController boardConfigController = new BoardConfigController(xmlFolderPath, boardName, this);
@@ -51,16 +51,6 @@ public class HomeViewController {
         } else {
             Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", "Configuration files are not available in the selected Directory.");
         }
-    }
-
-    private boolean validateXmlFolder(String xmlFolderPath) {
-        File hardwareConfigFile = new File(xmlFolderPath + "/hardware_configuration.xml");
-        File pinMuxingConfigFile = new File(xmlFolderPath + "/pin_muxing.xml");
-
-        if(hardwareConfigFile.exists() && pinMuxingConfigFile.exists()){
-            return parseInputXmlFiles(xmlFolderPath);
-        }
-        return false;
     }
 
     public void onOutputGenerateClick(String xmlFolderPath) {

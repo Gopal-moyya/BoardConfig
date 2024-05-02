@@ -64,4 +64,11 @@ public class Utils {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    public static boolean validateXmlFolder(String xmlFolderPath) {
+        File hardwareConfigFile = new File(xmlFolderPath + "/hardware_configuration.xml");
+        File pinMuxingConfigFile = new File(xmlFolderPath + "/pin_muxing.xml");
+
+        return hardwareConfigFile.exists() && pinMuxingConfigFile.exists();
+    }
 }

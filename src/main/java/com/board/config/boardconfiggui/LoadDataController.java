@@ -1,5 +1,6 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.common.Utils;
 import com.board.config.boardconfiggui.controllers.SelectBoardNameController;
 import com.board.config.boardconfiggui.data.Constants;
 import com.invecas.CodeGenerator;
@@ -26,8 +27,10 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class LoadDataController implements Initializable {
+    private static final Logger logger = Logger.getLogger(LoadDataController.class.getName());
 
     @FXML
     private TextField xmlPathField;
@@ -39,8 +42,6 @@ public class LoadDataController implements Initializable {
     private TextField outputPathField;
     @FXML
     private Button submitBtn;
-
-    private final String xmlFolderPath;
 
     private final HomeViewController homeViewController;
     private final String xmlFolderPath;
@@ -123,25 +124,37 @@ public class LoadDataController implements Initializable {
     }
 
     public void onConfigureClick(ActionEvent actionEvent) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
-            Parent root = loader.load();
+        String selectedDirectoryPath  = xmlPathField.getText();
 
-            Stage stage = new Stage();
-            SelectBoardNameController controller = loader.getController();
-            controller.setDialogStage(stage);
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setTitle(Constants.BOARD_NAME);
-            stage.showAndWait();
+        if (StringUtils.isEmpty(selectedDirectoryPath)) {
+            logger.warning("the Selected folder path is null or empty" + selectedDirectoryPath);
+            Utils.alertDialog(Alert.AlertType.INFORMATION, "Select Directory", "Please select the directory.");
+            return;
+        }
 
-            if (controller.isContinueSelected()) {
-                String boardName = controller.getBoardName();
-                homeViewController.onConfigureClick(xmlPathField.getText(),boardName );
+        if (Utils.validateXmlFolder(selectedDirectoryPath)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
+                Parent root = loader.load();
+
+                Stage stage = new Stage();
+                SelectBoardNameController controller = loader.getController();
+                controller.setDialogStage(stage);
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initStyle(StageStyle.UTILITY);
+                stage.setTitle(Constants.BOARD_NAME);
+                stage.showAndWait();
+
+                if (controller.isContinueSelected()) {
+                    String boardName = controller.getBoardName();
+                    homeViewController.onConfigureClick(xmlPathField.getText(), boardName);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } else {
+            Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", "Configuration files are not available in the selected Directory.");
         }
     }
 
@@ -151,4 +164,5 @@ public class LoadDataController implements Initializable {
             xmlPathField.setText(xmlFolderPath);
         }
     }
+
 }
