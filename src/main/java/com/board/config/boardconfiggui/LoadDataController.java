@@ -1,20 +1,33 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.controllers.SelectBoardNameController;
+import com.board.config.boardconfiggui.data.Constants;
 import com.invecas.CodeGenerator;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import org.apache.commons.lang3.StringUtils;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
+import java.net.URL;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class LoadDataController {
+public class LoadDataController implements Initializable {
 
     @FXML
     private TextField xmlPathField;
@@ -27,11 +40,13 @@ public class LoadDataController {
     @FXML
     private Button submitBtn;
 
+    private final String xmlFolderPath;
+
     private final HomeViewController homeViewController;
 
     public LoadDataController(HomeViewController homeViewController, String xmlFolderPath) {
         this.homeViewController = homeViewController;
-        xmlPathField.setText(xmlFolderPath);
+        this.xmlFolderPath = xmlFolderPath;
     }
 
     @FXML
@@ -45,6 +60,13 @@ public class LoadDataController {
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select Folder");
+
+        String selectedDirectoryPath = xmlPathField.getText();
+        if (StringUtils.isNotEmpty(selectedDirectoryPath)) {
+            File defaultDirectory = new File(selectedDirectoryPath);
+            directoryChooser.setInitialDirectory(defaultDirectory);
+        }
+
         File selectedFolder = directoryChooser.showDialog(null);
         if (selectedFolder != null) {
             switch (sourceNode.getUserData().toString()){
@@ -99,6 +121,32 @@ public class LoadDataController {
     }
 
     public void onConfigureClick(ActionEvent actionEvent) {
-        homeViewController.onConfigureClick(xmlPathField.getText());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            SelectBoardNameController controller = loader.getController();
+            controller.setDialogStage(stage);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle(Constants.BOARD_NAME);
+            stage.showAndWait();
+
+            if (controller.isContinueSelected()) {
+                String boardName = controller.getBoardName();
+                homeViewController.onConfigureClick(xmlPathField.getText(),boardName );
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (StringUtils.isNotEmpty(xmlFolderPath)) {
+            xmlPathField.setText(xmlFolderPath);
+        }
     }
 }
