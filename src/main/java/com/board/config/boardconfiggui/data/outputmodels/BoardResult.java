@@ -48,6 +48,9 @@ public class BoardResult {
     }
 
     public PinConfig getPinConfig() {
+        if(Objects.isNull(pinConfig)){
+            pinConfig = new PinConfig();
+        }
         return pinConfig;
     }
 

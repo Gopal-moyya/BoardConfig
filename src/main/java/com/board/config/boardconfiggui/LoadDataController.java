@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,14 +21,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.File;
-import java.net.URL;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class LoadDataController implements Initializable {
+public class LoadDataController  {
     private static final Logger logger = Logger.getLogger(LoadDataController.class.getName());
 
     @FXML
@@ -44,7 +41,7 @@ public class LoadDataController implements Initializable {
     private Button submitBtn;
 
     private final HomeViewController homeViewController;
-    private final String xmlFolderPath;
+    private  String xmlFolderPath;
 
     public LoadDataController(HomeViewController homeViewController, String xmlFolderPath) {
         this.homeViewController = homeViewController;
@@ -52,9 +49,12 @@ public class LoadDataController implements Initializable {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         submitBtn.setDisable(true);
-        xmlPathField.setText(xmlFolderPath);
+
+        if (StringUtils.isNotEmpty(xmlFolderPath)) {
+            xmlPathField.setText(xmlFolderPath);
+        }
     }
 
     @FXML
@@ -64,9 +64,8 @@ public class LoadDataController implements Initializable {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select Folder");
 
-        String selectedDirectoryPath = xmlPathField.getText();
-        if (StringUtils.isNotEmpty(selectedDirectoryPath)) {
-            File defaultDirectory = new File(selectedDirectoryPath);
+        if (StringUtils.isNotEmpty(xmlFolderPath)) {
+            File defaultDirectory = new File(xmlFolderPath);
             directoryChooser.setInitialDirectory(defaultDirectory);
         }
 
@@ -75,6 +74,7 @@ public class LoadDataController implements Initializable {
             switch (sourceNode.getUserData().toString()){
                 case "xmlBtn":
                     xmlPathField.setText(selectedFolder.getAbsolutePath());
+                    this.xmlFolderPath = xmlPathField.getText();
                     break;
                 case "repoBtn":
                     repoPathField.setText(selectedFolder.getAbsolutePath());
@@ -124,15 +124,14 @@ public class LoadDataController implements Initializable {
     }
 
     public void onConfigureClick(ActionEvent actionEvent) {
-        String selectedDirectoryPath  = xmlPathField.getText();
 
-        if (StringUtils.isEmpty(selectedDirectoryPath)) {
-            logger.warning("the Selected folder path is null or empty" + selectedDirectoryPath);
-            Utils.alertDialog(Alert.AlertType.INFORMATION, "Select Directory", "Please select the directory.");
+        if (StringUtils.isEmpty(xmlFolderPath)) {
+            logger.info("the Selected folder path is null or empty" + xmlFolderPath);
+            Utils.alertDialog(Alert.AlertType.INFORMATION, "Select Directory",null, "Please select the directory.");
             return;
         }
 
-        if (Utils.validateXmlFolder(selectedDirectoryPath)) {
+        if (Utils.validateXmlFolder(xmlFolderPath)) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
                 Parent root = loader.load();
@@ -154,14 +153,7 @@ public class LoadDataController implements Initializable {
                 throw new RuntimeException(e);
             }
         } else {
-            Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", "Configuration files are not available in the selected Directory.");
-        }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (StringUtils.isNotEmpty(xmlFolderPath)) {
-            xmlPathField.setText(xmlFolderPath);
+            Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", null,"Configuration files are not available in the selected Directory.");
         }
     }
 

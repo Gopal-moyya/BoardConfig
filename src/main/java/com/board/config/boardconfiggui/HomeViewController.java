@@ -25,15 +25,21 @@ public class HomeViewController {
 
     private static final Logger logger = Logger.getLogger(HomeViewController.class.getName());
 
+    private String xmlFolderPath = null;
+
     @FXML
     public Pane contentArea;
 
+
     @FXML
     public void initialize() {
-        loadDataView("");
+        loadDataView();
     }
 
+
     public void onConfigureClick(String xmlFolderPath , String boardName) {
+
+        this.xmlFolderPath = xmlFolderPath;
 
         if (parseInputXmlFiles(xmlFolderPath)) {
             Parent fxml = null;
@@ -49,15 +55,15 @@ public class HomeViewController {
             contentArea.getChildren().removeAll();
             contentArea.getChildren().setAll(fxml);
         } else {
-            Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", "Configuration files are not available in the selected Directory.");
+            Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", null,"Configuration files are not available in the selected Directory.");
         }
     }
 
-    public void onOutputGenerateClick(String xmlFolderPath) {
-        loadDataView(xmlFolderPath);
+    public void onOutputGenerateClick() {
+        loadDataView();
     }
 
-    private void loadDataView(String xmlFolderPath) {
+    private void loadDataView() {
         Parent fxml = null;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("load-data-view.fxml"));
         LoadDataController loadDataController = new LoadDataController(this, xmlFolderPath);

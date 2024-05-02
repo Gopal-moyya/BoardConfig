@@ -1,6 +1,7 @@
 package com.board.config.boardconfiggui;
 
 import com.board.config.boardconfiggui.common.Utils;
+import com.board.config.boardconfiggui.common.ValidationUtils;
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
@@ -11,13 +12,16 @@ import com.board.config.boardconfiggui.data.outputmodels.genralconfig.Option;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
+import com.board.config.boardconfiggui.ui.dialogs.CustomAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -127,19 +131,31 @@ public class BoardConfigController implements Initializable{
 
         //Handling mouse click events
         treeView.setOnMouseClicked(event -> {
+
             TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
             if (item != null && item.isLeaf()) {
                 saveCurrentControllerData();
                 loadContentArea(item);
             }
+
         });
     }
 
     @FXML
     private void generateOutput() {
         saveCurrentControllerData();
-        if(Utils.saveData(xmlFolderPath))
-            homeViewController.onOutputGenerateClick(xmlFolderPath);
+        String message = ValidationUtils.validateData();
+        if (Utils.saveData(xmlFolderPath)) {
+            new CustomAlert(
+                    Alert.AlertType.ERROR,
+                    "Validation Failed",
+                    "Unable to generate board configuration. Please review and resolve the following errors.",
+                    message
+            ).showAndWait();
+        } else {
+            if(Utils.saveData(xmlFolderPath))
+                homeViewController.onOutputGenerateClick();
+        }
     }
 
     private void loadContentArea(TreeItem<String> item) {
@@ -187,4 +203,5 @@ public class BoardConfigController implements Initializable{
             ((BoardPageDataSaverInterface) currentController).saveData();
         }
     }
+
 }

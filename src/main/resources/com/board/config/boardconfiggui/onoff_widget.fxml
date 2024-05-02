@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="50" prefWidth="400" spacing="40" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.board.config.boardconfiggui.controllers.OnOffButtonWidgetController">
+    <children>
+        <Label fx:id="buttonLabel" prefWidth="100.0" wrapText="true">
+        </Label>
+      <Button fx:id="button" onAction="#buttonSelectionChanged" text="OFF" />
+    </children>
+    <padding>
+        <Insets left="10.0" top="10.0" />
+    </padding>
+</HBox>
