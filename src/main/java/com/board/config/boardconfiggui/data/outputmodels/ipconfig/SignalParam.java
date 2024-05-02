@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @XmlRootElement(name = "signalParam")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SingnalParam {
+public class SignalParam {
 
     @XmlAttribute(name = "Pin")
     String pin;
@@ -16,10 +16,10 @@ public class SingnalParam {
     @XmlAttribute(name = "Name")
     String name;
 
-    public SingnalParam() {
+    public SignalParam() {
     }
 
-    public SingnalParam(String pin, String name) {
+    public SignalParam(String pin, String name) {
         this.pin = name;
         this.name = name;
     }
@@ -36,7 +36,7 @@ public class SingnalParam {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SingnalParam that = (SingnalParam) o;
+        SignalParam that = (SignalParam) o;
         return Objects.equals(pin, that.pin) && Objects.equals(name, that.name);
     }
 

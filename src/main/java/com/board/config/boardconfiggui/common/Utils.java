@@ -66,10 +66,10 @@ public class Utils {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(boardResult, new File(selectedDirectory, "board_configuration.xml"));
 
-            alertDialog(Alert.AlertType.INFORMATION,"File Information","File Saved successfully");
+            alertDialog(Alert.AlertType.INFORMATION,"File Information",null, "File Saved successfully");
             return true;
         }catch (Exception e) {
-            alertDialog(Alert.AlertType.ERROR,"File Information","Problem in saving Board Results");
+            alertDialog(Alert.AlertType.ERROR,"File Information", null, "Problem in saving Board Results");
         }
 
         return false;
@@ -82,10 +82,10 @@ public class Utils {
      * @param title     The title of the alert dialog.
      * @param content   The content text to be displayed in the alert dialog.
      */
-    private static void alertDialog(Alert.AlertType alertType, String title, String content){
+    public static void alertDialog(Alert.AlertType alertType, String title, String header, String content){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(null);
+        alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
     }

@@ -7,6 +7,8 @@ module com.board.config.boardconfiggui {
     requires java.desktop;
     requires com.sun.istack.runtime;
     requires CodeGeneration;
+    requires org.apache.commons.collections4;
+    requires org.apache.commons.lang3;
     requires commons.collections;
     requires org.apache.commons.codec;
 
