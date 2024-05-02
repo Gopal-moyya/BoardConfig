@@ -39,6 +39,14 @@ public class BoardConfigController implements Initializable{
     @FXML
     public StackPane contentArea;
 
+    private final HomeViewController homeViewController;
+    private final String xmlFolderPath;
+
+    public BoardConfigController(String xmlFolderPath, HomeViewController homeViewController) {
+        this.xmlFolderPath = xmlFolderPath;
+        this.homeViewController = homeViewController;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         clearData();
@@ -120,8 +128,10 @@ public class BoardConfigController implements Initializable{
 
     @FXML
     private void generateOutput() {
-        Utils.SaveData();
+        if(Utils.saveData(xmlFolderPath))
+            homeViewController.onOutputGenerateClick();
     }
+
     private void loadContentArea(TreeItem<String> item) {
 
         String PIN_CONFIG_FXML_NAME = "pin-config.fxml";

@@ -29,26 +29,25 @@ public class Utils {
     /**
      * Save BoardResult to the given directory path
      */
-    public static void SaveData(){
-        //TODO:Change the directory name
-        File selectedDirectory =new File("D:/");
-        if (selectedDirectory != null) {
-            try {
-                BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
-                BoardResult boardResult = boardResultsRepo.getBoardResult();
+    public static boolean saveData(String folderPath){
 
-                JAXBContext context = JAXBContext.newInstance(BoardResult.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(boardResult, new File(selectedDirectory, "board_configuration.xml"));
+        File selectedDirectory = new File(folderPath);
+        try {
+            BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
+            BoardResult boardResult = boardResultsRepo.getBoardResult();
 
-                alertDialog(Alert.AlertType.INFORMATION,"File Information","File Saved successfully");
-            }catch (Exception e) {
-                alertDialog(Alert.AlertType.ERROR,"File Information","Problem in saving Board Results");
-            }
-        }else {
-            alertDialog(Alert.AlertType.ERROR,"Information","Directory path not available");
+            JAXBContext context = JAXBContext.newInstance(BoardResult.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(boardResult, new File(selectedDirectory, "board_configuration.xml"));
+
+            alertDialog(Alert.AlertType.INFORMATION,"File Information","File Saved successfully");
+            return true;
+        }catch (Exception e) {
+            alertDialog(Alert.AlertType.ERROR,"File Information","Problem in saving Board Results");
         }
+
+        return false;
     }
 
     /**
