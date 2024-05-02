@@ -1,6 +1,9 @@
 package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
+import com.board.config.boardconfiggui.data.outputmodels.BooleanAdapter;
+
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Objects;
 
 @XmlRootElement(name = "configParam")
@@ -8,10 +11,11 @@ import java.util.Objects;
 public class PinConfigParam {
 
     @XmlAttribute(name = "Pin")
-    int pin;
+    String pin;
 
     @XmlAttribute(name = "ByPassMode")
-    boolean byPassMode;
+    @XmlJavaTypeAdapter(BooleanAdapter.class)
+    Boolean byPassMode;
 
     @XmlAttribute(name = "Direction")
     String direction;
@@ -20,7 +24,8 @@ public class PinConfigParam {
     String value;
 
     @XmlAttribute(name = "IntEnable")
-    boolean intEnable;
+    @XmlJavaTypeAdapter(BooleanAdapter.class)
+    Boolean intEnable;
 
     @XmlAttribute(name = "IntType")
     String intType;
@@ -31,19 +36,19 @@ public class PinConfigParam {
     public PinConfigParam() {
     }
 
-    public PinConfigParam(int pin) {
+    public PinConfigParam(String pin) {
         this.pin = pin;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
-    public boolean isByPassMode() {
+    public Boolean isByPassMode() {
         return byPassMode;
     }
 
-    public void setByPassMode(boolean byPassMode) {
+    public void setByPassMode(Boolean byPassMode) {
         this.byPassMode = byPassMode;
     }
 
@@ -63,11 +68,11 @@ public class PinConfigParam {
         this.value = value;
     }
 
-    public boolean isIntEnable() {
+    public Boolean isIntEnable() {
         return intEnable;
     }
 
-    public void setIntEnable(boolean intEnable) {
+    public void setIntEnable(Boolean intEnable) {
         this.intEnable = intEnable;
     }
 
@@ -90,7 +95,7 @@ public class PinConfigParam {
     @Override
     public String toString() {
         return "PinConfigParam{" +
-                "pin=" + pin +
+                "pin='" + pin + '\'' +
                 ", byPassMode=" + byPassMode +
                 ", direction='" + direction + '\'' +
                 ", value='" + value + '\'' +
@@ -105,7 +110,7 @@ public class PinConfigParam {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PinConfigParam that = (PinConfigParam) o;
-        return pin == that.pin && byPassMode == that.byPassMode && intEnable == that.intEnable && Objects.equals(direction, that.direction) && Objects.equals(value, that.value) && Objects.equals(intType, that.intType) && Objects.equals(intValue, that.intValue);
+        return Objects.equals(pin, that.pin) && byPassMode == that.byPassMode && intEnable == that.intEnable && Objects.equals(direction, that.direction) && Objects.equals(value, that.value) && Objects.equals(intType, that.intType) && Objects.equals(intValue, that.intValue);
     }
 
     @Override
