@@ -40,14 +40,12 @@ public class LoadDataController {
 
     @FXML
     protected void onButtonClick(Event event) {
-        System.out.println("onButtonClick");
         Node sourceNode = (Node) event.getSource();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select Folder");
         File selectedFolder = directoryChooser.showDialog(null);
         if (selectedFolder != null) {
-            System.out.println("Selected folder: " + selectedFolder.getAbsolutePath());
             switch (sourceNode.getUserData().toString()){
                 case "xmlBtn":
                     xmlPathField.setText(selectedFolder.getAbsolutePath());
@@ -62,19 +60,17 @@ public class LoadDataController {
                     outputPathField.setText(selectedFolder.getAbsolutePath());
                     break;
                 default:
-                    System.out.println("Select right folder..!");
+                    break;
             }
         }
 
         boolean allFields = !xmlPathField.getText().isEmpty() && !repoPathField.getText().isEmpty() && !toolChainPathField.getText().isEmpty();
-        System.out.println("true/false"+allFields);
         if (allFields){
             submitBtn.setDisable(false);
         }
     }
 
     public void onSubmit() {
-        System.out.println("onSubmit clicked");
         Map<String, Object> folderPaths = new LinkedHashMap<>();
         folderPaths.put("xml",xmlPathField.getText());
         folderPaths.put("repository",repoPathField.getText());

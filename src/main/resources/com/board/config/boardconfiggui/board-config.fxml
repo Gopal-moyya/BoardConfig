@@ -13,7 +13,7 @@
     <TreeView fx:id="treeView" prefHeight="800.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
   </left>
   <bottom>
-    <Button mnemonicParsing="false" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER" onAction="#outputGenerateClick">
+    <Button fx:id="generateOutput" mnemonicParsing="false" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER" onAction="#generateOutput">
       <BorderPane.margin>
         <Insets top="15.0" />
       </BorderPane.margin>
