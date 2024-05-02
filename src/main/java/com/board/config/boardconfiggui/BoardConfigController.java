@@ -1,5 +1,6 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.common.Utils;
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
@@ -117,6 +118,10 @@ public class BoardConfigController implements Initializable{
         });
     }
 
+    @FXML
+    private void generateOutput() {
+        Utils.SaveData();
+    }
     private void loadContentArea(TreeItem<String> item) {
 
         String PIN_CONFIG_FXML_NAME = "pin-config.fxml";
