@@ -4,29 +4,30 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class SaveFileController {
+public class SelectBoardNameController {
     @FXML
     private TextField txtBoardName;
     private Stage dialogStage;
-    private boolean isContinueClicked = false;
+    private boolean isContinueSelected = false;
     @FXML
     private Button btnContinue;
+   private int MINIMUM_BOARD_LENGTH = 3;
 
     public void setDialogStage(Stage dialogStage) {
         btnContinue.setDisable(true);
         txtBoardName.textProperty().addListener((observable, oldValue, newValue) -> {
-            btnContinue.setDisable(newValue.trim().isEmpty() || newValue.trim().length() <= 3);
+            btnContinue.setDisable(newValue.trim().length() <= MINIMUM_BOARD_LENGTH);
         });
         this.dialogStage = dialogStage;
     }
 
-    public boolean isContinueClicked() {
-        return isContinueClicked;
+    public boolean isContinueSelected() {
+        return isContinueSelected;
     }
 
     @FXML
     private void onContinueClicked() {
-        isContinueClicked = true;
+        isContinueSelected = true;
         dialogStage.close();
     }
 

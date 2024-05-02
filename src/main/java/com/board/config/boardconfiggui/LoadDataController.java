@@ -1,6 +1,7 @@
 package com.board.config.boardconfiggui;
 
-import com.board.config.boardconfiggui.controllers.SaveFileController;
+import com.board.config.boardconfiggui.controllers.SelectBoardNameController;
+import com.board.config.boardconfiggui.data.Constants;
 import com.invecas.CodeGenerator;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -107,21 +108,21 @@ public class LoadDataController {
 
     public void onConfigureClick(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("save-file.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            SaveFileController controller = loader.getController();
+            SelectBoardNameController controller = loader.getController();
             controller.setDialogStage(stage);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initStyle(StageStyle.UTILITY);
-            stage.setTitle("Board Name");
+            stage.setTitle(Constants.BOARD_NAME);
             stage.showAndWait();
 
-            if (controller.isContinueClicked()) {
-                String text = controller.getBoardName();
-                homeViewController.onConfigureClick(xmlPathField.getText());
+            if (controller.isContinueSelected()) {
+                String boardName = controller.getBoardName();
+                homeViewController.onConfigureClick(xmlPathField.getText(),boardName );
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
