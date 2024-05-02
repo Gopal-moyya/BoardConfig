@@ -14,7 +14,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.*;
@@ -58,10 +57,12 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             if (Objects.nonNull(pinConfigParam)) {
                 if (pinConfigParam.isByPassMode()) {
                     pinConfigUiModel.setSelectedMode(BY_PASS);
+                    inPutOutPutWidget.setVisible(false);
                 } else {
                     pinConfigUiModel.setSelectedMode(GPIO);
-                    String value = StringUtils.isEmpty(pinConfigParam.getDirection()) ? pinConfigParam.getValue() : pinConfigParam.getDirection();
+                    String value = pinConfigParam.getDirection() == null ? pinConfigParam.getIntValue() : pinConfigParam.getDirection();
                     pinConfigUiModel.setSelectedValue(value);
+                    inPutOutPutWidget.setVisible(true);
                 }
                 pinConfigUiModel.setPinStatus(true);
             }
@@ -74,7 +75,6 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
             onOffWidgetController.setButton("ON");
             dropDownWidget.setVisible(true);
-            inPutOutPutWidget.setVisible(true);
             dropDownWidgetController.setComboBoxLabel("Mode Type:", "select");
             dropDownWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
             dropDownWidgetController.setSelectedMode(pinConfigUiModel.getSelectedMode());
@@ -183,9 +183,8 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         PinConfig pinConfig = BoardResultsRepo.getInstance().getBoardResult().getPinConfig();
 
         if (Objects.isNull(pinConfigUiModel.getSelectedMode())) {
-            pinConfigParam = null;
-            // pinConfig.resetConfig(portName, Integer.parseInt(currentPin.getName()), pinConfigParam);
-            return;
+           //  pinConfig.removePinConfig(portName, Integer.parseInt(currentPin.getName()));
+           // return;
         }
         if (pinConfigUiModel.getSelectedMode().equals(BY_PASS)) {
             pinConfigParam.setByPassMode(true);

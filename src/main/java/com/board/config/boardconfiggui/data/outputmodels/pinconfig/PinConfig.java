@@ -96,4 +96,26 @@ public class PinConfig {
 
         }
     }
+
+    public void removePinConfig(String portNumber, int pinNumber) {
+
+        if (CollectionUtils.isEmpty(ports)) {
+          return;
+        } else {
+            PinConfigPort pinConfigPort = ports.stream()
+                    .filter(x -> x.getName().equals(portNumber))
+                    .findFirst()
+                    .orElse(null);
+            if (Objects.isNull(pinConfigPort)) {
+                PinConfigPort pinConfigPort1 = new PinConfigPort(portNumber);
+                pinConfigPort1.setPinConfigParamData(pinNumber, pinConfigParam);
+                addPort(pinConfigPort1);
+            } else {
+                if (portNumber.equals(pinConfigPort.name)) {
+                    pinConfigPort.setPinConfigParamData(pinNumber, pinConfigParam);
+                }
+            }
+
+        }
+    }
 }
