@@ -12,7 +12,7 @@ public class IpConfigPort {
     String name;
 
     @XmlElement(name = "signalParam")
-    List<SingnalParam> signalParams;
+    List<SignalParam> signalParams;
 
     public IpConfigPort() {
     }
@@ -23,11 +23,11 @@ public class IpConfigPort {
 
     public String getName() { return name;}
 
-    public List<SingnalParam> getSignalParams() {
+    public List<SignalParam> getSignalParams() {
         return signalParams;
     }
 
-    public void setSignalParams(List<SingnalParam> signalParams) {
+    public void setSignalParams(List<SignalParam> signalParams) {
         this.signalParams = signalParams;
     }
 
