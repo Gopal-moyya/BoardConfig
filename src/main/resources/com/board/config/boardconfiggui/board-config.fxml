@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1300.0"
-            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
   <left>
-    <TreeView fx:id="treeView" prefHeight="850.0" prefWidth="200.0"/>
+    <TreeView fx:id="treeView" prefHeight="850.0" prefWidth="200.0" />
   </left>
   <bottom>
-    <Button fx:id="generateOutput" mnemonicParsing="false" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER" onAction="#generateOutput">
+      <HBox alignment="CENTER">
+    <Button fx:id="generateOutput" mnemonicParsing="false" onAction="#generateOutput" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER">
       <BorderPane.margin>
-        <Insets top="10.0" />
+        <Insets left="20.0" />
       </BorderPane.margin>
     </Button>
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButton" text="Cancel" BorderPane.alignment="CENTER">
+          <BorderPane.margin>
+              <Insets left="20.0" />
+          </BorderPane.margin>
+
+            <HBox.margin>
+               <Insets left="10.0" />
+            </HBox.margin>
+    </Button>
+      </HBox>
   </bottom>
   <center>
     <AnchorPane prefHeight="850.0" prefWidth="1100.0">

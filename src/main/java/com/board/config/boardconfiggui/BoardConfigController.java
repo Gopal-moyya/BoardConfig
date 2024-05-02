@@ -18,10 +18,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -155,6 +155,19 @@ public class BoardConfigController implements Initializable{
         } else {
             if(Utils.saveData(xmlFolderPath))
                 homeViewController.onOutputGenerateClick();
+        }
+    }
+
+    @FXML
+    private void cancelButton() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Cancel");
+        alert.setHeaderText("Are you sure you want to cancel the changes?.");
+        Optional<ButtonType> buttonType = alert.showAndWait();
+        if(buttonType.isPresent() && buttonType.get().equals(ButtonType.OK)) {
+            homeViewController.onOutputGenerateClick();
+        } else {
+            alert.close();
         }
     }
 
