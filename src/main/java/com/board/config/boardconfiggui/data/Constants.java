@@ -52,6 +52,8 @@ public class Constants {
     public static final String IBI_PAYLOAD_SPEED_LIMIT = "ibiPayloadSpeedLimit";
     public static final String SELECT_DEVICE_ROLE = "Select Device Role";
 
+    public static final String BOARD_NAME = "Board Name";
+
     /**
      * Constant for direction output.
      */
