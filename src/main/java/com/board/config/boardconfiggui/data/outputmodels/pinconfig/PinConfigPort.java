@@ -83,11 +83,11 @@ public class PinConfigPort {
         }
     }
 
-    public void removePinConfigParamData(int pinNumber) {
+    public void removePinConfigParamData(String pinNumber) {
 
         if (CollectionUtils.isNotEmpty(configParams)) {
             PinConfigParam pinConfigParam = configParams.stream()
-                    .filter(x -> x.getPin() == pinNumber)
+                    .filter(x -> StringUtils.equals(x.getPin(), pinNumber))
                     .findFirst()
                     .orElse(null);
             if (Objects.nonNull(pinConfigParam)) {
