@@ -7,16 +7,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" >
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.board.config.boardconfiggui.controllers.SaveFileController" >
    <children>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" text="Name:">
+            <Label alignment="CENTER" text="Board Name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="txtFileName" />
+            <TextField fx:id="txtBoardName" />
          </children>
          <VBox.margin>
             <Insets top="30.0" />
@@ -24,8 +24,8 @@
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Button fx:id="btnSave" mnemonicParsing="false" text="Save" />
-            <Button fx:id="btnCancel" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="btnContinue" mnemonicParsing="false" text="Continue"  onAction="#onContinueClicked" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" text="Cancel" onAction="#onCancelClicked"/>
          </children>
       </HBox>
    </children>

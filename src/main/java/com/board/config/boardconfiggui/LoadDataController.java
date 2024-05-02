@@ -1,16 +1,24 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.controllers.SaveFileController;
 import com.invecas.CodeGenerator;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -98,6 +106,25 @@ public class LoadDataController {
     }
 
     public void onConfigureClick(ActionEvent actionEvent) {
-        homeViewController.onConfigureClick(xmlPathField.getText());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("save-file.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            SaveFileController controller = loader.getController();
+            controller.setDialogStage(stage);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle("Board Name");
+            stage.showAndWait();
+
+            if (controller.isContinueClicked()) {
+                String text = controller.getBoardName();
+                homeViewController.onConfigureClick(xmlPathField.getText());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
