@@ -64,7 +64,8 @@ public class LoadDataController  {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select Folder");
 
-        if (StringUtils.isNotEmpty(xmlFolderPath)) {
+        if (StringUtils.equals(sourceNode.getUserData().toString(), "xmlBtn")
+                && StringUtils.isNotEmpty(xmlFolderPath)) {
             File defaultDirectory = new File(xmlFolderPath);
             directoryChooser.setInitialDirectory(defaultDirectory);
         }
