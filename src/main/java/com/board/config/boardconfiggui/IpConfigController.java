@@ -1,5 +1,6 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.controllers.OnOffButtonWidgetController;
 import com.board.config.boardconfiggui.controllers.SlaveWidgetController;
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
@@ -21,6 +22,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,6 +36,10 @@ import java.util.*;
 public class IpConfigController implements Initializable, BoardPageDataSaverInterface {
 
   private String ipName;
+  @FXML
+  private OnOffButtonWidgetController onOffWidgetController;
+  @FXML
+  private GridPane gridpaneWidget;
   @FXML
   private ComboBox<String> sclChoiceBox;
   @FXML
@@ -130,6 +137,22 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     ipConfigModel = new IpConfigModel();
     updateIpType();
     initializeData();
+    onOffWidgetController.setButtonLabel("IP Status:");
+    onOffWidgetController.getButton().setOnAction(actionEvent -> {
+      if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, ((Button) actionEvent.getSource()).getText())) {
+        onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
+        onOffWidgetController.setButtonText("ON");
+        gridpaneWidget.setVisible(true);
+        ipConfigVBox.setVisible(true);
+      } else {
+        onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
+        onOffWidgetController.setButtonText("OFF");
+        gridpaneWidget.setVisible(false);
+        ipConfigVBox.setVisible(false);
+        ipConfigModel = new IpConfigModel();
+      }
+
+    });
   }
 
 

@@ -105,8 +105,9 @@ public class SlaveWidgetController implements Initializable {
         ibiPayloadSpeedLimitController.getText().addListener((observable, oldValue, newValue) ->
                 slaveDeviceConfigModel.setIbiPayloadSpeedLimit(newValue.matches("\\d*") ? newValue : oldValue));
 
-        devRoleController.getCmbInfoItem().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setDevRole(newValue.matches("\\d*") ? newValue : oldValue));
+        devRoleController.getCmbInfoItem().addListener((observable, oldValue, newValue) ->{
+                slaveDeviceConfigModel.setDevRole(newValue);
+        });
     }
 
     public DeviceConfiguration getDeviceConfiguration() {
