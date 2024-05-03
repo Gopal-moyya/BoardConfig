@@ -70,6 +70,7 @@ public class Utils {
             alertDialog(Alert.AlertType.INFORMATION,"File Information",null, "File Saved successfully");
             return true;
         }catch (Exception e) {
+          e.printStackTrace();
             alertDialog(Alert.AlertType.ERROR,"File Information", null, "Problem in saving Board Results");
         }
 

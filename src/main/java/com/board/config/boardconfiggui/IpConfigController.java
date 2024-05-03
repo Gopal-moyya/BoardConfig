@@ -36,7 +36,7 @@ import java.util.*;
 
 public class IpConfigController implements Initializable, BoardPageDataSaverInterface {
 
-  private String ipName;
+  private final String ipName;
   @FXML
   private OnOffButtonWidgetController onOffWidgetController;
   @FXML
@@ -109,9 +109,10 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     try {
       Integer noOfSlaves = noOfSlavesField.getValue();
       ipConfigModel.setNoOfSlaves(String.valueOf(noOfSlaves));
+      ipConfigVBox.getChildren().clear();
+      slaveWidgetControllers.clear();
       if (noOfSlaves > 0) {
         slavesInfoLabel.setVisible(true);
-        ipConfigVBox.getChildren().clear();
         for (int i = 0; i < noOfSlaves; i++) {
           FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
           ipConfigVBox.getChildren().add(loader.load());
@@ -120,8 +121,6 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
         }
       } else {
         slavesInfoLabel.setVisible(false);
-        ipConfigVBox.getChildren().clear();
-        slaveWidgetControllers.clear();
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -138,7 +137,7 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       ipConfigModel = new IpConfigModel();
       updateIpType();
       initializeData();
-      onOffWidgetController.setButtonLabel("IP Status:");
+      onOffWidgetController.setButtonLabel("Enable Status:");
       onOffWidgetController.getButton().setOnAction(actionEvent -> {
         if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, ((Button) actionEvent.getSource()).getText())) {
           onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
@@ -174,10 +173,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
         List<String> byPassSupportedPortPins = Objects.isNull(bypassConfiguredPins.get(port.getName()))
                 ? new ArrayList<>() : bypassConfiguredPins.get(port.getName());
         for (Pin pin : port.getPinList()) {
-          IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
-          ipPinConfig.setClock(pin.getValues().contains(getSCLParam()));
-          ipPinConfig.setEnabled(CollectionUtils.containsAny(byPassSupportedPortPins, pin.getName()));
-          ipPinConfigs.add(ipPinConfig);
+          if (pin.getValues().contains(getSCLParam()) || pin.getValues().contains(getSDAParam())) {
+            IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
+            ipPinConfig.setClock(pin.getValues().contains(getSCLParam()));
+            ipPinConfig.setEnabled(CollectionUtils.containsAny(byPassSupportedPortPins, pin.getName()));
+            ipPinConfigs.add(ipPinConfig);
+          }
         }
       }
       sdaChoiceBox.setItems(FXCollections.observableList(getPinDataDisplayValues()));
@@ -264,11 +265,13 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
         }
 
         DeviceDescriptor deviceDescriptor = ip.getDeviceDescriptor();
-        List<DeviceConfiguration> deviceConfigurations = deviceDescriptor.getDeviceConfigurations();
-        noOfSlavesField.getValueFactory().setValue(deviceConfigurations.size());
-        onNoOfSlavesUpdate();
-        for (int i = 0; i < deviceConfigurations.size(); i++) {
-          slaveWidgetControllers.get(i).setDeviceConfiguration(deviceConfigurations.get(i));
+        if (Objects.nonNull(deviceDescriptor)) {
+          List<DeviceConfiguration> deviceConfigurations = deviceDescriptor.getDeviceConfigurations();
+          noOfSlavesField.getValueFactory().setValue(deviceConfigurations.size());
+          onNoOfSlavesUpdate();
+          for (int i = 0; i < deviceConfigurations.size(); i++) {
+            slaveWidgetControllers.get(i).setDeviceConfiguration(deviceConfigurations.get(i));
+          }
         }
         onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
         onOffWidgetController.setButtonText("ON");
@@ -339,17 +342,19 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       Param i2cFreq = new Param(Constants.I2C_FREQ_PARAM, ipConfigModel.getI2cFreq());
       Param sdrFreq = new Param(Constants.SDR_FREQ_PARAM, ipConfigModel.getSdrFreq());
 
-      DeviceDescriptor deviceDescriptor = new DeviceDescriptor();
-      List<DeviceConfiguration> deviceConfigurations = new ArrayList<>();
-      for (SlaveWidgetController slaveWidgetController: slaveWidgetControllers) {
-        deviceConfigurations.add(slaveWidgetController.getDeviceConfiguration());
-      }
-      deviceDescriptor.setDeviceConfigurations(deviceConfigurations);
-
       IpConfigIp ipConfigIp = new IpConfigIp(ipName);
       ipConfigIp.setPorts(ipConfigPortsList);
       ipConfigIp.setParams(List.of(sysClock, i2cFreq, sdrFreq));
-      ipConfigIp.setDeviceDescriptor(deviceDescriptor);
+
+      if (CollectionUtils.isNotEmpty(slaveWidgetControllers)) {
+        DeviceDescriptor deviceDescriptor = new DeviceDescriptor();
+        List<DeviceConfiguration> deviceConfigurations = new ArrayList<>();
+        for (SlaveWidgetController slaveWidgetController: slaveWidgetControllers) {
+          deviceConfigurations.add(slaveWidgetController.getDeviceConfiguration());
+        }
+        deviceDescriptor.setDeviceConfigurations(deviceConfigurations);
+        ipConfigIp.setDeviceDescriptor(deviceDescriptor);
+      }
       return ipConfigIp;
     }
 
@@ -406,11 +411,11 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
   private void clearUi() {
     sdaChoiceBox.setItems(null);
-    sdaChoiceBox.setPromptText("select");
     sdaChoiceBox.setItems(FXCollections.observableList(getPinDataDisplayValues()));
-    sclChoiceBox.setItems(null);
     sdaChoiceBox.setPromptText("select");
+    sclChoiceBox.setItems(null);
     sclChoiceBox.setItems(FXCollections.observableList(getPinClockDisplayValues()));
+    sclChoiceBox.setPromptText("select");
     sysClockField.textProperty().setValue(null);
     i2cFreqField.textProperty().setValue(null);
     sdrFreqField.textProperty().setValue(null);

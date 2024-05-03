@@ -46,7 +46,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <TextArea fx:id="disabledPinsTextArea" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextArea fx:id="disabledPinsTextArea" GridPane.columnSpan="4" wrapText="true" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           </children>
           <padding>
             <Insets left="60.0" right="60.0" top="40.0" />
