@@ -30,6 +30,10 @@ public class LabelTextFieldWidgetController {
         stringProperty.setValue(information);
     }
 
+    public void setDisabled(boolean disabled) {
+      txtInformation.setDisable(disabled);
+    }
+
     @FXML
     private void onTextChanged() {
         enteredText = txtInformation.getText();

@@ -67,6 +67,9 @@ public class SlaveWidgetController implements Initializable {
         ibiPayloadSizeController.setLabel(Constants.IBI_PAYLOAD_SIZE);
         ibiPayloadSpeedLimitController.setLabel(Constants.IBI_PAYLOAD_SPEED_LIMIT);
 
+        ibiPayloadSizeController.setDisabled(true);
+        ibiPayloadSpeedLimitController.setDisabled(true);
+
         devRoleController.setComboBoxLabel(Constants.DEV_ROLE, Constants.SELECT_DEVICE_ROLE);
 
         devRoleController.setItems(FXCollections.observableArrayList(Utils.getSlaveDeviceRoles()));
@@ -97,7 +100,11 @@ public class SlaveWidgetController implements Initializable {
                 slaveDeviceConfigModel.setDynamicAddress(newValue.matches("\\d*") ? newValue : oldValue));
 
         isIbiDeviceController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setIsIbiDevice(newValue.matches("\\d*") ? newValue : oldValue));
+          {
+            ibiPayloadSizeController.setDisabled(!StringUtils.equals(newValue, Constants.IBI_DEVICE_ENABLED));
+            ibiPayloadSpeedLimitController.setDisabled(!StringUtils.equals(newValue, Constants.IBI_DEVICE_ENABLED));
+            slaveDeviceConfigModel.setIsIbiDevice(newValue.matches("\\d*") ? newValue : oldValue);
+          });
 
         ibiPayloadSizeController.getText().addListener((observable, oldValue, newValue) ->
                 slaveDeviceConfigModel.setIbiPayloadSize(newValue.matches("\\d*") ? newValue : oldValue));

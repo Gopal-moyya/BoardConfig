@@ -38,12 +38,12 @@ public class ValidationUtils {
             return missingConfig.toString();
         }
 
-        String message = validateConnectivityConfig(boardResult.getConnectivityConfig());
-        if (StringUtils.isNotEmpty(message)) {
-            missingConfig.append(message);
-        }
+//        String message = validateConnectivityConfig(boardResult.getConnectivityConfig());
+//        if (StringUtils.isNotEmpty(message)) {
+//            missingConfig.append(message);
+//        }
 
-        message = validatePinConfig(boardResult.getPinConfig());
+        String message = validatePinConfig(boardResult.getPinConfig());
         if (StringUtils.isNotEmpty(message)) {
             missingConfig.append(message);
         }
@@ -236,7 +236,7 @@ public class ValidationUtils {
 
             List<Param> params = deviceConfiguration.getParams();
             boolean isIbiDevice = params.stream()
-                    .anyMatch(param -> param.getName().equals(Constants.IS_IBI_DEVICE) && param.getValue().equals(Constants.ONE));
+              .anyMatch(param -> param != null && StringUtils.equals(param.getName(),Constants.IS_IBI_DEVICE) && StringUtils.equals(param.getValue(), Constants.ONE));
 
             List<String> combinedParamsRequired = new ArrayList<>(paramsRequired);
             if (isIbiDevice) {
