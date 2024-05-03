@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui;
 
 import com.board.config.boardconfiggui.controllers.LabelComboBoxWidgetController;
 import com.board.config.boardconfiggui.controllers.OnOffButtonWidgetController;
+import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
@@ -184,7 +185,9 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                 case OUTPUT_LOW:
                 case OUTPUT_HIGH:
                     pinConfigParam.setByPassMode(false);
-                    pinConfigParam.setDirection(pinConfigUiModel.getSelectedValue());
+                    String[] directionValue = getDirectionValue(pinConfigUiModel.getSelectedValue());
+                    pinConfigParam.setDirection(Objects.isNull(directionValue) ? pinConfigUiModel.getSelectedValue() : directionValue[0]);
+                    pinConfigParam.setValue(Objects.isNull(directionValue) ? null : directionValue[1]);
                     break;
                 case LEVEL_TRIG_HIGH:
                 case LEVEL_TRIG_LOW:
@@ -202,5 +205,14 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             }
         }
         pinConfig.savePinConfig(portName, currentPin.getName(), pinConfigParam);
+    }
+
+    private String[] getDirectionValue(String selectedValue) {
+        if(StringUtils.isNotEmpty(selectedValue)){
+            if(!selectedValue.contains(INPUT)) {
+             return selectedValue.split("_");
+            }
+        }
+        return null;
     }
 }

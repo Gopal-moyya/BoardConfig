@@ -105,15 +105,15 @@ public class ValidationUtils {
     }
 
     private static String validatePinConfigParam(PinConfigParam pinConfigParam) {
-        boolean isByPassMode = pinConfigParam.isByPassMode() != null && pinConfigParam.isByPassMode();
+        boolean isNotByPassMode = pinConfigParam.isByPassMode() != null && !pinConfigParam.isByPassMode();
         boolean isIntEnable = pinConfigParam.isIntEnable() != null && pinConfigParam.isIntEnable();
 
-        if (!isByPassMode) {
+        if (isNotByPassMode) {
             if (StringUtils.isEmpty(pinConfigParam.getDirection())) {
                 return "Direction is missing for pin " + pinConfigParam.getPin();
             }
 
-            if (Constants.DIRECTION_OUTPUT.equals(pinConfigParam.getDirection())
+            if (Constants.DIRECTION_OUTPUT.equalsIgnoreCase(pinConfigParam.getDirection())
                     && StringUtils.isEmpty(pinConfigParam.getValue())) {
                 return "Output value is missing for pin " + pinConfigParam.getPin();
             }
