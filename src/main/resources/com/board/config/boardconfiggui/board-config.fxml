@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+  <left>
+    <TreeView fx:id="treeView" prefHeight="850.0" prefWidth="200.0" />
+  </left>
+  <bottom>
+      <HBox alignment="CENTER">
+    <Button fx:id="generateOutput" mnemonicParsing="false" onAction="#generateOutput" styleClass="btn-bg" text="Generate output" BorderPane.alignment="CENTER">
+      <BorderPane.margin>
+        <Insets left="20.0" />
+      </BorderPane.margin>
+    </Button>
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButton" text="Cancel" BorderPane.alignment="CENTER">
+          <BorderPane.margin>
+              <Insets left="20.0" />
+          </BorderPane.margin>
 
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TreeView?>
-
-<HBox spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.board.config.boardconfiggui.BoardConfigController">
-  <TreeView fx:id="treeView"/>
-  <VBox alignment="CENTER" spacing="20.0">
-    <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-
-  </VBox>
-</HBox>
+            <HBox.margin>
+               <Insets left="10.0" />
+            </HBox.margin>
+    </Button>
+      </HBox>
+  </bottom>
+  <center>
+    <AnchorPane prefHeight="850.0" prefWidth="1100.0">
+        <StackPane fx:id="contentArea" prefHeight="810.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+    </AnchorPane>
+  </center>
+   <padding>
+      <Insets left="5.0" top="5.0" />
+   </padding>
+</BorderPane>

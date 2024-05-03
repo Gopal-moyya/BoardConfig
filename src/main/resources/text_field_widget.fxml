@@ -12,7 +12,7 @@
                 <Insets top="5.0" />
             </HBox.margin>
         </Label>
-        <TextField fx:id="txtInformation" onKeyReleased="#textFieldTextChanged"/>
+        <TextField fx:id="txtInformation" onKeyReleased="#onTextChanged"/>
     </children>
     <padding>
         <Insets left="10.0" top="10.0" />

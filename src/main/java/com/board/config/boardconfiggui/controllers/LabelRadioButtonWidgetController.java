@@ -30,10 +30,11 @@ public class LabelRadioButtonWidgetController {
     @FXML
     private void onSelection(ActionEvent e){
         if(rbTrue.isSelected()){
-            System.out.println("tbtrue");
+            //TODO : Need to handle
 
-        }if(rbFalse.isSelected()){
-            System.out.println("tbfalse");
+        }
+        if(rbFalse.isSelected()){
+            //TODO : Need to handle
         }
     }
 }
