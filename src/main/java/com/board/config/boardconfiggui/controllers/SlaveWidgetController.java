@@ -76,41 +76,41 @@ public class SlaveWidgetController implements Initializable {
 
         // listening the value from fields
         deviceNameController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setDeviceName(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setDeviceName(newValue));
 
         i2cFmPlusSpeedController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setI2cFmPlusSpeed(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setI2cFmPlusSpeed(newValue));
 
         addressController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setI2c10bAddr(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setI2c10bAddr(newValue));
 
         hdrCapableController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setHdrCapable(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setHdrCapable(newValue));
 
         legacyI2CDevController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setLegacyI2CDev(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setLegacyI2CDev(newValue));
 
         hasStaticAddressController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setHasStaticAddress(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setHasStaticAddress(newValue));
 
         staticAddressController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setStaticAddress(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setStaticAddress(newValue));
 
         dynamicAddressController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setDynamicAddress(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setDynamicAddress(newValue));
 
         isIbiDeviceController.getText().addListener((observable, oldValue, newValue) ->
           {
             ibiPayloadSizeController.setDisabled(!StringUtils.equals(newValue, Constants.IBI_DEVICE_ENABLED));
             ibiPayloadSpeedLimitController.setDisabled(!StringUtils.equals(newValue, Constants.IBI_DEVICE_ENABLED));
-            slaveDeviceConfigModel.setIsIbiDevice(newValue.matches("\\d*") ? newValue : oldValue);
+            slaveDeviceConfigModel.setIsIbiDevice(newValue);
           });
 
         ibiPayloadSizeController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setIbiPayloadSize(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setIbiPayloadSize(newValue));
 
         ibiPayloadSpeedLimitController.getText().addListener((observable, oldValue, newValue) ->
-                slaveDeviceConfigModel.setIbiPayloadSpeedLimit(newValue.matches("\\d*") ? newValue : oldValue));
+                slaveDeviceConfigModel.setIbiPayloadSpeedLimit(newValue));
 
         devRoleController.getCmbInfoItem().addListener((observable, oldValue, newValue) ->{
                 slaveDeviceConfigModel.setDevRole(newValue);
