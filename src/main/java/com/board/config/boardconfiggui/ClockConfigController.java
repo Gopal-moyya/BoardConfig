@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.board.config.boardconfiggui.data.Constants.NUMERIC_FIELD_ONLY;
+
 public class ClockConfigController implements Initializable, BoardPageDataSaverInterface {
 
     private List<ClockConfigModel> viewsData;
@@ -78,7 +80,7 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
             gridPane.add(labelControl, col, row);
             if (viewType.equals(ClockConfigModel.ViewType.TEXT_FIELD)) {
                 TextField textField = new TextField();
-                textField.setPromptText("Numeric Field Only");
+                textField.setPromptText(NUMERIC_FIELD_ONLY);
                 textField.setText(viewData.getResult());
                 gridPane.add(textField, col + 1, row);
                 // Store user-entered value into result field
