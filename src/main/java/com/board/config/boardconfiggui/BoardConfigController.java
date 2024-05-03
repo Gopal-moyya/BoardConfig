@@ -22,6 +22,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -144,13 +145,13 @@ public class BoardConfigController implements Initializable{
     @FXML
     private void generateOutput() {
         saveCurrentControllerData();
-        String message = ValidationUtils.validateData();
-        if (Utils.saveData(xmlFolderPath)) {
+        String errorMessages = ValidationUtils.validateData();
+        if (StringUtils.isNotEmpty(errorMessages)) {
             new CustomAlert(
                     Alert.AlertType.ERROR,
                     "Validation Failed",
                     "Unable to generate board configuration. Please review and resolve the following errors.",
-                    message
+                    errorMessages
             ).showAndWait();
         } else {
             if(Utils.saveData(xmlFolderPath))
