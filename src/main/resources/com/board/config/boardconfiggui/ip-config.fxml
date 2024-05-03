@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane prefHeight="810.0" prefWidth="1080.0" maxHeight="810.0" maxWidth="1080.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="810.0" maxWidth="1080.0" prefHeight="810.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
   <ScrollPane style="-fx-background-color: #ffffff;">
     <AnchorPane prefHeight="810.0" prefWidth="1080.0">
       <children>
-        <GridPane alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0" AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="7.0">
+        <fx:include fx:id="onOffWidget" source="onoff_widget.fxml" />
+        <GridPane fx:id="gridpaneWidget" alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0" AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0"
+        visible="false">
           <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="310.0" minWidth="10.0" prefWidth="228.0" />
@@ -29,6 +24,7 @@
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
+                  <RowConstraints />
           </rowConstraints>
           <children>
             <Label text="SCL Pin" />
@@ -39,20 +35,24 @@
             <TextField fx:id="sysClockField" onKeyTyped="#onSysClockUpdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="i2cFreqField" onKeyTyped="#onI2CFreqUpdate" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <TextField fx:id="sdrFreqField" onKeyTyped="#onSDSRFreqUpdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ChoiceBox fx:id="sclChoiceBox" maxWidth="1.7976931348623157E308" onMouseClicked="#onSCLPinUpdate" GridPane.columnIndex="1" />
-            <ChoiceBox fx:id="sdaChoiceBox" maxWidth="1.7976931348623157E308" onMouseClicked="#onSDAPinUpdate" GridPane.columnIndex="4" />
-            <Label text="SCL disabled pins" GridPane.rowIndex="1" />
-            <Label text="SDA disabled pins" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <Label prefHeight="15.0" prefWidth="170.0" text="Number of slaves" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <TextField fx:id="noOfSlavesField" onKeyTyped="#onNoOfSlavesUpdate" text="0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <ComboBox fx:id="sclChoiceBox" maxWidth="1.7976931348623157E308" onAction="#onSCLPinUpdate" promptText="select" GridPane.columnIndex="1" />
+            <ComboBox fx:id="sdaChoiceBox" maxWidth="1.7976931348623157E308" onAction="#onSDAPinUpdate" promptText="select" GridPane.columnIndex="4" />
+            <Label text="Disabled pins : " GridPane.rowIndex="1" />
+            <Label GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label fx:id="noOfSlavesLabel" prefHeight="15.0" prefWidth="170.0" text="Number of slaves" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Spinner fx:id="noOfSlavesField" onMouseClicked="#onNoOfSlavesUpdate" min="0" max="10" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <Label fx:id="slavesInfoLabel" text="Slaves information :" visible="false" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="disabledPinsTextArea" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           </children>
           <padding>
             <Insets left="60.0" right="60.0" top="40.0" />
           </padding>
         </GridPane>
-        <VBox fx:id="ipConfigVBox" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="1075.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="320.0" />
+        <VBox fx:id="ipConfigVBox" visible="false" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="1075.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="380.0" />
       </children>
     </AnchorPane>
   </ScrollPane>

@@ -51,6 +51,7 @@ public class Constants {
     public static final String IBI_PAYLOAD_SIZE = "ibiPayloadSize";
     public static final String IBI_PAYLOAD_SPEED_LIMIT = "ibiPayloadSpeedLimit";
     public static final String SELECT_DEVICE_ROLE = "Select Device Role";
+    public static final String IBI_DEVICE_ENABLED = "1";
     public static final String NUMERIC_FIELD_ONLY = "Numeric Field Only";
 
     //Strings related to the Pin configuration
@@ -154,5 +155,10 @@ public class Constants {
             "FOUT_POSTDIV4",
             "FOUT_POSTDIV5"
     );
+
+    //IpConfig strings
+    public static final String SYS_CLK_PARAM = "sysClk";
+    public static final String I2C_FREQ_PARAM = "i2cFreq";
+    public static final String SDR_FREQ_PARAM = "sdrFreq";
 }
 
