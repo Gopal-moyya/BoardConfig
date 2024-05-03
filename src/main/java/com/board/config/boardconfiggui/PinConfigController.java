@@ -61,7 +61,9 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                     inPutOutPutWidget.setVisible(false);
                 } else {
                     pinConfigUiModel.setSelectedMode(GPIO);
-                    String value = pinConfigParam.getDirection() == null ? pinConfigParam.getIntValue() : pinConfigParam.getDirection();
+
+                    String value = StringUtils.isEmpty(pinConfigParam.getDirection()) ? pinConfigParam.getIntValue() :
+                            StringUtils.isEmpty(pinConfigParam.getValue()) ? INPUT : pinConfigParam.getValue();
                     pinConfigUiModel.setSelectedValue(value);
                     inPutOutPutWidget.setVisible(true);
                 }
@@ -182,12 +184,14 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         } else {
             switch (pinConfigUiModel.getSelectedValue()) {
                 case INPUT:
+                    pinConfigParam.setByPassMode(false);
+                    pinConfigParam.setDirection(DIRECTION_INPUT);
+                    break;
                 case OUTPUT_LOW:
                 case OUTPUT_HIGH:
                     pinConfigParam.setByPassMode(false);
-                    String[] directionValue = getDirectionValue(pinConfigUiModel.getSelectedValue());
-                    pinConfigParam.setDirection(Objects.isNull(directionValue) ? pinConfigUiModel.getSelectedValue() : directionValue[0]);
-                    pinConfigParam.setValue(Objects.isNull(directionValue) ? null : directionValue[1]);
+                    pinConfigParam.setDirection(DIRECTION_OUTPUT);
+                    pinConfigParam.setValue(pinConfigUiModel.getSelectedValue());
                     break;
                 case LEVEL_TRIG_HIGH:
                 case LEVEL_TRIG_LOW:
@@ -205,14 +209,5 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             }
         }
         pinConfig.savePinConfig(portName, currentPin.getName(), pinConfigParam);
-    }
-
-    private String[] getDirectionValue(String selectedValue) {
-        if(StringUtils.isNotEmpty(selectedValue)){
-            if(!selectedValue.contains(INPUT)) {
-             return selectedValue.split("_");
-            }
-        }
-        return null;
     }
 }

@@ -113,7 +113,7 @@ public class ValidationUtils {
                 return "Direction is missing for pin " + pinConfigParam.getPin();
             }
 
-            if (Constants.DIRECTION_OUTPUT.equalsIgnoreCase(pinConfigParam.getDirection())
+            if (Constants.DIRECTION_OUTPUT.equals(pinConfigParam.getDirection())
                     && StringUtils.isEmpty(pinConfigParam.getValue())) {
                 return "Output value is missing for pin " + pinConfigParam.getPin();
             }
