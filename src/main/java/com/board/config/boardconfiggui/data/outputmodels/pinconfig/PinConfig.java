@@ -71,6 +71,12 @@ public class PinConfig {
         return Objects.hashCode(ports);
     }
 
+    /**
+     * Method to save the pin configuration of the given port.
+     * @param portNumber reference of the port number
+     * @param pinNumber reference of the pin number to be saved
+     * @param pinConfigParam reference of the pin configuration to be saved.
+     */
     public void savePinConfig(String portNumber, String pinNumber, @NotNull PinConfigParam pinConfigParam) {
 
         if (CollectionUtils.isEmpty(ports)) {
@@ -95,6 +101,12 @@ public class PinConfig {
         }
     }
 
+
+    /**
+     * Method to remove the pin configuration of the given port.
+     * @param portNumber reference of the port number
+     * @param pinNumber reference of the pin to be removed.
+     */
     public void removePinConfig(String portNumber, String pinNumber) {
 
         if (CollectionUtils.isNotEmpty(ports)) {
@@ -109,15 +121,20 @@ public class PinConfig {
         }
     }
 
+    /**
+     * Method to get all the bypass enabled pin configurations of the current port.
+     *
+     * @return bypass supported pin configurations
+     */
     public Map<String, List<String>> getBypassConfiguredPins() {
       if (CollectionUtils.isEmpty(ports)) {
-        return null;
+        return new HashMap<>();
       }
       Map<String, List<String>> bypassConfiguredPins = new HashMap<>();
       for (PinConfigPort pinConfigPort : ports) {
         List<String> pins = new ArrayList<>();
         for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
-          if (BooleanUtils.isFalse(pinConfigParam.byPassMode)) {
+          if (BooleanUtils.isTrue(pinConfigParam.byPassMode)) {
             pins.add(pinConfigParam.getPin());
           }
         }

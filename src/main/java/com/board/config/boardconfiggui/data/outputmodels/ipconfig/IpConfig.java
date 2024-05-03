@@ -39,7 +39,7 @@ public class IpConfig {
 
     if (CollectionUtils.isNotEmpty(ips)) {
       IpConfigIp ipConfigIp = ips.stream()
-        .filter(x -> x.getName().equals(ipName))
+        .filter(ipConfigIpInstance -> ipConfigIpInstance.getName().equals(ipName))
         .findFirst()
         .orElse(null);
       if (Objects.nonNull(ipConfigIp)) {

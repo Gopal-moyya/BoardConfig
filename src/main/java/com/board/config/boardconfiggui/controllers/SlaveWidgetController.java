@@ -110,6 +110,11 @@ public class SlaveWidgetController implements Initializable {
         });
     }
 
+    /**
+     * Method to get the {@link DeviceConfiguration} object from the entered values
+     *
+     * @return {@link DeviceConfiguration}
+     */
     public DeviceConfiguration getDeviceConfiguration() {
       DeviceConfiguration deviceConfiguration = new DeviceConfiguration(slaveDeviceConfigModel.getDeviceName());
       List<Param> params = new ArrayList<>();
@@ -122,7 +127,7 @@ public class SlaveWidgetController implements Initializable {
       params.add(new Param(Constants.DYNAMIC_ADDRESS, slaveDeviceConfigModel.getDynamicAddress()));
       params.add(new Param(Constants.IS_IBI_DEVICE, slaveDeviceConfigModel.getIsIbiDevice()));
       params.add(new Param(Constants.DEV_ROLE, slaveDeviceConfigModel.getDevRole()));
-      if (StringUtils.equals(slaveDeviceConfigModel.getIsIbiDevice(), "1")) {
+      if (StringUtils.equals(slaveDeviceConfigModel.getIsIbiDevice(), Constants.IBI_DEVICE_ENABLED)) {
         params.add(new Param(Constants.IBI_PAYLOAD_SIZE, slaveDeviceConfigModel.getIbiPayloadSize()));
         params.add(new Param(Constants.IBI_PAYLOAD_SPEED_LIMIT, slaveDeviceConfigModel.getIbiPayloadSpeedLimit()));
       }
@@ -131,6 +136,10 @@ public class SlaveWidgetController implements Initializable {
       return deviceConfiguration;
     }
 
+    /**
+     * Method to set the {@link DeviceConfiguration} object to the {@link SlaveDeviceConfigModel}
+     * @param deviceConfiguration reference object to set it to the SlaveDeviceConfigModel
+     */
     public void setDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
       String deviceName = deviceConfiguration.getName();
       slaveDeviceConfigModel.setDeviceName(deviceName);

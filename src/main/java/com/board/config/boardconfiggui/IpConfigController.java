@@ -3,6 +3,7 @@ package com.board.config.boardconfiggui;
 import com.board.config.boardconfiggui.controllers.OnOffButtonWidgetController;
 import com.board.config.boardconfiggui.controllers.SlaveWidgetController;
 import com.board.config.boardconfiggui.data.Constants;
+import com.board.config.boardconfiggui.data.IpPinConfig;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
@@ -21,11 +22,10 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -66,12 +66,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
   private BoardResultsRepo boardResultsRepo;
 
-  private List<Pair<String, String>> sclPinsList = new ArrayList<>();
-  private List<Pair<String, String>> sdaPinsList = new ArrayList<>();
+  private final List<IpPinConfig> ipPinConfigs = new ArrayList<>();
 
-  private List<Pair<String, String>> disabledPinsList = new ArrayList<>();
-
-  private List<SlaveWidgetController> slaveWidgetControllers = new ArrayList<>();
+  private final List<SlaveWidgetController> slaveWidgetControllers = new ArrayList<>();
 
   @FXML
   private void onSCLPinUpdate() {
@@ -135,7 +132,6 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       this.ipName = ipName;
   }
 
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     try {
@@ -164,44 +160,55 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     }
   }
 
-
   private void initializeData() {
     try {
       InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
       List<Port> ports = inputConfigRepo.getPinConfig().getPorts();
 
-      List<String> sdaAndsclPorts = new ArrayList<>();
-      List<String> sdaAndsclPins = new ArrayList<>();
+      boardResultsRepo = BoardResultsRepo.getInstance();
+      PinConfig pinConfig = boardResultsRepo.getBoardResult().getPinConfig();
+
+      Map<String, List<String>> bypassConfiguredPins = pinConfig.getBypassConfiguredPins();
 
       for (Port port : ports) {
+        List<String> byPassSupportedPortPins = Objects.isNull(bypassConfiguredPins.get(port.getName()))
+                ? new ArrayList<>() : bypassConfiguredPins.get(port.getName());
         for (Pin pin : port.getPinList()) {
-          if (pin.getValues().contains(getSDAParam())) {
-            sdaAndsclPins.add(pin.getName());
-            sdaAndsclPorts.add(port.getName());
-            sdaPinsList.add(new Pair<>(port.getName(), pin.getName()));
-          } else if (pin.getValues().contains(getSCLParam())) {
-            sclPinsList.add(new Pair<>(port.getName(), pin.getName()));
-          }
+          IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
+          ipPinConfig.setClock(pin.getValues().contains(getSCLParam()));
+          ipPinConfig.setEnabled(CollectionUtils.containsAny(byPassSupportedPortPins, pin.getName()));
+          ipPinConfigs.add(ipPinConfig);
         }
       }
-      sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
-      sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
+      sdaChoiceBox.setItems(FXCollections.observableList(getPinDataDisplayValues()));
+      sclChoiceBox.setItems(FXCollections.observableList(getPinClockDisplayValues()));
 
-      boardResultsRepo = BoardResultsRepo.getInstance();
       prefillData(boardResultsRepo.getBoardResult());
-      setDisabledPins(boardResultsRepo.getBoardResult().getPinConfig());
+      setDisabledPins();
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private List<String> getPinDisplayValues(List<Pair<String, String>> pinPortPairs) {
-    List<String> displayValues = new ArrayList<>();
-    for (Pair<String, String> pair: pinPortPairs) {
-      displayValues.add(getPinDisplayValue(pair));
-    }
-    return displayValues;
+  private List<String> getPinClockDisplayValues() {
+    return ipPinConfigs.stream()
+            .filter(ipPinConfig -> ipPinConfig.isEnabled() && ipPinConfig.isClock())
+            .map(IpPinConfig::getDisplayValue)
+            .toList();
+  }
+
+  private List<String> getPinDataDisplayValues() {
+    return ipPinConfigs.stream()
+            .filter(ipPinConfig -> ipPinConfig.isEnabled() && !ipPinConfig.isClock())
+            .map(IpPinConfig::getDisplayValue)
+            .toList();
+  }
+  private List<String> getDisabledPinDisplayValues() {
+    return ipPinConfigs.stream()
+            .filter(ipPinConfig -> !ipPinConfig.isEnabled())
+            .map(IpPinConfig::getDisplayValue)
+            .toList();
   }
 
   private Pair<String, String> getPinPortPair(String data) {
@@ -212,8 +219,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     return new Pair<>(strings[0], strings[1]);
   }
 
-  private String getPinDisplayValue(Pair<String, String> pinPortPair) {
-    return pinPortPair.getKey() + " Pin: " + pinPortPair.getValue();
+  private String getPinDisplayValue(String portName, String pinName) {
+    return ipPinConfigs.stream()
+            .filter(ipPinConfig -> StringUtils.equals(portName, ipPinConfig.getPortName()) &&
+                    StringUtils.equals(pinName, ipPinConfig.getPinName()))
+            .map(IpPinConfig::getDisplayValue)
+            .findFirst().orElse("");
   }
 
   private void prefillData(BoardResult boardResult) {
@@ -228,12 +239,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
             if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
               ipConfigModel.setSdaPin(signalParam.getPin());
               ipConfigModel.setSdaPort(portName);
-              String sdaPin = getPinDisplayValue(new Pair<>(portName, signalParam.getPin()));
+              String sdaPin = getPinDisplayValue(portName, signalParam.getPin());
               sdaChoiceBox.valueProperty().setValue(sdaPin);
             } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
               ipConfigModel.setSclPin(signalParam.getPin());
               ipConfigModel.setSclPort(portName);
-              String sclPin = getPinDisplayValue(new Pair<>(portName, signalParam.getPin()));
+              String sclPin = getPinDisplayValue(portName, signalParam.getPin());
               sclChoiceBox.valueProperty().setValue(sclPin);
             }
           }
@@ -266,28 +277,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     }
   }
 
-  private void setDisabledPins(PinConfig pinConfig) {
-    Map<String, List<String>> pinConfigPorts = pinConfig.getBypassConfiguredPins();
-    if (Objects.nonNull(pinConfigPorts)) {
-      pinConfigPorts.forEach((port, pin) -> {
-        pin.forEach(pin1 -> {
-          Pair<String, String> pinPair = new Pair<>(port, pin1);
-          boolean status = sclPinsList.remove(pinPair);
-          if (status) {
-            disabledPinsList.add(new Pair<>(port, pin1));
-            return;
-          }
-          status = sdaPinsList.remove(pinPair);
-          if (status) {
-            disabledPinsList.add(pinPair);
-          }
-        });
-      });
-    }
-    List<String> displayValues = getPinDisplayValues(disabledPinsList);
+  private void setDisabledPins() {
+    List<String> displayValues = getDisabledPinDisplayValues();
     disabledPinsTextArea.setText(String.join(", ", displayValues));
-    sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
-    sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
   }
 
   private String getSDAParam() {
@@ -415,10 +407,10 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   private void clearUi() {
     sdaChoiceBox.setItems(null);
     sdaChoiceBox.setPromptText("select");
-    sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
+    sdaChoiceBox.setItems(FXCollections.observableList(getPinDataDisplayValues()));
     sclChoiceBox.setItems(null);
     sdaChoiceBox.setPromptText("select");
-    sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
+    sclChoiceBox.setItems(FXCollections.observableList(getPinClockDisplayValues()));
     sysClockField.textProperty().setValue(null);
     i2cFreqField.textProperty().setValue(null);
     sdrFreqField.textProperty().setValue(null);

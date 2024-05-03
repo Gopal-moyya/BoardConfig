@@ -51,6 +51,7 @@ public class Constants {
     public static final String IBI_PAYLOAD_SIZE = "ibiPayloadSize";
     public static final String IBI_PAYLOAD_SPEED_LIMIT = "ibiPayloadSpeedLimit";
     public static final String SELECT_DEVICE_ROLE = "Select Device Role";
+    public static final String IBI_DEVICE_ENABLED = "1";
 
     //Strings related to the Pin configuration
     public static final String INPUT = "input";
