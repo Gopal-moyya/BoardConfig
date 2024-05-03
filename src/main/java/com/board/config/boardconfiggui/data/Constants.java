@@ -76,6 +76,7 @@ public class Constants {
      * Constant for direction output.
      */
     public static final String DIRECTION_OUTPUT = "Output";
+    public static final String DIRECTION_INPUT = "Input";
 
     /**
      * Constant representing the value '1'.
