@@ -9,7 +9,9 @@ import java.util.Objects;
  */
 public class IpConfigModel {
   String sclPin;
+  String sclPort;
   String sdaPin;
+  String sdaPort;
   String sysClock;
   String i2cFreq;
   String sdrFreq;
@@ -23,16 +25,32 @@ public class IpConfigModel {
     return sclPin;
   }
 
+  public String getSclPort() {
+    return sclPort;
+  }
+
   public void setSclPin(String sclPin) {
     this.sclPin = sclPin;
+  }
+
+  public void setSclPort(String sclPort) {
+    this.sclPort = sclPort;
   }
 
   public String getSdaPin() {
     return sdaPin;
   }
 
+  public String getSdaPort() {
+    return sdaPort;
+  }
+
   public void setSdaPin(String sdaPin) {
     this.sdaPin = sdaPin;
+  }
+
+  public void setSdaPort(String sdaPort) {
+    this.sdaPort = sdaPort;
   }
 
   public String getSysClock() {
@@ -75,41 +93,15 @@ public class IpConfigModel {
     this.slaveDeviceConfigModelList = slaveDeviceConfigModelList;
   }
 
-  public String getSCLPortName() {
-    if (Objects.isNull(sclPin)) {
-      return "";
-    }
-    return sclPin.split(" Pin: ")[0];
-  }
-
-  public String getSCLPinName() {
-    if (Objects.isNull(sclPin)) {
-      return "";
-    }
-    return sclPin.split(" Pin: ")[1];
-  }
-
-  public String getSDAPortName() {
-    if (Objects.isNull(sdaPin)) {
-      return "";
-    }
-    return sdaPin.split(" Pin: ")[0];
-  }
-
-  public String getSDAPinName() {
-    if (Objects.isNull(sdaPin)) {
-      return "";
-    }
-    return sdaPin.split(" Pin: ")[1];
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     IpConfigModel that = (IpConfigModel) o;
     return Objects.equals(sclPin, that.sclPin) &&
+            Objects.equals(sclPort, that.sclPort) &&
             Objects.equals(sdaPin, that.sdaPin) &&
+            Objects.equals(sdaPort, that.sdaPort) &&
             Objects.equals(sysClock, that.sysClock) &&
             Objects.equals(i2cFreq, that.i2cFreq) &&
             Objects.equals(sdrFreq, that.sdrFreq) &&
@@ -126,7 +118,9 @@ public class IpConfigModel {
   public String toString() {
     return "IpConfigModel{" +
       "sclPin='" + sclPin + '\'' +
+      ", sclPort='" + sclPort + '\'' +
       ", sdaPin='" + sdaPin + '\'' +
+      ", sdaPort='" + sdaPort + '\'' +
       ", sysClock='" + sysClock + '\'' +
       ", i2cFreq='" + i2cFreq + '\'' +
       ", sdrFreq='" + sdrFreq + '\'' +

@@ -10,8 +10,6 @@ import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.Param;
 import com.board.config.boardconfiggui.data.outputmodels.ipconfig.*;
-import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
-import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigPort;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
@@ -24,6 +22,7 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,33 +47,34 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   private TextField noOfSlavesField;
   @FXML
   private Label noOfSlavesLabel;
-
   @FXML
   private Label slavesInfoLabel;
   @FXML
   private VBox ipConfigVBox;
-
   @FXML
   private TextArea disabledPinsTextArea;
-
   @FXML
   private IpConfigModel ipConfigModel;
 
-  private List<String> slkPinsList = new ArrayList<>();
-  private List<String> sdaPinsList = new ArrayList<>();
+  private List<Pair<String, String>> sclPinsList = new ArrayList<>();
+  private List<Pair<String, String>> sdaPinsList = new ArrayList<>();
 
   private List<SlaveWidgetController> slaveWidgetControllers = new ArrayList<>();
 
   @FXML
   private void onSCLPinUpdate() {
     String sclPin = sclChoiceBox.getValue();
-    ipConfigModel.setSclPin(sclPin);
+    Pair<String, String> sclPinPair = getPinPortPair(sclPin);
+    ipConfigModel.setSclPort(sclPinPair.getKey());
+    ipConfigModel.setSclPin(sclPinPair.getValue());
   }
 
   @FXML
   private void onSDAPinUpdate() {
     String sdaPin = sdaChoiceBox.getValue();
-    ipConfigModel.setSdaPin(sdaPin);
+    Pair<String, String> sdaPinPair = getPinPortPair(sdaPin);
+    ipConfigModel.setSdaPort(sdaPinPair.getKey());
+    ipConfigModel.setSdaPin(sdaPinPair.getValue());
   }
 
   @FXML
@@ -96,29 +96,33 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   }
 
   @FXML
-  private void onNoOfSlavesUpdate() throws IOException {
-    String noOfSlaves = noOfSlavesField.getText();
-    ipConfigModel.setNoOfSlaves(noOfSlaves);
-    if (isNotEmpty(noOfSlaves)) {
-      slavesInfoLabel.setVisible(true);
-      ipConfigVBox.getChildren().clear();
-      int count = Integer.parseInt(noOfSlaves);
-      for (int i = 0; i < count; i++) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
-        ipConfigVBox.getChildren().add(loader.load());
-        SlaveWidgetController slaveWidgetController = loader.getController();
-        slaveWidgetControllers.add(slaveWidgetController);
+  private void onNoOfSlavesUpdate() {
+    try {
+      String noOfSlaves = noOfSlavesField.getText();
+      ipConfigModel.setNoOfSlaves(noOfSlaves);
+      if (isNotEmpty(noOfSlaves)) {
+        slavesInfoLabel.setVisible(true);
+        ipConfigVBox.getChildren().clear();
+        int count = Integer.parseInt(noOfSlaves);
+        for (int i = 0; i < count; i++) {
+          FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
+          ipConfigVBox.getChildren().add(loader.load());
+          SlaveWidgetController slaveWidgetController = loader.getController();
+          slaveWidgetControllers.add(slaveWidgetController);
+        }
+      } else {
+        slavesInfoLabel.setVisible(false);
+        ipConfigVBox.getChildren().clear();
+        slaveWidgetControllers.clear();
       }
-    } else {
-      slavesInfoLabel.setVisible(false);
-      ipConfigVBox.getChildren().clear();
-      slaveWidgetControllers.clear();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
-    public IpConfigController(String ipName) {
-        this.ipName = ipName;
-    }
+  public IpConfigController(String ipName) {
+      this.ipName = ipName;
+  }
 
 
   @Override
@@ -142,16 +146,14 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
           if (pin.getValues().contains(getSDAParam())) {
             sdaAndsclPins.add(pin.getName());
             sdaAndsclPorts.add(port.getName());
-            sdaPinsList.add(port.getName() + " Pin: " + pin.getName());
-            sdaChoiceBox.setItems(FXCollections.observableList(sdaPinsList));
+            sdaPinsList.add(new Pair<>(port.getName(), pin.getName()));
           } else if (pin.getValues().contains(getSCLParam())) {
-            sdaAndsclPins.add(pin.getName());
-            sdaAndsclPorts.add(port.getName());
-            slkPinsList.add(port.getName() + " Pin: " + pin.getName());
-            sclChoiceBox.setItems(FXCollections.observableList(slkPinsList));
+            sclPinsList.add(new Pair<>(port.getName(), pin.getName()));
           }
         }
       }
+      sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
+      sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
 
       BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
       prefillData(boardResultsRepo.getBoardResult());
@@ -172,6 +174,23 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     }
   }
 
+  private List<String> getPinDisplayValues(List<Pair<String, String>> pinPortPairs) {
+    List<String> displayValues = new ArrayList<>();
+    for (Pair<String, String> pair: pinPortPairs) {
+      displayValues.add(getPinDisplayValue(pair));
+    }
+    return displayValues;
+  }
+
+  private Pair<String, String> getPinPortPair(String data) {
+    String[] strings = data.split(" Pin: ");
+    return new Pair<>(strings[0], strings[1]);
+  }
+
+  private String getPinDisplayValue(Pair<String, String> pinPortPair) {
+    return pinPortPair.getKey() + " Pin: " + pinPortPair.getValue();
+  }
+
   private void prefillData(BoardResult boardResult) {
     if (boardResult.getIpConfig() == null) {
       return;
@@ -180,11 +199,17 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       if (ip.getName().equals(ipName)) {
         for (IpConfigPort ipConfigPort: ip.getPorts()) {
           String portName = ipConfigPort.getName();
-          for (SignalParam SignalParam : ipConfigPort.getSignalParams()) {
-            if (StringUtils.equals(SignalParam.getName(), getSDAParam())) {
-              ipConfigModel.setSdaPin(portName + " Pin: " + SignalParam.getPin());
-            } else if (StringUtils.equals(SignalParam.getName(), getSCLParam())) {
-              ipConfigModel.setSclPin(portName + " Pin: " + SignalParam.getPin());
+          for (SignalParam signalParam : ipConfigPort.getSignalParams()) {
+            if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
+              ipConfigModel.setSdaPin(signalParam.getPin());
+              ipConfigModel.setSdaPort(portName);
+              String sdaPin = getPinDisplayValue(new Pair<>(portName, signalParam.getPin()));
+              sdaChoiceBox.valueProperty().setValue(sdaPin);
+            } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
+              ipConfigModel.setSclPin(signalParam.getPin());
+              ipConfigModel.setSclPort(portName);
+              String sclPin = getPinDisplayValue(new Pair<>(portName, signalParam.getPin()));
+              sclChoiceBox.valueProperty().setValue(sclPin);
             }
           }
         }
@@ -195,14 +220,17 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
             sysClockField.setText(param.getValue());
           } else if (StringUtils.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
             ipConfigModel.setI2cFreq(param.getValue());
+            i2cFreqField.setText(param.getValue());
           } else if (StringUtils.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
             ipConfigModel.setSdrFreq(param.getValue());
+            sdrFreqField.setText(param.getValue());
           }
         }
 
         DeviceDescriptor deviceDescriptor = ip.getDeviceDescriptor();
         List<DeviceConfiguration> deviceConfigurations = deviceDescriptor.getDeviceConfigurations();
         noOfSlavesField.setText(String.valueOf(deviceConfigurations.size()));
+        onNoOfSlavesUpdate();
         for (int i = 0; i < deviceConfigurations.size(); i++) {
           slaveWidgetControllers.get(i).setDeviceConfiguration(deviceConfigurations.get(i));
         }
@@ -239,22 +267,22 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
     private IpConfigIp prepareIpConfigData() {
 
-      SignalParam sdaParam = new SignalParam(ipConfigModel.getSDAPinName(), getSDAParam());
-      SignalParam sclParam = new SignalParam(ipConfigModel.getSCLPinName(), getSCLParam());
+      SignalParam sdaParam = new SignalParam(ipConfigModel.getSdaPin(), getSDAParam());
+      SignalParam sclParam = new SignalParam(ipConfigModel.getSclPin(), getSCLParam());
 
       List<IpConfigPort> ipConfigPortsList = new ArrayList<>();
-      if (StringUtils.isNotBlank(ipConfigModel.getSDAPortName()) && StringUtils.equals(ipConfigModel.getSCLPortName(), ipConfigModel.getSDAPortName())) {
-        IpConfigPort ipConfigPort = new IpConfigPort(ipConfigModel.getSCLPortName());
+      if (StringUtils.isNotBlank(ipConfigModel.getSdaPort()) && StringUtils.equals(ipConfigModel.getSclPort(), ipConfigModel.getSdaPort())) {
+        IpConfigPort ipConfigPort = new IpConfigPort(ipConfigModel.getSclPort());
         ipConfigPort.setSignalParams(List.of(sclParam, sdaParam));
         ipConfigPortsList.add(ipConfigPort);
       } else {
-        if (StringUtils.isNotBlank(ipConfigModel.getSDAPortName())) {
-          IpConfigPort sdaConfigPort = new IpConfigPort(ipConfigModel.getSDAPortName());
+        if (StringUtils.isNotBlank(ipConfigModel.getSdaPort())) {
+          IpConfigPort sdaConfigPort = new IpConfigPort(ipConfigModel.getSdaPort());
           sdaConfigPort.setSignalParams(List.of(sdaParam));
           ipConfigPortsList.add(sdaConfigPort);
         }
-        if (StringUtils.isNotBlank(ipConfigModel.getSCLPortName())) {
-          IpConfigPort sclConfigPort = new IpConfigPort(ipConfigModel.getSCLPortName());
+        if (StringUtils.isNotBlank(ipConfigModel.getSclPort())) {
+          IpConfigPort sclConfigPort = new IpConfigPort(ipConfigModel.getSclPort());
           sclConfigPort.setSignalParams(List.of(sclParam));
           ipConfigPortsList.add(sclConfigPort);
         }
