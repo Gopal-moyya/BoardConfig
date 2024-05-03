@@ -11,6 +11,7 @@ import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.Param;
 import com.board.config.boardconfiggui.data.outputmodels.ipconfig.*;
+import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
@@ -51,7 +52,7 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   @FXML
   private TextField sdrFreqField;
   @FXML
-  private TextField noOfSlavesField;
+  private Spinner<Integer> noOfSlavesField;
   @FXML
   private Label noOfSlavesLabel;
   @FXML
@@ -63,8 +64,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   @FXML
   private IpConfigModel ipConfigModel;
 
+  private BoardResultsRepo boardResultsRepo;
+
   private List<Pair<String, String>> sclPinsList = new ArrayList<>();
   private List<Pair<String, String>> sdaPinsList = new ArrayList<>();
+
+  private List<Pair<String, String>> disabledPinsList = new ArrayList<>();
 
   private List<SlaveWidgetController> slaveWidgetControllers = new ArrayList<>();
 
@@ -105,13 +110,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   @FXML
   private void onNoOfSlavesUpdate() {
     try {
-      String noOfSlaves = noOfSlavesField.getText();
-      ipConfigModel.setNoOfSlaves(noOfSlaves);
-      if (isNotEmpty(noOfSlaves)) {
+      Integer noOfSlaves = noOfSlavesField.getValue();
+      ipConfigModel.setNoOfSlaves(String.valueOf(noOfSlaves));
+      if (noOfSlaves > 0) {
         slavesInfoLabel.setVisible(true);
         ipConfigVBox.getChildren().clear();
-        int count = Integer.parseInt(noOfSlaves);
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < noOfSlaves; i++) {
           FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
           ipConfigVBox.getChildren().add(loader.load());
           SlaveWidgetController slaveWidgetController = loader.getController();
@@ -134,25 +138,30 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    ipConfigModel = new IpConfigModel();
-    updateIpType();
-    initializeData();
-    onOffWidgetController.setButtonLabel("IP Status:");
-    onOffWidgetController.getButton().setOnAction(actionEvent -> {
-      if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, ((Button) actionEvent.getSource()).getText())) {
-        onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
-        onOffWidgetController.setButtonText("ON");
-        gridpaneWidget.setVisible(true);
-        ipConfigVBox.setVisible(true);
-      } else {
-        onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
-        onOffWidgetController.setButtonText("OFF");
-        gridpaneWidget.setVisible(false);
-        ipConfigVBox.setVisible(false);
-        ipConfigModel = new IpConfigModel();
-      }
+    try {
+      ipConfigModel = new IpConfigModel();
+      updateIpType();
+      initializeData();
+      onOffWidgetController.setButtonLabel("IP Status:");
+      onOffWidgetController.getButton().setOnAction(actionEvent -> {
+        if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, ((Button) actionEvent.getSource()).getText())) {
+          onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
+          onOffWidgetController.setButtonText("ON");
+          gridpaneWidget.setVisible(true);
+          ipConfigVBox.setVisible(true);
+        } else {
+          onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
+          onOffWidgetController.setButtonText("OFF");
+          gridpaneWidget.setVisible(false);
+          ipConfigVBox.setVisible(false);
+          ipConfigModel = new IpConfigModel();
+          clearUi();
+        }
 
-    });
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
 
@@ -178,19 +187,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
       sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
 
-      BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
+      boardResultsRepo = BoardResultsRepo.getInstance();
       prefillData(boardResultsRepo.getBoardResult());
-
-//    List<PinConfigPort> pinConfigPorts = boardResultsRepo.getBoardResult().getPinConfig().getPorts();
-//    for(PinConfigPort pinConfigPort : pinConfigPorts){
-//      if (sdaAndsclPorts.contains(pinConfigPort.getName())) {
-//        for (PinConfigParam pinConfigParam : pinConfigPort.getConfigParams()) {
-//          if (sdaAndsclPins.contains(pinConfigParam.getPin())) {
-//            pinConfigParam.getPin();
-//          }
-//        }
-//      }
-//    }
+      setDisabledPins(boardResultsRepo.getBoardResult().getPinConfig());
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -206,6 +205,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   }
 
   private Pair<String, String> getPinPortPair(String data) {
+    if (Objects.isNull(data)) {
+      return new Pair<>(null, null);
+    }
     String[] strings = data.split(" Pin: ");
     return new Pair<>(strings[0], strings[1]);
   }
@@ -252,13 +254,40 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
         DeviceDescriptor deviceDescriptor = ip.getDeviceDescriptor();
         List<DeviceConfiguration> deviceConfigurations = deviceDescriptor.getDeviceConfigurations();
-        noOfSlavesField.setText(String.valueOf(deviceConfigurations.size()));
+        noOfSlavesField.getValueFactory().setValue(deviceConfigurations.size());
         onNoOfSlavesUpdate();
         for (int i = 0; i < deviceConfigurations.size(); i++) {
           slaveWidgetControllers.get(i).setDeviceConfiguration(deviceConfigurations.get(i));
         }
-      }
+        onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
+        onOffWidgetController.setButtonText("ON");
+        gridpaneWidget.setVisible(true);
+        ipConfigVBox.setVisible(true);      }
     }
+  }
+
+  private void setDisabledPins(PinConfig pinConfig) {
+    Map<String, List<String>> pinConfigPorts = pinConfig.getBypassConfiguredPins();
+    if (Objects.nonNull(pinConfigPorts)) {
+      pinConfigPorts.forEach((port, pin) -> {
+        pin.forEach(pin1 -> {
+          Pair<String, String> pinPair = new Pair<>(port, pin1);
+          boolean status = sclPinsList.remove(pinPair);
+          if (status) {
+            disabledPinsList.add(new Pair<>(port, pin1));
+            return;
+          }
+          status = sdaPinsList.remove(pinPair);
+          if (status) {
+            disabledPinsList.add(pinPair);
+          }
+        });
+      });
+    }
+    List<String> displayValues = getPinDisplayValues(disabledPinsList);
+    disabledPinsTextArea.setText(String.join(", ", displayValues));
+    sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
+    sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
   }
 
   private String getSDAParam() {
@@ -271,7 +300,10 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
     @Override
     public void saveData() {
-      BoardResultsRepo boardResultsRepo = BoardResultsRepo.getInstance();
+      if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, onOffWidgetController.getButton().getText())) {
+        removeFromRepo();
+        return;
+      }
       BoardResult boardResult = boardResultsRepo.getBoardResult();
 
       checkForEmptyIps(boardResult);
@@ -378,5 +410,26 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
   private boolean isNotEmpty(String value) {
     return value != null && !value.isEmpty() && !value.isBlank() && Integer.parseInt(value)!=0;
+  }
+
+  private void clearUi() {
+    sdaChoiceBox.setItems(null);
+    sdaChoiceBox.setPromptText("select");
+    sdaChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sdaPinsList)));
+    sclChoiceBox.setItems(null);
+    sdaChoiceBox.setPromptText("select");
+    sclChoiceBox.setItems(FXCollections.observableList(getPinDisplayValues(sclPinsList)));
+    sysClockField.textProperty().setValue(null);
+    i2cFreqField.textProperty().setValue(null);
+    sdrFreqField.textProperty().setValue(null);
+    noOfSlavesField.getValueFactory().setValue(0);
+    onNoOfSlavesUpdate();
+  }
+
+  private void removeFromRepo() {
+    IpConfig ipConfig = boardResultsRepo.getBoardResult().getIpConfig();
+    if (Objects.nonNull(ipConfig)) {
+      boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
+    }
   }
 }

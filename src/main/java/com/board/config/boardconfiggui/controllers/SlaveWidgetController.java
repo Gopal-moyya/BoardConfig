@@ -171,7 +171,7 @@ public class SlaveWidgetController implements Initializable {
             break;
           case Constants.DEV_ROLE:
             slaveDeviceConfigModel.setDevRole(param.getValue());
-            devRoleController.getCmbInfoItem().setValue(param.getValue());
+            devRoleController.setSelectedMode(param.getValue());
             break;
           case Constants.IBI_PAYLOAD_SIZE:
             slaveDeviceConfigModel.setIbiPayloadSize(param.getValue());

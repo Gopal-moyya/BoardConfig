@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +34,19 @@ public class IpConfig {
     public void setIps(List<IpConfigIp> ips) {
         this.ips = ips;
     }
+
+  public void removeIpConfig(String ipName) {
+
+    if (CollectionUtils.isNotEmpty(ips)) {
+      IpConfigIp ipConfigIp = ips.stream()
+        .filter(x -> x.getName().equals(ipName))
+        .findFirst()
+        .orElse(null);
+      if (Objects.nonNull(ipConfigIp)) {
+        ips.remove(ipConfigIp);
+      }
+    }
+  }
 
     @Override
     public String toString() {

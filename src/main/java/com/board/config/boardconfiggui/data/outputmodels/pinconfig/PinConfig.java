@@ -2,14 +2,13 @@ package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
 import com.sun.istack.NotNull;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @XmlRootElement(name = "pinConfig")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -108,5 +107,22 @@ public class PinConfig {
             }
 
         }
+    }
+
+    public Map<String, List<String>> getBypassConfiguredPins() {
+      if (CollectionUtils.isEmpty(ports)) {
+        return null;
+      }
+      Map<String, List<String>> bypassConfiguredPins = new HashMap<>();
+      for (PinConfigPort pinConfigPort : ports) {
+        List<String> pins = new ArrayList<>();
+        for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
+          if (BooleanUtils.isFalse(pinConfigParam.byPassMode)) {
+            pins.add(pinConfigParam.getPin());
+          }
+        }
+        bypassConfiguredPins.put(pinConfigPort.getName(), pins);
+      }
+      return bypassConfiguredPins;
     }
 }
