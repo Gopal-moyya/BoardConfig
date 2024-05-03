@@ -1,7 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
 import com.sun.istack.NotNull;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 
 import javax.xml.bind.annotation.XmlAccessType;

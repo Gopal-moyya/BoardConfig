@@ -9,8 +9,6 @@ module com.board.config.boardconfiggui {
     requires CodeGeneration;
     requires org.apache.commons.collections4;
     requires org.apache.commons.lang3;
-    requires commons.collections;
-    requires org.apache.commons.codec;
 
   opens com.board.config.boardconfiggui to javafx.fxml;
     opens com.board.config.boardconfiggui.data.inputmodels.ipconfig to java.xml.bind;
