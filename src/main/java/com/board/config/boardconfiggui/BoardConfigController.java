@@ -18,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
@@ -144,17 +145,30 @@ public class BoardConfigController implements Initializable{
     @FXML
     private void generateOutput() {
         saveCurrentControllerData();
-        String message = ValidationUtils.validateData();
-        if (StringUtils.isNotEmpty(message)) {
+        String errorMessages = ValidationUtils.validateData();
+        if (StringUtils.isNotEmpty(errorMessages)) {
             new CustomAlert(
                     Alert.AlertType.ERROR,
                     "Validation Failed",
                     "Unable to generate board configuration. Please review and resolve the following errors.",
-                    message
+                    errorMessages
             ).showAndWait();
         } else {
             if(Utils.saveData(xmlFolderPath))
                 homeViewController.onOutputGenerateClick();
+        }
+    }
+
+    @FXML
+    private void cancelButton() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Cancel");
+        alert.setHeaderText("Are you sure you want to cancel the changes?.");
+        Optional<ButtonType> buttonType = alert.showAndWait();
+        if(buttonType.isPresent() && buttonType.get().equals(ButtonType.OK)) {
+            homeViewController.onOutputGenerateClick();
+        } else {
+            alert.close();
         }
     }
 
