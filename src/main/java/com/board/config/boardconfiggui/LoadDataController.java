@@ -3,6 +3,10 @@ package com.board.config.boardconfiggui;
 import com.board.config.boardconfiggui.common.Utils;
 import com.board.config.boardconfiggui.controllers.SelectBoardNameController;
 import com.board.config.boardconfiggui.data.Constants;
+import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
+import com.board.config.boardconfiggui.data.outputmodels.genralconfig.GeneralConfig;
+import com.board.config.boardconfiggui.data.outputmodels.genralconfig.Option;
+import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.invecas.CodeGenerator;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -15,6 +19,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class LoadDataController  {
@@ -43,6 +50,9 @@ public class LoadDataController  {
     private final HomeViewController homeViewController;
     private  String xmlFolderPath;
 
+    private BoardResultsRepo boardResultsRepo;
+
+
     public LoadDataController(HomeViewController homeViewController, String xmlFolderPath) {
         this.homeViewController = homeViewController;
         this.xmlFolderPath = xmlFolderPath;
@@ -51,6 +61,7 @@ public class LoadDataController  {
     @FXML
     public void initialize() {
         submitBtn.setDisable(true);
+        boardResultsRepo = BoardResultsRepo.getInstance();
 
         if (StringUtils.isNotEmpty(xmlFolderPath)) {
             xmlPathField.setText(xmlFolderPath);
@@ -126,35 +137,72 @@ public class LoadDataController  {
 
     public void onConfigureClick(ActionEvent actionEvent) {
 
+        // checking the directory path is selected or not
         if (StringUtils.isEmpty(xmlFolderPath)) {
-            logger.info("the Selected folder path is null or empty" + xmlFolderPath);
-            Utils.alertDialog(Alert.AlertType.INFORMATION, "Select Directory",null, "Please select the directory.");
+            logger.info("The Selected folder path is null or empty" + xmlFolderPath);
+            Utils.alertDialog(Alert.AlertType.INFORMATION, "Select directory",null, "Please select the xml directory.");
             return;
         }
 
-        if (Utils.validateXmlFolder(xmlFolderPath)) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
-                Parent root = loader.load();
+        // checking the input configuration files availability from selected directory
+        if (!Utils.isInputConfigurationReached(xmlFolderPath)) {
+            Utils.alertDialog(Alert.AlertType.ERROR, "No files found", null, "Configuration files are not available in the selected directory.");
+            return;
+        }
 
-                Stage stage = new Stage();
-                SelectBoardNameController controller = loader.getController();
-                controller.setDialogStage(stage);
-                stage.setScene(new Scene(root));
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.initStyle(StageStyle.UTILITY);
-                stage.setTitle(Constants.BOARD_NAME);
-                stage.showAndWait();
+        // checking the parsing status of input configuration files
+        if(BooleanUtils.isFalse(Utils.parseInputXmlFiles(xmlFolderPath))) {
+            Utils.alertDialog(Alert.AlertType.ERROR, "Parsing failed", null,"An issue occurred while parsing the input XML files.");
+            return;
+        }
 
-                if (controller.isContinueSelected()) {
-                    String boardName = controller.getBoardName();
-                    homeViewController.onConfigureClick(xmlPathField.getText(), boardName);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        //Fetching the BoardResult object if the Board configuration file is available.
+        BoardResult boardResult = Utils.getBoardConfigResult(xmlFolderPath);
+        if (Objects.isNull(boardResult)) {
+            //Creating new instance
+            boardResultsRepo.createBoardResult();
         } else {
-            Utils.alertDialog(Alert.AlertType.ERROR, "No Files found", null,"Configuration files are not available in the selected Directory.");
+            //Set the board results to repo
+            boardResultsRepo.setBoardResult(boardResult);
+        }
+
+        // Opening the Board name dialog
+        openBoardNameDialog();
+
+    }
+
+    private void openBoardNameDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("select-board-name.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            SelectBoardNameController controller = loader.getController();
+            controller.setDialogStage(stage);
+
+            GeneralConfig generalConfig = boardResultsRepo.getBoardResult().getGeneralConfig();
+            if (ObjectUtils.isNotEmpty(generalConfig)) {
+                String boardName = generalConfig.getOption().getValue();
+                controller.setTxtBoardName(boardName);
+            }
+
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle(Constants.BOARD_NAME);
+            stage.showAndWait();
+
+            if (controller.isContinueSelected()) {
+                String boardName = controller.getBoardName();
+
+                //set the board name information
+                generalConfig = new GeneralConfig(new Option(boardName));
+                boardResultsRepo.getBoardResult().setGeneralConfig(generalConfig);
+
+                homeViewController.onConfigureClick(xmlFolderPath);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -47,4 +47,13 @@ public class BoardResultsRepo {
     public BoardResult getBoardResult() {
         return boardResult;
     }
+
+    /**
+     * Sets the Board Result data model
+     *
+     * @param boardResult to be set
+     */
+    public void setBoardResult(BoardResult boardResult) {
+        this.boardResult = boardResult;
+    }
 }

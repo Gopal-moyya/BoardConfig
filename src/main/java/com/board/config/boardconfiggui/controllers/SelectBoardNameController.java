@@ -13,6 +13,11 @@ public class SelectBoardNameController {
     private Button btnContinue;
    private int MINIMUM_BOARD_LENGTH = 3;
 
+
+    public void setTxtBoardName(String txtBoardName) {
+        this.txtBoardName.setText(txtBoardName);
+    }
+
     public void setDialogStage(Stage dialogStage) {
         btnContinue.setDisable(true);
         txtBoardName.textProperty().addListener((observable, oldValue, newValue) -> {

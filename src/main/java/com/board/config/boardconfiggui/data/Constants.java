@@ -18,6 +18,8 @@ public class Constants {
      */
     public static final String PIN_CONFIG_FILE_NAME = "pin_muxing.xml";
 
+    public static final String BOARD_CONFIG_FILE_NAME = "board_configuration.xml";
+
     /**
      * Constant representing the development role.
      */
@@ -71,6 +73,8 @@ public class Constants {
     public static final String EXTI = "EXTI";
 
     public static final String BOARD_NAME = "Board Name";
+
+    public static final String SELECT = "select";
 
     /**
      * Constant for direction output.
