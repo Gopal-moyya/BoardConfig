@@ -10,10 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -81,6 +78,7 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
             gridPane.add(labelControl, col, row);
             if (viewType.equals(ClockConfigModel.ViewType.TEXT_FIELD)) {
                 TextField textField = new TextField();
+                textField.setPromptText("Numeric Field Only");
                 textField.setText(viewData.getResult());
                 gridPane.add(textField, col + 1, row);
                 // Store user-entered value into result field
