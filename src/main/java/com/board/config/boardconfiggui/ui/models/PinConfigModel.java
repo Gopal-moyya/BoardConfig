@@ -1,7 +1,6 @@
 package com.board.config.boardconfiggui.ui.models;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class PinConfigModel {
     private final String portName;
@@ -14,7 +13,6 @@ public class PinConfigModel {
         this.portName = portName;
         this.pinNumber = pinName;
     }
-
 
     public String getPortName() {
         return portName;

@@ -10,6 +10,7 @@ import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.dialogs.CustomAlert;
+import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,6 +37,7 @@ public class BoardConfigController implements Initializable{
 
     private final List<String> ipNames = new ArrayList<>();
     private final Map<String, Map<String, Pin>> portPinsMap = new HashMap<>();
+    private final Map<String,List<PinType>> pinTypeList = new HashMap<>();
     private Object currentController;
 
     @FXML
@@ -62,6 +64,7 @@ public class BoardConfigController implements Initializable{
     private void clearData() {
         portPinsMap.clear();
         ipNames.clear();
+        pinTypeList.clear();
     }
 
     private void initializeData() {
@@ -72,6 +75,8 @@ public class BoardConfigController implements Initializable{
             Map<String, Pin> pinsMap = new HashMap<>();
             for(Pin pin : port.getPinList()) {
                 pinsMap.put(pin.getName(), pin);
+                List<PinType> pinTypes = Utils.getPinTypesFromXml(pin);
+                pinTypeList.put(port.getName()+"_"+pin.getName(), pinTypes);
             }
             portPinsMap.put(port.getName(), pinsMap);
         }
@@ -189,7 +194,8 @@ public class BoardConfigController implements Initializable{
             }else{
                 loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
                 Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
-                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
+                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin,
+                        pinTypeList.get(item.getParent().getValue()+"_"+pin.getName()));
                 currentController = pinConfigController;
                 loader.setController(pinConfigController);
                 fxml = loader.load();

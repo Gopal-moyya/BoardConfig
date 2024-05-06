@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui.common;
 
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
+import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityConfig;
@@ -15,16 +16,16 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Logger;
 
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
+import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.scene.control.Alert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
+
+import static com.board.config.boardconfiggui.data.Constants.EXTI;
 
 /**
  * Utility class containing helper methods.
@@ -173,5 +174,124 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static List<PinType> getPinTypesFromXml(Pin pin) {
+        String pinValue = pin.getValues().replaceAll(" ", "");
+        List<PinType> pinTypes = new ArrayList<>();
+
+        if (pinValue.contains("],")) {
+            String[] splitValues = pinValue.split("],");
+            for (String mode : splitValues) {
+
+                if (mode.contains(":[")) {
+                    String[] split = mode.split(":\\[");
+
+                    String modeName = split[0].trim();
+                    List<PinType> pins = getModeValues(modeName, split[1]);
+                    if(CollectionUtils.isNotEmpty(pins)){
+                        pinTypes.addAll(pins);
+                    }
+
+                }
+            }
+        }
+        return pinTypes;
+    }
+
+    private static List<PinType> getModeValues(String modeName, String value){
+        List<PinType> pinTypes = new ArrayList<>();
+
+        List<String> modeValues = new ArrayList<>();
+
+        String pinValueString = value;
+
+        if(pinValueString.contains("]")){
+            pinValueString = pinValueString.replaceAll("]", "");
+        }
+
+        if(pinValueString.contains(",")){
+            modeValues = Arrays.stream(pinValueString.split(",")).toList();
+        }
+
+        if(CollectionUtils.isEmpty(modeValues)){
+            modeValues.add(pinValueString);
+        }
+
+        if(modeName.equals(Constants.GPIO)){
+            PinType gpioType = new PinType(modeName);
+            List<String> gpioChildren = new ArrayList<>();
+            Map<String, List<String>> subValues = new HashMap<>();
+            for(String name : modeValues){
+                if(name.contains("_")){
+                    String[] split = name.split("_");
+                    List<String> strings = subValues.get(split[0]);
+                    if(strings == null){
+                        strings = new ArrayList<>();
+                    }
+                    strings.add(split[1]);
+                    subValues.put(split[0], strings);
+                }else{
+                    subValues.put(name, new ArrayList<>());
+                }
+            }
+
+            List<PinType> subPinTypes = new ArrayList<>();
+            for(String key : subValues.keySet()){
+                gpioChildren.add(key);
+                if(key.equals(Constants.INPUT))
+                    continue;
+                PinType pinType1 = new PinType(key);
+                pinType1.setChildren(subValues.get(key));
+                subPinTypes.add(pinType1);
+            }
+
+            gpioType.setChildren(gpioChildren);
+            pinTypes.add(gpioType);
+            pinTypes.addAll(subPinTypes);
+
+        }else if(modeName.contains(EXTI)){
+
+            PinType inputPinType = new PinType(Constants.INPUT);
+            List<String> inputChildren = new ArrayList<>();
+            inputChildren.add(Constants.INPUT);
+            inputChildren.add(modeName);
+            inputPinType.setChildren(inputChildren);
+            pinTypes.add(inputPinType);
+
+            Map<String, List<String>> subValues = new HashMap<>();
+            for(String name : modeValues){
+                if(name.contains("_")){
+                    String[] split = name.split("_");
+                    List<String> strings = subValues.get(split[0]);
+                    if(strings == null){
+                        strings = new ArrayList<>();
+                    }
+                    strings.add(split[2]);
+                    subValues.put(split[0], strings);
+                }
+            }
+
+            List<PinType> subPinTypes = new ArrayList<>();
+            List<String> extChildren = new ArrayList<>();
+            PinType extType = new PinType(modeName);
+            for(String key : subValues.keySet()){
+                extChildren.add(key);
+                PinType pinType1 = new PinType(key);
+                pinType1.setChildren(subValues.get(key));
+                subPinTypes.add(pinType1);
+            }
+
+            extType.setChildren(extChildren);
+            pinTypes.add(extType);
+            pinTypes.addAll(subPinTypes);
+
+        }else if(modeName.equals(Constants.BY_PASS)){
+            PinType bypassType = new PinType(modeName);
+            bypassType.setChildren(modeValues);
+            pinTypes.add(bypassType);
+        }
+
+        return pinTypes;
     }
 }

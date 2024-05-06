@@ -9,6 +9,7 @@ import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigPara
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.models.PinConfigModel;
+import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +30,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
     private final String portName;
     private final Pin currentPin;
     private final PinConfigModel pinConfigUiModel;
+    private final List<PinType> pinTypes;
     @FXML
     private OnOffButtonWidgetController onOffWidgetController;
     @FXML
@@ -42,9 +44,10 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
     @FXML
     HBox inPutOutPutWidget;
 
-    public PinConfigController(String portName, Pin pin) {
+    public PinConfigController(String portName, Pin pin, List<PinType> pinTypes) {
         this.portName = portName;
         this.currentPin = pin;
+        this.pinTypes = pinTypes;
         pinConfigUiModel = new PinConfigModel(portName, pin.getName());
     }
 
