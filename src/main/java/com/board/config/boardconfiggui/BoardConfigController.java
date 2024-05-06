@@ -78,9 +78,6 @@ public class BoardConfigController implements Initializable{
 
         List<Ip> ipList = inputConfigRepo.getIpConfig().getIpList();
         for(Ip ip : ipList){
-            if(ip.getName().equals(Constants.QSPI_IP_NAME)){ //For now we are not adding QSPI IP name in UI
-                continue;
-            }
             List<Instance> instanceList = ip.getInstanceList();
             for(Instance instance: instanceList){
                 ipNames.add(instance.getName());
@@ -168,6 +165,7 @@ public class BoardConfigController implements Initializable{
 
         String PIN_CONFIG_FXML_NAME = "pin-config.fxml";
         String IP_CONFIG_FXML_NAME = "ip-config.fxml";
+        String QSPI_IP_CONFIG_FXML_NAME = "spi-ip-config.fxml";
         String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
 
         Parent fxml = null;
@@ -181,10 +179,17 @@ public class BoardConfigController implements Initializable{
                 loader.setController(clockConfigController);
                 fxml = loader.load();
             } else if (item.getParent().getValue().equals(IP_CONFIG_NAME)) {
-                loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
-                IpConfigController ipConfigController = new IpConfigController(item.getValue());
-                currentController = ipConfigController;
-                loader.setController(ipConfigController);
+                if (item.getValue().equals(Constants.QSPI_IP_NAME)) {
+                    loader = new FXMLLoader(getClass().getResource(QSPI_IP_CONFIG_FXML_NAME));
+                    SPIIpConfigController spiIpConfigController = new SPIIpConfigController(item.getValue());
+                    currentController = spiIpConfigController;
+                    loader.setController(spiIpConfigController);
+                } else {
+                    loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
+                    IpConfigController ipConfigController = new IpConfigController(item.getValue());
+                    currentController = ipConfigController;
+                    loader.setController(ipConfigController);
+                }
                 fxml = loader.load();
             }else{
                 loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
