@@ -13,6 +13,7 @@ import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.Param;
 import com.board.config.boardconfiggui.data.outputmodels.ipconfig.*;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
+import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
@@ -67,6 +68,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   private BoardResultsRepo boardResultsRepo;
 
   private PinConfig pinConfig;
+
+  private IpPinConfig sclIpConfigModel,
+          sdaIpConfigModel;
 
   private final List<IpPinConfig> ipPinConfigs = new ArrayList<>();
 
@@ -233,10 +237,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
         if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
           ipConfigModel.setSdaPin(signalParam.getPin());
           ipConfigModel.setSdaPort(portName);
+          sdaIpConfigModel = ipPinConfig;
           sdaChoiceBox.valueProperty().setValue(ipPinConfig);
         } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
           ipConfigModel.setSclPin(signalParam.getPin());
           ipConfigModel.setSclPort(portName);
+          sclIpConfigModel = ipPinConfig;
           sclChoiceBox.valueProperty().setValue(ipPinConfig);
         }
       }
@@ -289,6 +295,8 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       checkForEmptyIps(boardResult);
 
       IpConfigIp ipConfigIp = prepareIpConfigData();
+
+      prepareIpPinConfigData();
 
       for (IpConfigIp ip : boardResult.getIpConfig().getIps()) {
         if (ip.getName().equals(ipName)) {
@@ -414,4 +422,59 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
     }
   }
+
+  /**
+   * Prepares and manages IP PIN configurations based on the provided IP configuration model.
+   * If a PIN configuration does not exist, it creates and saves it. If an existing PIN
+   * configuration has a different PIN, it updates the configuration.
+   */
+  private void prepareIpPinConfigData() {
+    // Get the SCL port and PIN from the IP configuration model
+    String sclPortName = ipConfigModel.getSclPort();
+    String sclPinName = ipConfigModel.getSclPin();
+
+    if (StringUtils.isNotEmpty(sclPortName) && StringUtils.isNotEmpty(sclPinName)) {
+
+      if (Objects.nonNull(sclIpConfigModel) &&
+              !StringUtils.equals(sclIpConfigModel.getPinName(), sclPinName)) {
+        // remove the pin configuration of the existing port.
+        pinConfig.removePinConfig(sclIpConfigModel.getPortName(), sclIpConfigModel.getPinName());
+      }
+
+      // If no existing configuration, create and save a new one
+      prepareAndSaveIpPinConfig(sclPortName, sclPinName);
+    }
+
+    // Get the SDA port and PIN from the IP configuration model
+    String sdaPortName = ipConfigModel.getSdaPort();
+    String sdaPinName = ipConfigModel.getSdaPin();
+    if (StringUtils.isNotEmpty(sdaPortName) && StringUtils.isNotEmpty(sdaPinName)) {
+
+      if (Objects.nonNull(sdaIpConfigModel) &&
+              !StringUtils.equals(sdaIpConfigModel.getPinName(), sdaPinName)) {
+        // remove the pin configuration of the existing port.
+        pinConfig.removePinConfig(sdaIpConfigModel.getPortName(), sdaIpConfigModel.getPinName());
+      }
+
+      // If no existing configuration, create and save a new one
+      prepareAndSaveIpPinConfig(sdaPortName, sdaPinName);
+
+    }
+  }
+
+  /**
+   * Prepares and saves an IP PIN configuration.
+   *
+   * @param portNumber The port number associated with the IP PIN configuration.
+   * @param pinNumber  The pinNumber for the IP PIN configuration.
+   */
+  private void prepareAndSaveIpPinConfig(String portNumber, String pinNumber) {
+    // Create a PinConfigParam object using the IP pin from ipConfigModel
+    PinConfigParam pinConfigParam = new PinConfigParam(pinNumber);
+    // Set bypass mode to true (if applicable)
+    pinConfigParam.setByPassMode(true);
+    // Save the IP PIN configuration
+    pinConfig.savePinConfig(portNumber, pinNumber, pinConfigParam);
+  }
+
 }
