@@ -10,8 +10,7 @@
     <AnchorPane prefHeight="810.0" prefWidth="1080.0">
       <children>
         <fx:include fx:id="onOffWidget" source="onoff_widget.fxml" />
-        <GridPane fx:id="gridpaneWidget" alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0" AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0"
-        visible="false">
+        <GridPane fx:id="gridpaneWidget" alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0" visible="false" AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
           <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="310.0" minWidth="10.0" prefWidth="228.0" />
@@ -23,36 +22,32 @@
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
             <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
                   <RowConstraints />
           </rowConstraints>
           <children>
             <Label text="SCL Pin" />
             <Label text="SDA Pin" GridPane.columnIndex="3" />
-            <Label text="sysClk" GridPane.rowIndex="2" />
-            <Label text="i2cFreq" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <Label text="sdrFreq" GridPane.rowIndex="3" />
-            <TextField fx:id="sysClockField" onKeyTyped="#onSysClockUpdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="i2cFreqField" onKeyTyped="#onI2CFreqUpdate" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-            <TextField fx:id="sdrFreqField" onKeyTyped="#onSDSRFreqUpdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="sysClk" GridPane.rowIndex="1" />
+            <Label text="i2cFreq" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="sdrFreq" GridPane.rowIndex="2" />
+            <TextField fx:id="sysClockField" onKeyTyped="#onSysClockUpdate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="i2cFreqField" onKeyTyped="#onI2CFreqUpdate" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <TextField fx:id="sdrFreqField" onKeyTyped="#onSDSRFreqUpdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="sclChoiceBox" maxWidth="1.7976931348623157E308" onAction="#onSCLPinUpdate" promptText="select" GridPane.columnIndex="1" />
             <ComboBox fx:id="sdaChoiceBox" maxWidth="1.7976931348623157E308" onAction="#onSDAPinUpdate" promptText="select" GridPane.columnIndex="4" />
-            <Label text="Disabled pins : " GridPane.rowIndex="1" />
-            <Label GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Label fx:id="noOfSlavesLabel" prefHeight="15.0" prefWidth="170.0" text="Number of slaves" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <Spinner fx:id="noOfSlavesField" onMouseClicked="#onNoOfSlavesUpdate" min="0" max="10" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-            <Label fx:id="slavesInfoLabel" text="Slaves information :" visible="false" GridPane.rowIndex="4">
+            <Label fx:id="noOfSlavesLabel" prefHeight="15.0" prefWidth="170.0" text="Number of slaves" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Spinner fx:id="noOfSlavesField" max="10" min="0" onMouseClicked="#onNoOfSlavesUpdate" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Label fx:id="slavesInfoLabel" text="Slaves information :" visible="false" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <TextArea fx:id="disabledPinsTextArea" GridPane.columnSpan="4" wrapText="true" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           </children>
           <padding>
             <Insets left="60.0" right="60.0" top="40.0" />
           </padding>
         </GridPane>
-        <VBox fx:id="ipConfigVBox" visible="false" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="1075.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="380.0" />
+        <VBox fx:id="ipConfigVBox" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="1075.0" visible="false" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="380.0" />
       </children>
     </AnchorPane>
   </ScrollPane>

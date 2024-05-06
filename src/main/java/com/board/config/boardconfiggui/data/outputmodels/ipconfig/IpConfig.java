@@ -48,6 +48,23 @@ public class IpConfig {
     }
   }
 
+  /**
+   * Method to get {@link IpConfigIp} based on ip name
+   * @param ipName for reference
+   * @return {@link IpConfigIp}
+   */
+  public IpConfigIp getIpConfig(String ipName) {
+
+    if (CollectionUtils.isNotEmpty(ips)) {
+      return ips.stream()
+        .filter(ipConfigIpInstance -> ipConfigIpInstance.getName().equals(ipName))
+        .findFirst()
+        .orElse(null);
+    }
+
+    return null;
+  }
+
     @Override
     public String toString() {
         return "IpConfig{" +
