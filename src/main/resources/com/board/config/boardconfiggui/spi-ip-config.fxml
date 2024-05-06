@@ -2,8 +2,14 @@
 
 <?import javafx.scene.layout.*?>
 
-<Pane xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:id="spiConfigGridPane"
-      prefHeight="810.0" prefWidth="1080.0">
+<Pane maxHeight="810.0" maxWidth="1080.0" prefHeight="810.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane prefHeight="810.0" prefWidth="1080.0">
+        <children>
+            <fx:include fx:id="onOffWidget" source="onoff_widget.fxml" />
+            <GridPane fx:id="gridpaneWidget" alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0"
+                      minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0"
+                      AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0" visible="false">
+            </GridPane>
+        </children>
+    </AnchorPane>
 </Pane>
