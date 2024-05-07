@@ -92,26 +92,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             pinMap.put(pinType.getName(), pinType);
         }
 
-        PinConfig pinConfig = BoardResultsRepo.getInstance().getBoardResult().getPinConfig();
-        if (Objects.nonNull(pinConfig)) {
-            PinConfigParam pinConfigParam = pinConfig.getPinConfigParamsData(portName, currentPin.getName());
-
-            if (Objects.nonNull(pinConfigParam)) {
-                if (BooleanUtils.isTrue(pinConfigParam.isByPassMode())) {
-                    pinConfigUiModel.setSelectedMode(BY_PASS);
-                    inPutOutPutWidget.setVisible(false);
-                } else {
-                    pinConfigUiModel.setSelectedMode(GPIO);
-
-                    String value = StringUtils.isEmpty(pinConfigParam.getDirection()) ? pinConfigParam.getIntValue() :
-                            StringUtils.isEmpty(pinConfigParam.getValue()) ? INPUT : pinConfigParam.getValue();
-                    pinConfigUiModel.setSelectedValue(value);
-                    inPutOutPutWidget.setVisible(true);
-                }
-                pinConfigUiModel.setPinStatus(true);
-            }
-
-        }
+        populatePreviousData();
 
         final List<String> modeTypes = new ArrayList<>();
         PinType pinType = pinMap.get(MODES_TEXT);
@@ -137,6 +118,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                 handleButtonOnStatus(modeTypes);
 
             } else {
+                pinConfigUiModel.setPinStatus(false);
                 handleButtonOffStatus();
             }
         });
@@ -219,13 +201,37 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         });
 
         edgeWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
-            pinConfigUiModel.setSelectedEdgeType(exioWidgetController.getCmbInfoItem().getValue());
+            pinConfigUiModel.setSelectedEdgeType(newValue);
         });
 
         outPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
             pinConfigUiModel.setSelectedOutputType(newValue);
         });
 
+    }
+
+    private void populatePreviousData() {
+
+        PinConfig pinConfig = BoardResultsRepo.getInstance().getBoardResult().getPinConfig();
+        if (Objects.nonNull(pinConfig)) {
+            PinConfigParam pinConfigParam = pinConfig.getPinConfigParamsData(portName, currentPin.getName());
+
+            if (Objects.nonNull(pinConfigParam)) {
+                if (BooleanUtils.isTrue(pinConfigParam.isByPassMode())) {
+                    pinConfigUiModel.setSelectedMode(BY_PASS);
+
+                } else {
+                    pinConfigUiModel.setSelectedMode(GPIO);
+
+                    String value = StringUtils.isEmpty(pinConfigParam.getDirection()) ? pinConfigParam.getIntValue() :
+                            StringUtils.isEmpty(pinConfigParam.getValue()) ? INPUT : pinConfigParam.getValue();
+                    pinConfigUiModel.setSelectedValue(value);
+                    inPutOutPutWidget.setVisible(true);
+                }
+                pinConfigUiModel.setPinStatus(true);
+            }
+
+        }
     }
 
     private void handleButtonOnStatus(List<String> modeTypes) {
@@ -339,33 +345,35 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             pinConfigParam.setByPassMode(true);
         } else {
             //If not selected input/output type
-            if (StringUtils.isEmpty(pinConfigUiModel.getSelectedValue())) {
+            if (StringUtils.isEmpty(pinConfigUiModel.getSelectedIOType())) {
                 return;
             }
-            switch (pinConfigUiModel.getSelectedValue()) {
-                case INPUT:
+
+            if(INPUT.equalsIgnoreCase(pinConfigUiModel.getSelectedIOType())){
+                String selectedInputType = pinConfigUiModel.getSelectedInputType();
+                if(StringUtils.isEmpty(selectedInputType)) {
+                    return;
+                }
+                if(INPUT.equalsIgnoreCase(selectedInputType)) {
                     pinConfigParam.setByPassMode(false);
                     pinConfigParam.setDirection(DIRECTION_INPUT);
-                    break;
-                case OUTPUT_LOW:
-                case OUTPUT_HIGH:
-                    pinConfigParam.setByPassMode(false);
-                    pinConfigParam.setDirection(DIRECTION_OUTPUT);
-                    pinConfigParam.setValue(pinConfigUiModel.getSelectedValue());
-                    break;
-                case LEVEL_TRIG_HIGH:
-                case LEVEL_TRIG_LOW:
-                case EDGE_TRIG_FALL:
-                case EDGE_TRIG_RISE:
-                case EDGE_TRIG_ANY:
+                }else{
                     pinConfigParam.setIntEnable(true);
-                    String selectedValue = pinConfigUiModel.getSelectedValue();
-                    pinConfigParam.setIntType(selectedValue.startsWith(LEVEL) ?
-                            LEVEL_TRIGGERED : EDGE_TRIGGERED);
-                    pinConfigParam.setIntValue(pinConfigUiModel.getSelectedValue());
-                    break;
-                default:
-                    break;
+                    String selectedExioType = pinConfigUiModel.getSelectedExioType();
+                    if(StringUtils.isNotEmpty(selectedExioType)){
+                        if(selectedExioType.equalsIgnoreCase(LEVEL)){
+                            pinConfigParam.setIntType(LEVEL_TRIGGERED);
+                            pinConfigParam.setIntValue(pinConfigUiModel.getSelectedLevelType());
+                        }else{
+                            pinConfigParam.setIntType(EDGE_TRIGGERED);
+                            pinConfigParam.setIntValue(pinConfigUiModel.getSelectedEdgeType());
+                        }
+                    }
+                }
+            }else{
+                pinConfigParam.setByPassMode(false);
+                pinConfigParam.setDirection(DIRECTION_OUTPUT);
+                pinConfigParam.setValue(pinConfigUiModel.getSelectedOutputType());
             }
         }
         pinConfig.savePinConfig(portName, currentPin.getName(), pinConfigParam);

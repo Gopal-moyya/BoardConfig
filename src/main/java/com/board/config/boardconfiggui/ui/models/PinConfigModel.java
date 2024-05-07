@@ -123,7 +123,7 @@ public class PinConfigModel {
                 ", selectedOutputType='" + selectedOutputType + '\'' +
                 ", selectedExioType='" + selectedExioType + '\'' +
                 ", selectedLevelType='" + selectedLevelType + '\'' +
-                ", selectedTriggerType='" + selectedEdgeType + '\'' +
+                ", selectedEdgeType='" + selectedEdgeType + '\'' +
                 ", selectedValue='" + selectedValue + '\'' +
                 ", pinStatus=" + pinStatus +
                 '}';
