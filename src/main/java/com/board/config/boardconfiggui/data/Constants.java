@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data;
 
+import com.board.config.boardconfiggui.data.enums.ConfigParam;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -165,5 +167,14 @@ public class Constants {
     public static final String SYS_CLK_PARAM = "sysClk";
     public static final String I2C_FREQ_PARAM = "i2cFreq";
     public static final String SDR_FREQ_PARAM = "sdrFreq";
+
+    public static final List<ConfigParam> QSPI_WRITE_COMPLETION_CONFIG_CONTROLS = Arrays.asList(
+            ConfigParam.POOL_COUNT,
+            ConfigParam.POLLING_BIT_INDEX,
+            ConfigParam.OPCODE,
+            ConfigParam.IS_DISABLED,
+            ConfigParam.POLLING_POLARITY,
+            ConfigParam.REPETITION_DELAY
+    );
 }
 

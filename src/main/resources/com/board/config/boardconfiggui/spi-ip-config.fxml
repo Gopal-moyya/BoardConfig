@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
+<?import javafx.geometry.Insets?>
 <Pane maxHeight="810.0" maxWidth="1080.0" prefHeight="810.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
     <AnchorPane prefHeight="810.0" prefWidth="1080.0">
         <children>
             <fx:include fx:id="onOffWidget" source="onoff_widget.fxml" />
-            <GridPane fx:id="gridpaneWidget" alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0"
-                      minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0"
-                      AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0" visible="false">
+            <GridPane fx:id="spiControlsGridPane" hgap="60.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity"
+                      maxWidth="1080.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT"
+                      prefHeight="300.0" prefWidth="1080.0" vgap="10.0" visible="false" AnchorPane.bottomAnchor="461.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
+                <columnConstraints>
+                    <ColumnConstraints maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                    <ColumnConstraints maxWidth="280.0" minWidth="10.0" prefWidth="280.0" />
+                    <ColumnConstraints maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                    <ColumnConstraints maxWidth="280.0" minWidth="10.0" prefWidth="280.0" />
+                </columnConstraints>
+                <padding>
+                    <Insets left="60.0" right="60.0" top="40.0" />
+                </padding>
+            </GridPane>
+         <Label fx:id="configControlHeader" layoutX="10.0" layoutY="370.0" AnchorPane.topAnchor="370.0" visible="false" >
+            <font>
+               <Font name="System Bold" size="13.0" />
+            </font>
+         </Label>
+            <GridPane fx:id="configControlsGridPane" hgap="60.0" layoutX="8.0" layoutY="410.0" maxHeight="-Infinity"
+                      maxWidth="1080.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT"
+                      prefHeight="325.0" prefWidth="1080.0" vgap="10.0" visible="false" AnchorPane.bottomAnchor="39.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="410.0">
+                <columnConstraints>
+                    <ColumnConstraints maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                    <ColumnConstraints maxWidth="280.0" minWidth="10.0" prefWidth="280.0" />
+                    <ColumnConstraints maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                    <ColumnConstraints maxWidth="280.0" minWidth="10.0" prefWidth="280.0" />
+                </columnConstraints>
+                <padding>
+                    <Insets left="60.0" right="60.0" top="40.0" />
+                </padding>
             </GridPane>
         </children>
     </AnchorPane>
