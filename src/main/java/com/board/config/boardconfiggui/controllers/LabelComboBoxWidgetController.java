@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 
 public class LabelComboBoxWidgetController {
     @FXML
@@ -20,6 +21,19 @@ public class LabelComboBoxWidgetController {
     public void setComboBoxLabel(String text, String promptText) {
         comboBoxLabel.setText(text);
         comboBox.setPromptText(promptText);
+
+        //Handled if prompt message not updated in UI
+        comboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(promptText);
+                } else {
+                    setText(item);
+                }
+            }
+        });
     }
 
     public void setItems(ObservableList<String> items) {
