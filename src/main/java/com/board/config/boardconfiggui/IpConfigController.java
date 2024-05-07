@@ -404,9 +404,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
   private void clearUi() {
     sdaChoiceBox.setValue(null);
-    sdaChoiceBox.setPromptText("select");
+    sdaChoiceBox.setPromptText(Constants.SELECT);
     sclChoiceBox.setValue(null);
-    sclChoiceBox.setPromptText("select");
+    sclChoiceBox.setPromptText(Constants.SELECT);
     sysClockField.textProperty().setValue(null);
     i2cFreqField.textProperty().setValue(null);
     sdrFreqField.textProperty().setValue(null);
@@ -420,6 +420,12 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     IpConfig ipConfig = boardResultsRepo.getBoardResult().getIpConfig();
     if (Objects.nonNull(ipConfig)) {
       boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
+      if (Objects.nonNull(sclIpConfigModel)) {
+        pinConfig.removePinConfig(sclIpConfigModel.getPortName(), sclIpConfigModel.getPinName());
+      }
+      if (Objects.nonNull(sdaIpConfigModel)) {
+        pinConfig.removePinConfig(sdaIpConfigModel.getPortName(), sdaIpConfigModel.getPinName());
+      }
     }
   }
 
@@ -436,13 +442,14 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     if (StringUtils.isNotEmpty(sclPortName) && StringUtils.isNotEmpty(sclPinName)) {
 
       if (Objects.nonNull(sclIpConfigModel) &&
-              !StringUtils.equals(sclIpConfigModel.getPinName(), sclPinName)) {
+              (!StringUtils.equals(sclIpConfigModel.getPortName(), sclPortName)
+                      || !StringUtils.equals(sclIpConfigModel.getPinName(), sclPinName))) {
         // remove the pin configuration of the existing port.
         pinConfig.removePinConfig(sclIpConfigModel.getPortName(), sclIpConfigModel.getPinName());
       }
 
       // If no existing configuration, create and save a new one
-      prepareAndSaveIpPinConfig(sclPortName, sclPinName);
+      prepareAndSaveIpPinConfig(sclPortName, sclPinName, getSCLParam());
     }
 
     // Get the SDA port and PIN from the IP configuration model
@@ -451,13 +458,14 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     if (StringUtils.isNotEmpty(sdaPortName) && StringUtils.isNotEmpty(sdaPinName)) {
 
       if (Objects.nonNull(sdaIpConfigModel) &&
-              !StringUtils.equals(sdaIpConfigModel.getPinName(), sdaPinName)) {
+              (!StringUtils.equals(sdaIpConfigModel.getPortName(), sdaPortName) ||
+                      !StringUtils.equals(sdaIpConfigModel.getPinName(), sdaPinName))) {
         // remove the pin configuration of the existing port.
         pinConfig.removePinConfig(sdaIpConfigModel.getPortName(), sdaIpConfigModel.getPinName());
       }
 
       // If no existing configuration, create and save a new one
-      prepareAndSaveIpPinConfig(sdaPortName, sdaPinName);
+      prepareAndSaveIpPinConfig(sdaPortName, sdaPinName, getSDAParam());
 
     }
   }
@@ -465,14 +473,17 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   /**
    * Prepares and saves an IP PIN configuration.
    *
-   * @param portNumber The port number associated with the IP PIN configuration.
-   * @param pinNumber  The pinNumber for the IP PIN configuration.
+   * @param portNumber   The port number associated with the IP PIN configuration.
+   * @param pinNumber    The pinNumber for the IP PIN configuration.
+   * @param pinParamValue The value of the IP PIN parameter (e.g., SDA, SCL).
    */
-  private void prepareAndSaveIpPinConfig(String portNumber, String pinNumber) {
+  private void prepareAndSaveIpPinConfig(String portNumber, String pinNumber, String pinParamValue) {
     // Create a PinConfigParam object using the IP pin from ipConfigModel
     PinConfigParam pinConfigParam = new PinConfigParam(pinNumber);
     // Set bypass mode to true (if applicable)
     pinConfigParam.setByPassMode(true);
+    // Set pinParamValue to pinConfigParam
+    pinConfigParam.setValue(pinParamValue);
     // Save the IP PIN configuration
     pinConfig.savePinConfig(portNumber, pinNumber, pinConfigParam);
   }

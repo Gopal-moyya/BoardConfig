@@ -87,7 +87,7 @@ public class LoadDataController  {
         Node sourceNode = (Node) event.getSource();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Folder");
+        directoryChooser.setTitle(Constants.SELECT_FOLDER);
 
         String directoryPath = getInitialDirectoryPath(sourceNode.getUserData().toString());
         if (StringUtils.isNotEmpty(directoryPath)) {
@@ -98,19 +98,19 @@ public class LoadDataController  {
         File selectedFolder = directoryChooser.showDialog(null);
         if (selectedFolder != null) {
             switch (sourceNode.getUserData().toString()){
-                case "xmlBtn":
+                case Constants.XML_BUTTON_TYPE:
                     xmlPathField.setText(selectedFolder.getAbsolutePath());
                     this.xmlFolderPath = xmlPathField.getText();
                     break;
-                case "repoBtn":
+                case Constants.REPO_BUTTON_TYPE:
                     repoPathField.setText(selectedFolder.getAbsolutePath());
                     this.repositoryFolderPath = repoPathField.getText();
                     break;
-                case "toolChainBtn":
+                case Constants.TOOL_CHAIN_BUTTON_TYPE:
                     toolChainPathField.setText(selectedFolder.getAbsolutePath());
                     this.toolChainFolderPath = toolChainPathField.getText();
                     break;
-                case "outputBtn":
+                case Constants.OUTPUT_BUTTON_TYPE:
                     outputPathField.setText(selectedFolder.getAbsolutePath());
                     this.outputLocationFolderPath = outputPathField.getText();
                     break;
@@ -243,10 +243,10 @@ public class LoadDataController  {
         }
 
         return switch (sourceNodeType) {
-            case "xmlBtn" -> xmlFolderPath;
-            case "repoBtn" -> repositoryFolderPath;
-            case "toolChainBtn" -> toolChainFolderPath;
-            case "outputBtn" -> outputLocationFolderPath;
+            case Constants.XML_BUTTON_TYPE -> xmlFolderPath;
+            case Constants.REPO_BUTTON_TYPE -> repositoryFolderPath;
+            case Constants.TOOL_CHAIN_BUTTON_TYPE -> toolChainFolderPath;
+            case Constants.OUTPUT_BUTTON_TYPE -> outputLocationFolderPath;
             default -> null;
         };
     }
