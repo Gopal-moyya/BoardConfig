@@ -18,6 +18,8 @@ public class Constants {
      */
     public static final String PIN_CONFIG_FILE_NAME = "pin_muxing.xml";
 
+    public static final String BOARD_CONFIG_FILE_NAME = "board_configuration.xml";
+
     /**
      * Constant representing the development role.
      */
@@ -51,6 +53,8 @@ public class Constants {
     public static final String IBI_PAYLOAD_SIZE = "ibiPayloadSize";
     public static final String IBI_PAYLOAD_SPEED_LIMIT = "ibiPayloadSpeedLimit";
     public static final String SELECT_DEVICE_ROLE = "Select Device Role";
+    public static final String IBI_DEVICE_ENABLED = "1";
+    public static final String NUMERIC_FIELD_ONLY = "Numeric Field Only";
 
     //Strings related to the Pin configuration
     public static final String INPUT = "input";
@@ -70,10 +74,13 @@ public class Constants {
 
     public static final String BOARD_NAME = "Board Name";
 
+    public static final String SELECT = "select";
+
     /**
      * Constant for direction output.
      */
     public static final String DIRECTION_OUTPUT = "Output";
+    public static final String DIRECTION_INPUT = "Input";
 
     /**
      * Constant representing the value '1'.
@@ -153,5 +160,10 @@ public class Constants {
             "FOUT_POSTDIV4",
             "FOUT_POSTDIV5"
     );
+
+    //IpConfig strings
+    public static final String SYS_CLK_PARAM = "sysClk";
+    public static final String I2C_FREQ_PARAM = "i2cFreq";
+    public static final String SDR_FREQ_PARAM = "sdrFreq";
 }
 

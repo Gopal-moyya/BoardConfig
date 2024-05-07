@@ -38,12 +38,12 @@ public class ValidationUtils {
             return missingConfig.toString();
         }
 
-        String message = validateConnectivityConfig(boardResult.getConnectivityConfig());
-        if (StringUtils.isNotEmpty(message)) {
-            missingConfig.append(message);
-        }
+//        String message = validateConnectivityConfig(boardResult.getConnectivityConfig());
+//        if (StringUtils.isNotEmpty(message)) {
+//            missingConfig.append(message);
+//        }
 
-        message = validatePinConfig(boardResult.getPinConfig());
+        String message = validatePinConfig(boardResult.getPinConfig());
         if (StringUtils.isNotEmpty(message)) {
             missingConfig.append(message);
         }
@@ -105,10 +105,10 @@ public class ValidationUtils {
     }
 
     private static String validatePinConfigParam(PinConfigParam pinConfigParam) {
-        boolean isByPassMode = pinConfigParam.isByPassMode() != null && pinConfigParam.isByPassMode();
+        boolean isNotByPassMode = pinConfigParam.isByPassMode() != null && !pinConfigParam.isByPassMode();
         boolean isIntEnable = pinConfigParam.isIntEnable() != null && pinConfigParam.isIntEnable();
 
-        if (!isByPassMode) {
+        if (isNotByPassMode) {
             if (StringUtils.isEmpty(pinConfigParam.getDirection())) {
                 return "Direction is missing for pin " + pinConfigParam.getPin();
             }
@@ -205,7 +205,7 @@ public class ValidationUtils {
         StringBuilder missingConfig = new StringBuilder();
 
         paramsRequired.stream()
-                .filter(paramRequired -> params.stream().noneMatch(p -> p.getName().equals(paramRequired)))
+                .filter(paramRequired -> params.stream().noneMatch(p -> p.getName().equals(paramRequired) && StringUtils.isNotEmpty(p.getValue())))
                 .forEach(paramRequired -> missingConfig.append("IPConfig: Param ")
                         .append(paramRequired)
                         .append(" is missing for ")
@@ -227,8 +227,8 @@ public class ValidationUtils {
 
         for (DeviceConfiguration deviceConfiguration : deviceConfigurations) {
             if (CollectionUtils.isEmpty(deviceConfiguration.getParams())) {
-                missingConfig.append("IPConfig DeviceConfiguration: Required params are missing for ")
-                        .append(deviceConfiguration.getName())
+                missingConfig.append("IPConfig DeviceConfiguration: Required params are missing for device ")
+                        .append(deviceConfiguration.getName() == null ? "unknown" : deviceConfiguration.getName())
                         .append(" in ").append(ipName)
                         .append(".\n");
                 continue;
@@ -236,7 +236,7 @@ public class ValidationUtils {
 
             List<Param> params = deviceConfiguration.getParams();
             boolean isIbiDevice = params.stream()
-                    .anyMatch(param -> param.getName().equals(Constants.IS_IBI_DEVICE) && param.getValue().equals(Constants.ONE));
+              .anyMatch(param -> param != null && StringUtils.equals(param.getName(),Constants.IS_IBI_DEVICE) && StringUtils.equals(param.getValue(), Constants.ONE));
 
             List<String> combinedParamsRequired = new ArrayList<>(paramsRequired);
             if (isIbiDevice) {
@@ -244,11 +244,11 @@ public class ValidationUtils {
             }
 
             for (String paramRequired : combinedParamsRequired) {
-                if (params.stream().noneMatch(p -> p.getName().equals(paramRequired))) {
+                if (params.stream().noneMatch(p -> p.getName().equals(paramRequired) && StringUtils.isNotEmpty(p.getValue()))) {
                     missingConfig.append("IPConfig DeviceConfiguration: Param ")
                             .append(paramRequired)
-                            .append(" is missing for ")
-                            .append(deviceConfiguration.getName())
+                            .append(" is missing for device ")
+                            .append(deviceConfiguration.getName() == null ? "unknown" : deviceConfiguration.getName())
                             .append(" in ").append(ipName).append(".\n");
                 }
             }
@@ -268,7 +268,7 @@ public class ValidationUtils {
         StringBuilder missingConfig = new StringBuilder();
 
         paramsRequired.stream()
-                .filter(paramRequired -> configParams.stream().noneMatch(p -> p.getName().equals(paramRequired)))
+                .filter(paramRequired -> configParams.stream().noneMatch(p -> p.getName().equals(paramRequired) && StringUtils.isNotEmpty(p.getValue())))
                 .forEach(paramRequired -> missingConfig.append("ClockConfig: Param ")
                         .append(paramRequired)
                         .append(" is missing.\n"));

@@ -20,7 +20,7 @@ public class SignalParam {
     }
 
     public SignalParam(String pin, String name) {
-        this.pin = name;
+        this.pin = pin;
         this.name = name;
     }
 

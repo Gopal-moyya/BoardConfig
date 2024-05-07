@@ -1,15 +1,14 @@
 package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
 import com.sun.istack.NotNull;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @XmlRootElement(name = "pinConfig")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -72,6 +71,12 @@ public class PinConfig {
         return Objects.hashCode(ports);
     }
 
+    /**
+     * Method to save the pin configuration of the given port.
+     * @param portNumber reference of the port number
+     * @param pinNumber reference of the pin number to be saved
+     * @param pinConfigParam reference of the pin configuration to be saved.
+     */
     public void savePinConfig(String portNumber, String pinNumber, @NotNull PinConfigParam pinConfigParam) {
 
         if (CollectionUtils.isEmpty(ports)) {
@@ -96,6 +101,12 @@ public class PinConfig {
         }
     }
 
+
+    /**
+     * Method to remove the pin configuration of the given port.
+     * @param portNumber reference of the port number
+     * @param pinNumber reference of the pin to be removed.
+     */
     public void removePinConfig(String portNumber, String pinNumber) {
 
         if (CollectionUtils.isNotEmpty(ports)) {
@@ -108,5 +119,27 @@ public class PinConfig {
             }
 
         }
+    }
+
+    /**
+     * Method to get all the bypass enabled pin configurations of the current port.
+     *
+     * @return bypass supported pin configurations
+     */
+    public Map<String, List<String>> getBypassConfiguredPins() {
+      if (CollectionUtils.isEmpty(ports)) {
+        return new HashMap<>();
+      }
+      Map<String, List<String>> bypassConfiguredPins = new HashMap<>();
+      for (PinConfigPort pinConfigPort : ports) {
+        List<String> pins = new ArrayList<>();
+        for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
+          if (BooleanUtils.isTrue(pinConfigParam.byPassMode)) {
+            pins.add(pinConfigParam.getPin());
+          }
+        }
+        bypassConfiguredPins.put(pinConfigPort.getName(), pins);
+      }
+      return bypassConfiguredPins;
     }
 }

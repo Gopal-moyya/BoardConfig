@@ -1,7 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 
-import org.apache.commons.codec.binary.StringUtils;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;

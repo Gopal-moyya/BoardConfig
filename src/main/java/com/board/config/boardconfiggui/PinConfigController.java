@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui;
 
 import com.board.config.boardconfiggui.controllers.LabelComboBoxWidgetController;
 import com.board.config.boardconfiggui.controllers.OnOffButtonWidgetController;
+import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
@@ -60,7 +61,9 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                     inPutOutPutWidget.setVisible(false);
                 } else {
                     pinConfigUiModel.setSelectedMode(GPIO);
-                    String value = pinConfigParam.getDirection() == null ? pinConfigParam.getIntValue() : pinConfigParam.getDirection();
+
+                    String value = StringUtils.isEmpty(pinConfigParam.getDirection()) ? pinConfigParam.getIntValue() :
+                            StringUtils.isEmpty(pinConfigParam.getValue()) ? INPUT : pinConfigParam.getValue();
                     pinConfigUiModel.setSelectedValue(value);
                     inPutOutPutWidget.setVisible(true);
                 }
@@ -75,10 +78,10 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
             onOffWidgetController.setButtonText(OnOffButtonWidgetController.ON_TXT);
             dropDownWidget.setVisible(true);
-            dropDownWidgetController.setComboBoxLabel("Mode Type:", "select");
+            dropDownWidgetController.setComboBoxLabel("Mode Type:", Constants.SELECT);
             dropDownWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
             dropDownWidgetController.setSelectedMode(pinConfigUiModel.getSelectedMode());
-            inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", "select");
+            inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", Constants.SELECT);
             inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
             inPutOutPutWidgetController.setSelectedMode(pinConfigUiModel.getSelectedValue());
         } else {
@@ -99,7 +102,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                 dropDownWidget.setVisible(true);
                 inPutOutPutWidget.setVisible(false);
                 dropDownWidgetController.setItems(null);
-                dropDownWidgetController.setComboBoxLabel("Mode Type:", "select");
+                dropDownWidgetController.setComboBoxLabel("Mode Type:", Constants.SELECT);
                 dropDownWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
             } else {
                 onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
@@ -117,7 +120,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         dropDownWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
             if (GPIO.equals(newValue)) {
                 inPutOutPutWidget.setVisible(true);
-                inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", "select");
+                inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", Constants.SELECT);
                 inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
                 pinConfigUiModel.setSelectedMode(inPutOutPutWidgetController.getCmbInfoItem().getValue());
             } else {
@@ -179,12 +182,20 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         if (pinConfigUiModel.getSelectedMode().equals(BY_PASS)) {
             pinConfigParam.setByPassMode(true);
         } else {
+            //If not selected input/output type
+            if(StringUtils.isEmpty(pinConfigUiModel.getSelectedValue())){
+                return;
+            }
             switch (pinConfigUiModel.getSelectedValue()) {
                 case INPUT:
+                    pinConfigParam.setByPassMode(false);
+                    pinConfigParam.setDirection(DIRECTION_INPUT);
+                    break;
                 case OUTPUT_LOW:
                 case OUTPUT_HIGH:
                     pinConfigParam.setByPassMode(false);
-                    pinConfigParam.setDirection(pinConfigUiModel.getSelectedValue());
+                    pinConfigParam.setDirection(DIRECTION_OUTPUT);
+                    pinConfigParam.setValue(pinConfigUiModel.getSelectedValue());
                     break;
                 case LEVEL_TRIG_HIGH:
                 case LEVEL_TRIG_LOW:
