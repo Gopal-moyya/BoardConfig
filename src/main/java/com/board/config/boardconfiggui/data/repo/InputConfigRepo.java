@@ -1,8 +1,8 @@
 package com.board.config.boardconfiggui.data.repo;
 
+import com.board.config.boardconfiggui.data.inputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.IpConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
-import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
 
 /**
  * The InputConfigRepo class represents a repository for storing input configuration data,

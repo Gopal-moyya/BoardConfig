@@ -78,6 +78,9 @@ public class Constants {
 
     public static final String SELECT = "select";
 
+    public static final String TRUE = "TRUE";
+    public static final String FALSE = "FALSE";
+
     /**
      * Constant for direction output.
      */

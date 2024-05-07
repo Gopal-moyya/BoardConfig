@@ -1,9 +1,13 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.data.Constants;
+import com.board.config.boardconfiggui.data.enums.DataType;
+import com.board.config.boardconfiggui.data.inputmodels.clockconfig.ClockConfigParameter;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfigParam;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
+import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.models.ClockConfigModel;
 import javafx.fxml.FXML;
@@ -16,47 +20,34 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static com.board.config.boardconfiggui.data.Constants.NUMERIC_FIELD_ONLY;
 
 public class ClockConfigController implements Initializable, BoardPageDataSaverInterface {
 
-    private List<ClockConfigModel> viewsData;
+    private final List<ClockConfigModel> configModelList = new ArrayList<>();
 
     @FXML
     private Pane clockConfigGridPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        viewsData = new ArrayList<>();
 
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "FREF_BYPASS", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "DAC_EN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "DSM_EN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "FBDIV_INT", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "FBDIV_FRAC", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "FOUT_POSTDIV_EN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "FOUT_VCO_EN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FREF", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "OFFSET_CAL_EN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "OFFSET_CAL_BYP", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "OFFSET_CAL_CNT", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "OFFSET_CAL_IN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "OFFSET_FAST_CAL", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.RADIO_BUTTON, "PLL_EN", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "REF_DIV", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "POSTDIV1", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "POSTDIV2", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV1", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV2", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV3", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV4", ""));
-        viewsData.add(new ClockConfigModel(ClockConfigModel.ViewType.TEXT_FIELD, "FOUT_POSTDIV5", ""));
+        InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
+        List<ClockConfigParameter> configParameters = inputConfigRepo.getClockConfig().getClockConfigParams();
+        if (CollectionUtils.isNotEmpty(configParameters)) {
+            for (ClockConfigParameter configParameter : configParameters) {
+                configModelList.add(new ClockConfigModel(configParameter.getId(), configParameter.getType(), configParameter.getDisplayValue()));
+            }
+        }
 
         prefillData();
 
@@ -69,46 +60,45 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
 
         int col = 0;
         int row = 0;
-        for (ClockConfigModel viewData : viewsData) {
-            ClockConfigModel.ViewType viewType = viewData.getViewType();
-            String label = viewData.getLabel();
+        for (ClockConfigModel clockConfigModel : configModelList) {
 
-            Label labelControl = new Label(label + ":");
+            Label labelControl = new Label(clockConfigModel.getLabel() + ":");
             Font myFont = Font.font("", FontWeight.BOLD, 14);
             labelControl.setFont(myFont);
 
             gridPane.add(labelControl, col, row);
-            if (viewType.equals(ClockConfigModel.ViewType.TEXT_FIELD)) {
+            if (Objects.equals(clockConfigModel.getViewType(), DataType.Integer)) {
                 TextField textField = new TextField();
                 textField.setPromptText(NUMERIC_FIELD_ONLY);
-                textField.setText(viewData.getResult());
+                textField.setText(clockConfigModel.getResult());
                 gridPane.add(textField, col + 1, row);
                 // Store user-entered value into result field
                 textField.textProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue.matches("\\d*")) {
-                        viewData.setResult(newValue);
+                        clockConfigModel.setResult(newValue);
                     } else {
                         textField.setText(oldValue);
                     }
                 });
-            } else if (viewType.equals(ClockConfigModel.ViewType.RADIO_BUTTON)) {
+            } else if (Objects.equals(clockConfigModel.getViewType(), DataType.Boolean)) {
                 ToggleGroup toggleGroup = new ToggleGroup();
-                RadioButton radioButton1 = new RadioButton("TRUE");
-                RadioButton radioButton2 = new RadioButton("FALSE");
+                RadioButton radioButton1 = new RadioButton(Constants.TRUE);
+                RadioButton radioButton2 = new RadioButton(Constants.FALSE);
                 radioButton1.setToggleGroup(toggleGroup);
                 radioButton2.setToggleGroup(toggleGroup);
                 HBox radioButtonBox = new HBox(10, radioButton1, radioButton2);
                 gridPane.add(radioButtonBox, col + 1, row);
 
-                if (viewData.getResult().equals("TRUE")) {
+                if (StringUtils.equals(clockConfigModel.getResult(), Constants.TRUE)) {
                     radioButton1.setSelected(true);
-                } else if (viewData.getResult().equals("FALSE")) {
+                } else if (StringUtils.equals(clockConfigModel.getResult(), Constants.FALSE)) {
                     radioButton2.setSelected(true);
                 }
+
                 toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
+                    if (StringUtils.isNotEmpty(newValue.toString())) {
                         RadioButton selectedRadioButton = (RadioButton) newValue;
-                        viewData.setResult(selectedRadioButton.getText());
+                        clockConfigModel.setResult(selectedRadioButton.getText());
                     }
                 });
             }
@@ -128,14 +118,14 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
         BoardResult boardResult = boardResultsRepo.getBoardResult();
         ClockConfig clockConfig = boardResult.getClockConfig();
 
-        if (clockConfig == null || clockConfig.getConfigParams().isEmpty()) {
+        if (Objects.isNull(clockConfig) || CollectionUtils.isEmpty(clockConfig.getConfigParams())) {
             return;
         }
 
         clockConfig.getConfigParams().forEach(clockConfigParam -> {
             if (!clockConfigParam.getValue().isEmpty()) {
-                viewsData.forEach(data -> {
-                    if (data.getLabel().equals(clockConfigParam.getName())) {
+                configModelList.forEach(data -> {
+                    if (StringUtils.equals(data.getId(), clockConfigParam.getName())) {
                         data.setResult(clockConfigParam.getValue());
                     }
                 });
@@ -146,8 +136,8 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
     @Override
     public void saveData() {
         List<ClockConfigParam> clockConfigParams = new ArrayList<>();
-        viewsData.forEach(data -> {
-            if (!data.getResult().isEmpty()) {
+        configModelList.forEach(data -> {
+            if (StringUtils.isNotEmpty(data.getResult())) {
                 clockConfigParams.add(new ClockConfigParam(data.getLabel(), data.getResult()));
             }
         });

@@ -2,9 +2,9 @@ package com.board.config.boardconfiggui.common;
 
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
+import com.board.config.boardconfiggui.data.inputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
-import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityConfig;
 import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityIp;
 import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfig;

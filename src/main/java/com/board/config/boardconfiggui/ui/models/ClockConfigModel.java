@@ -1,30 +1,29 @@
 package com.board.config.boardconfiggui.ui.models;
 
+import com.board.config.boardconfiggui.data.enums.DataType;
+
 public class ClockConfigModel {
-    private ViewType viewType;
-    private String label;
+    private final String id;
+    private final DataType viewType;
+    private final String label;
     private String result;
 
-    public ClockConfigModel(ViewType viewType, String label, String result) {
+    public ClockConfigModel(String id, DataType viewType, String label) {
+        this.id = id;
         this.viewType = viewType;
         this.label = label;
-        this.result = result;
     }
 
-    public ViewType getViewType() {
+    public String getId() {
+        return id;
+    }
+
+    public DataType getViewType() {
         return viewType;
-    }
-
-    public void setViewType(ViewType viewType) {
-        this.viewType = viewType;
     }
 
     public String getLabel() {
         return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
     }
 
     public String getResult() {
@@ -35,9 +34,5 @@ public class ClockConfigModel {
         this.result = result;
     }
 
-    public enum ViewType {
-        TEXT_FIELD,
-        RADIO_BUTTON
-    }
 }
 
