@@ -97,12 +97,6 @@ public class BoardConfigController implements Initializable{
         TreeItem<String> pinConfig = new TreeItem<>(PIN_CONFIG_NAME);
         for(String port : portPinsMap.keySet()){
             TreeItem<String> portTree = new TreeItem<>(port);
-            List<String> pinNames = new ArrayList<>(portPinsMap.get(port).keySet().stream().toList());
-            Collections.sort(pinNames);
-            for(String pin : pinNames){
-                TreeItem<String> pinTree = new TreeItem<>(pin);
-                portTree.getChildren().add(pinTree);
-            }
             pinConfig.getChildren().add(portTree);
             pinConfig.setExpanded(true);
         }
@@ -166,7 +160,7 @@ public class BoardConfigController implements Initializable{
 
     private void loadContentArea(TreeItem<String> item) {
 
-        String PIN_CONFIG_FXML_NAME = "pin-config.fxml";
+        String PORT_CONFIG_FXML_NAME = "port-config.fxml";
         String IP_CONFIG_FXML_NAME = "ip-config.fxml";
         String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
 
@@ -187,11 +181,11 @@ public class BoardConfigController implements Initializable{
                 loader.setController(ipConfigController);
                 fxml = loader.load();
             }else{
-                loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
-                Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
-                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
-                currentController = pinConfigController;
-                loader.setController(pinConfigController);
+                loader = new FXMLLoader(getClass().getResource(PORT_CONFIG_FXML_NAME));
+                Map<String, Pin> pins = portPinsMap.get(item.getValue());
+                PortConfigController portConfigController = new PortConfigController(item.getValue(), pins);
+                currentController = portConfigController;
+                loader.setController(portConfigController);
                 fxml = loader.load();
             }
         }catch (IOException e) {
