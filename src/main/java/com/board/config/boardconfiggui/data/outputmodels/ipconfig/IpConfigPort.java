@@ -1,6 +1,9 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +32,17 @@ public class IpConfigPort {
 
     public void setSignalParams(List<SignalParam> signalParams) {
         this.signalParams = signalParams;
+    }
+
+    public void addSignalParam(SignalParam signalParam) {
+        if (Objects.isNull(signalParam)) {
+            return;
+        }
+
+        if (CollectionUtils.isEmpty(this.signalParams)) {
+            this.signalParams = new ArrayList<>();
+        }
+        this.signalParams.add(signalParam);
     }
 
     @Override
