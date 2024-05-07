@@ -68,6 +68,7 @@ public class Constants {
     public static final String LEVEL = "Level";
     public static final String LEVEL_TRIGGERED = "LevelTriggered";
     public static final String EDGE_TRIGGERED = "EdgeTriggered";
+    public static final String MODES_TEXT = "Modes";
     public static final String BY_PASS = "Bypass";
     public static final String GPIO = "GPIO";
     public static final String EXTI = "EXTI";

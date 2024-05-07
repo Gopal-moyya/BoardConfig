@@ -22,7 +22,7 @@ public class PinType {
         return children;
     }
 
-    public void addChildNode(String child){
+    public void addChild(String child){
         if(Objects.isNull(child))
             return;
 

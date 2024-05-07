@@ -14,6 +14,7 @@ public class LabelComboBoxWidgetController {
     @FXML
     private ComboBox<String> comboBox;
 
+
     private final StringProperty selectedItem = new SimpleStringProperty();
 
     public void setComboBoxLabel(String text, String promptText) {
@@ -33,7 +34,7 @@ public class LabelComboBoxWidgetController {
         selectedItem.setValue(comboBox.getSelectionModel().getSelectedItem());
     }
 
-    public void setSelectedMode(String selectedMode){
-        comboBox.valueProperty().setValue(selectedMode);
+    public void setSelectedValue(String selectedValue){
+        comboBox.valueProperty().setValue(selectedValue);
     }
 }

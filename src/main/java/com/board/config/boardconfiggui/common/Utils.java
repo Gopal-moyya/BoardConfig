@@ -179,6 +179,7 @@ public class Utils {
     public static List<PinType> getPinTypesFromXml(Pin pin) {
         String pinValue = pin.getValues().replaceAll(" ", "");
         List<PinType> pinTypes = new ArrayList<>();
+        PinType modesPinType = new PinType(Constants.MODES_TEXT);
 
         if (pinValue.contains("],")) {
             String[] splitValues = pinValue.split("],");
@@ -188,6 +189,9 @@ public class Utils {
                     String[] split = mode.split(":\\[");
 
                     String modeName = split[0].trim();
+                    if(!modeName.contains(EXTI)) //Not adding EXTI in modes types.
+                        modesPinType.
+                                addChild(modeName);
                     List<PinType> pins = getModeValues(modeName, split[1]);
                     if(CollectionUtils.isNotEmpty(pins)){
                         pinTypes.addAll(pins);
@@ -196,6 +200,7 @@ public class Utils {
                 }
             }
         }
+        pinTypes.add(modesPinType);
         return pinTypes;
     }
 
@@ -220,7 +225,7 @@ public class Utils {
 
         if(modeName.equals(Constants.GPIO)){
             PinType gpioType = new PinType(modeName);
-            List<String> gpioChildren = new ArrayList<>();
+
             Map<String, List<String>> subValues = new HashMap<>();
             for(String name : modeValues){
                 if(name.contains("_")){
@@ -238,7 +243,7 @@ public class Utils {
 
             List<PinType> subPinTypes = new ArrayList<>();
             for(String key : subValues.keySet()){
-                gpioChildren.add(key);
+                gpioType.addChild(key);
                 if(key.equals(Constants.INPUT))
                     continue;
                 PinType pinType1 = new PinType(key);
@@ -246,17 +251,14 @@ public class Utils {
                 subPinTypes.add(pinType1);
             }
 
-            gpioType.setChildren(gpioChildren);
             pinTypes.add(gpioType);
             pinTypes.addAll(subPinTypes);
 
         }else if(modeName.contains(EXTI)){
 
             PinType inputPinType = new PinType(Constants.INPUT);
-            List<String> inputChildren = new ArrayList<>();
-            inputChildren.add(Constants.INPUT);
-            inputChildren.add(modeName);
-            inputPinType.setChildren(inputChildren);
+            inputPinType.addChild(Constants.INPUT);
+            inputPinType.addChild(modeName);
             pinTypes.add(inputPinType);
 
             Map<String, List<String>> subValues = new HashMap<>();
@@ -273,16 +275,15 @@ public class Utils {
             }
 
             List<PinType> subPinTypes = new ArrayList<>();
-            List<String> extChildren = new ArrayList<>();
+
             PinType extType = new PinType(modeName);
             for(String key : subValues.keySet()){
-                extChildren.add(key);
+                extType.addChild(key);
                 PinType pinType1 = new PinType(key);
                 pinType1.setChildren(subValues.get(key));
                 subPinTypes.add(pinType1);
             }
 
-            extType.setChildren(extChildren);
             pinTypes.add(extType);
             pinTypes.addAll(subPinTypes);
 
