@@ -48,7 +48,10 @@ public class LoadDataController  {
     private Button submitBtn;
 
     private final HomeViewController homeViewController;
-    private  String xmlFolderPath;
+    private String xmlFolderPath,
+            repositoryFolderPath,
+            toolChainFolderPath,
+            outputLocationFolderPath;
 
     private BoardResultsRepo boardResultsRepo;
 
@@ -66,6 +69,17 @@ public class LoadDataController  {
         if (StringUtils.isNotEmpty(xmlFolderPath)) {
             xmlPathField.setText(xmlFolderPath);
         }
+        if (StringUtils.isNotEmpty(repositoryFolderPath)) {
+            repoPathField.setText(repositoryFolderPath);
+        }
+
+        if (StringUtils.isNotEmpty(toolChainFolderPath)) {
+            toolChainPathField.setText(toolChainFolderPath);
+        }
+
+        if (StringUtils.isNotEmpty(outputLocationFolderPath)) {
+            outputPathField.setText(outputLocationFolderPath);
+        }
     }
 
     @FXML
@@ -73,36 +87,39 @@ public class LoadDataController  {
         Node sourceNode = (Node) event.getSource();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Folder");
+        directoryChooser.setTitle(Constants.SELECT_FOLDER);
 
-        if (StringUtils.equals(sourceNode.getUserData().toString(), "xmlBtn")
-                && StringUtils.isNotEmpty(xmlFolderPath)) {
-            File defaultDirectory = new File(xmlFolderPath);
+        String directoryPath = getInitialDirectoryPath(sourceNode.getUserData().toString());
+        if (StringUtils.isNotEmpty(directoryPath)) {
+            File defaultDirectory = new File(directoryPath);
             directoryChooser.setInitialDirectory(defaultDirectory);
         }
 
         File selectedFolder = directoryChooser.showDialog(null);
         if (selectedFolder != null) {
             switch (sourceNode.getUserData().toString()){
-                case "xmlBtn":
+                case Constants.XML_BUTTON_TYPE:
                     xmlPathField.setText(selectedFolder.getAbsolutePath());
                     this.xmlFolderPath = xmlPathField.getText();
                     break;
-                case "repoBtn":
+                case Constants.REPO_BUTTON_TYPE:
                     repoPathField.setText(selectedFolder.getAbsolutePath());
+                    this.repositoryFolderPath = repoPathField.getText();
                     break;
-                case "toolChainBtn":
+                case Constants.TOOL_CHAIN_BUTTON_TYPE:
                     toolChainPathField.setText(selectedFolder.getAbsolutePath());
+                    this.toolChainFolderPath = toolChainPathField.getText();
                     break;
-                case "outputBtn":
+                case Constants.OUTPUT_BUTTON_TYPE:
                     outputPathField.setText(selectedFolder.getAbsolutePath());
+                    this.outputLocationFolderPath = outputPathField.getText();
                     break;
                 default:
                     break;
             }
         }
 
-        boolean allFields = !xmlPathField.getText().isEmpty() && !repoPathField.getText().isEmpty() && !toolChainPathField.getText().isEmpty();
+        boolean allFields = !xmlPathField.getText().isEmpty() && !repoPathField.getText().isEmpty() && !toolChainPathField.getText().isEmpty() && !outputPathField.getText().isEmpty();
         if (allFields){
             submitBtn.setDisable(false);
         }
@@ -204,6 +221,34 @@ public class LoadDataController  {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Retrieves the initial directory path based on the specified source node type.
+     *
+     * @param sourceNodeType The type of source node
+     *                       <p>
+     *                       the node types are:
+     *                       <ul>
+     *                           <li>xmlBtn</li>
+     *                           <li>repoBtn</li>
+     *                           <li>toolChainBtn</li>
+     *                           <li>outputBtn</li>
+     *                       </ul>
+     * @return The initial directory path corresponding to the source node type, or null if not found.
+     */
+    private String getInitialDirectoryPath(String sourceNodeType) {
+        if (StringUtils.isEmpty(sourceNodeType)) {
+            return null;
+        }
+
+        return switch (sourceNodeType) {
+            case Constants.XML_BUTTON_TYPE -> xmlFolderPath;
+            case Constants.REPO_BUTTON_TYPE -> repositoryFolderPath;
+            case Constants.TOOL_CHAIN_BUTTON_TYPE -> toolChainFolderPath;
+            case Constants.OUTPUT_BUTTON_TYPE -> outputLocationFolderPath;
+            default -> null;
+        };
     }
 
 }
