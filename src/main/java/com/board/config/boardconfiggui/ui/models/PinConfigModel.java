@@ -12,7 +12,6 @@ public class PinConfigModel {
     private String selectedExioType;
     private String selectedLevelType;
     private String selectedEdgeType;
-    private String selectedValue;
     private boolean pinStatus;
 
     public PinConfigModel(String portName, String pinName) {
@@ -34,14 +33,6 @@ public class PinConfigModel {
 
     public void setSelectedMode(String selectedMode) {
         this.selectedMode = selectedMode;
-    }
-
-    public String getSelectedValue() {
-        return selectedValue;
-    }
-
-    public void setSelectedValue(String selectedValue) {
-        this.selectedValue = selectedValue;
     }
 
     public boolean isPinStatus() {
@@ -104,12 +95,12 @@ public class PinConfigModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PinConfigModel that)) return false;
-        return pinStatus == that.pinStatus && Objects.equals(portName, that.portName) && Objects.equals(pinNumber, that.pinNumber) && Objects.equals(selectedMode, that.selectedMode) && Objects.equals(selectedIOType, that.selectedIOType) && Objects.equals(selectedInputType, that.selectedInputType) && Objects.equals(selectedOutputType, that.selectedOutputType) && Objects.equals(selectedExioType, that.selectedExioType) && Objects.equals(selectedLevelType, that.selectedLevelType) && Objects.equals(selectedEdgeType, that.selectedEdgeType) && Objects.equals(selectedValue, that.selectedValue);
+        return pinStatus == that.pinStatus && Objects.equals(portName, that.portName) && Objects.equals(pinNumber, that.pinNumber) && Objects.equals(selectedMode, that.selectedMode) && Objects.equals(selectedIOType, that.selectedIOType) && Objects.equals(selectedInputType, that.selectedInputType) && Objects.equals(selectedOutputType, that.selectedOutputType) && Objects.equals(selectedExioType, that.selectedExioType) && Objects.equals(selectedLevelType, that.selectedLevelType) && Objects.equals(selectedEdgeType, that.selectedEdgeType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(portName, pinNumber, selectedMode, selectedIOType, selectedInputType, selectedOutputType, selectedExioType, selectedLevelType, selectedEdgeType, selectedValue, pinStatus);
+        return Objects.hash(portName, pinNumber, selectedMode, selectedIOType, selectedInputType, selectedOutputType, selectedExioType, selectedLevelType, selectedEdgeType, pinStatus);
     }
 
     @Override
@@ -124,7 +115,6 @@ public class PinConfigModel {
                 ", selectedExioType='" + selectedExioType + '\'' +
                 ", selectedLevelType='" + selectedLevelType + '\'' +
                 ", selectedEdgeType='" + selectedEdgeType + '\'' +
-                ", selectedValue='" + selectedValue + '\'' +
                 ", pinStatus=" + pinStatus +
                 '}';
     }
