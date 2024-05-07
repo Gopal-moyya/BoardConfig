@@ -168,6 +168,14 @@ public class Constants {
     public static final String I2C_FREQ_PARAM = "i2cFreq";
     public static final String SDR_FREQ_PARAM = "sdrFreq";
 
+    // load data controller strings
+    public static final String SELECT_FOLDER = "Select Folder";
+    public static final String XML_BUTTON_TYPE = "xmlBtn";
+    public static final String REPO_BUTTON_TYPE = "repoBtn";
+    public static final String TOOL_CHAIN_BUTTON_TYPE = "toolChainBtn";
+    public static final String OUTPUT_BUTTON_TYPE = "outputBtn";
+
+
     public static final List<ConfigParam> QSPI_WRITE_COMPLETION_CONFIG_CONTROLS = Arrays.asList(
             ConfigParam.POOL_COUNT,
             ConfigParam.POLLING_BIT_INDEX,
