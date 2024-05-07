@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,6 +32,10 @@ public class WriteCompletionConfigParam {
 
     public String getValue() {
         return value;
+    }
+
+    public boolean isValid(){
+        return StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value);
     }
 
     @Override

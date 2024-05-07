@@ -6,15 +6,14 @@ import com.board.config.boardconfiggui.data.outputmodels.Param;
 import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfigParam;
 import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityConfig;
-import com.board.config.boardconfiggui.data.outputmodels.ipconfig.DeviceConfiguration;
-import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfig;
-import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfigIp;
-import com.board.config.boardconfiggui.data.outputmodels.ipconfig.SignalParam;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.*;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigPort;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
+import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -158,13 +157,15 @@ public class ValidationUtils {
             }
 
             // Validate IpConfig params
-            if (CollectionUtils.isEmpty(ipConfigIp.getParams())) {
-                missingConfig.append("IPConfig: Required params like sysclk, i2cFreq, sdrFreg are missing for ")
-                        .append(ipConfigIp.getName()).append(".\n");
-            } else {
-                String message = validateIpConfigParams(ipConfigIp.getName(), ipConfigIp.getParams());
-                if (StringUtils.isNotEmpty(message)) {
-                    missingConfig.append(message);
+            if (ipConfigIp.getName().contains(Constants.I3C_IP_NAME)) {
+                if (CollectionUtils.isEmpty(ipConfigIp.getParams())) {
+                    missingConfig.append("IPConfig: Required params like sysclk, i2cFreq, sdrFreg are missing for ")
+                            .append(ipConfigIp.getName()).append(".\n");
+                } else {
+                    String message = validateIpConfigParams(ipConfigIp.getName(), ipConfigIp.getParams());
+                    if (StringUtils.isNotEmpty(message)) {
+                        missingConfig.append(message);
+                    }
                 }
             }
 
@@ -177,14 +178,27 @@ public class ValidationUtils {
                     missingConfig.append(message);
                 }
             }
+
+            if(ObjectUtils.isNotEmpty(ipConfigIp.getWriteCompletionConfig())){
+                String message = validateWriteCompletionConfigParams(ipConfigIp.getName(), ipConfigIp.getWriteCompletionConfig());
+                if(StringUtils.isNotEmpty(message))
+                    missingConfig.append(message);
+            }
         }
 
         return missingConfig.toString();
     }
 
     private static String validateIpConfigSignalParams(String ipName, List<SignalParam> signalParams) {
-        // ToDo: Need to check the required signals
-        List<String> signalsRequired = Arrays.asList(ipName + "_SCL", ipName + "_SDA");
+        List<String> signalsRequired;
+
+        // ToDo: Need to remove this condition once we get all controls from pin muxing
+        if (ipName.contains(Constants.I3C_IP_NAME)) {
+            signalsRequired = Arrays.asList(ipName + "_SCL", ipName + "_SDA");
+        } else {
+            InputConfigRepo inputConfigRepo = InputConfigRepo.getInstance();
+            signalsRequired = inputConfigRepo.getIPControls(ipName);
+        }
 
         StringBuilder missingConfig = new StringBuilder();
 
@@ -192,6 +206,27 @@ public class ValidationUtils {
                 .filter(signal -> signalParams.stream().noneMatch(param -> param.getName().equals(signal)))
                 .forEach(signal -> missingConfig.append("IPConfig: SignalParam ")
                         .append(signal)
+                        .append(" is missing for ")
+                        .append(ipName)
+                        .append(".\n"));
+
+        return missingConfig.toString();
+    }
+
+    private static String validateWriteCompletionConfigParams(String ipName, WriteCompletionConfig writeCompletionConfig) {
+
+        StringBuilder missingConfig = new StringBuilder();
+
+        if (StringUtils.isEmpty(writeCompletionConfig.getName()))
+            return missingConfig.append("WriteCompletionConfig: Invalid name").toString();
+
+        List<WriteCompletionConfigParam> configParams = writeCompletionConfig.getConfigParams();
+        if (CollectionUtils.isEmpty(configParams))
+            return missingConfig.append("WriteCompletionConfig: Config parameters shouldn't be empty").toString();
+
+        configParams.stream().filter(writeCompletionConfigParam -> !writeCompletionConfigParam.isValid())
+                .forEach(configParam -> missingConfig.append("WriteCompletionConfig: ConfigParam ")
+                        .append(configParam.getName())
                         .append(" is missing for ")
                         .append(ipName)
                         .append(".\n"));

@@ -40,6 +40,10 @@ public class IpConfigPort {
     }
 
     public void addSignalParam(SignalParam signalParam) {
+        if (Objects.isNull(signalParam)) {
+            return;
+        }
+
         if (CollectionUtils.isEmpty(signalParams))
             this.signalParams = new ArrayList<>();
 

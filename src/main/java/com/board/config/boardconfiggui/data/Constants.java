@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data;
 
+import com.board.config.boardconfiggui.data.enums.ConfigParam;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +31,11 @@ public class Constants {
      * Constant representing the QSPI IP name
      */
     public static final String QSPI_IP_NAME = "QSPI";
+
+    /**
+     * Constant representing the I3C IP name
+     */
+    public static final String I3C_IP_NAME = "I3C";
 
     /**
      * Constant representing the write completion config name
@@ -81,6 +88,11 @@ public class Constants {
      */
     public static final String DIRECTION_OUTPUT = "Output";
     public static final String DIRECTION_INPUT = "Input";
+
+    /**
+     * Constant representing the value '0'.
+     */
+    public static final String ZERO = "0";
 
     /**
      * Constant representing the value '1'.
@@ -173,5 +185,21 @@ public class Constants {
     public static final String TOOL_CHAIN_BUTTON_TYPE = "toolChainBtn";
     public static final String OUTPUT_BUTTON_TYPE = "outputBtn";
 
+    /**
+     * Constant representing write completion config header to show in UI.
+     */
+    public static final String WRITE_COMPLETION_CONFIG_HEADER = "Write completion config controls";
+
+    /**
+     * Constant representing the list of ConfigParam for write completion config controls
+     */
+    public static final List<ConfigParam> QSPI_WRITE_COMPLETION_CONFIG_CONTROLS = Arrays.asList(
+            ConfigParam.POOL_COUNT,
+            ConfigParam.POLLING_BIT_INDEX,
+            ConfigParam.OPCODE,
+            ConfigParam.IS_DISABLED,
+            ConfigParam.POLLING_POLARITY,
+            ConfigParam.REPETITION_DELAY
+    );
 }
 
