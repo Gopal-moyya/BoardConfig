@@ -2,10 +2,11 @@ package com.board.config.boardconfiggui.data.repo;
 
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.IpConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
+import com.board.config.boardconfiggui.data.outputmodels.clockconfig.ClockConfig;
 
 /**
  * The InputConfigRepo class represents a repository for storing input configuration data,
- * including IP configuration and PIN configuration.
+ * including IP configuration, PIN configuration and Clock configuration.
  * <p>
  * This class follows the singleton pattern, ensuring that only one instance exists
  * throughout the application.
@@ -15,6 +16,7 @@ public class InputConfigRepo {
     private static InputConfigRepo instance;
     private IpConfig ipConfig;
     private PinConfig pinConfig;
+    private ClockConfig clockConfig;
 
     /**
      * Private constructor to prevent instantiation from outside the class.
@@ -69,5 +71,23 @@ public class InputConfigRepo {
      */
     public void setPinConfig(PinConfig pinConfig) {
         this.pinConfig = pinConfig;
+    }
+
+    /**
+     * Gets the Clock configuration stored in the repository.
+     *
+     * @return The Clock configuration.
+     */
+    public ClockConfig getClockConfig() {
+        return clockConfig;
+    }
+
+    /**
+     * Sets the Clock configuration in the repository.
+     *
+     * @param clockConfig The clock configuration to be set.
+     */
+    public void setClockConfig(ClockConfig clockConfig) {
+        this.clockConfig = clockConfig;
     }
 }

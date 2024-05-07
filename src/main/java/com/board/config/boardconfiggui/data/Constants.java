@@ -20,6 +20,8 @@ public class Constants {
 
     public static final String BOARD_CONFIG_FILE_NAME = "board_configuration.xml";
 
+    public static final String CLOCK_CONFIG_FILE_NAME = "clock_configuration.xml";
+
     /**
      * Constant representing the development role.
      */
