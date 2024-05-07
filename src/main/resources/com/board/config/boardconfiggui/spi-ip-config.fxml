@@ -11,7 +11,7 @@
             <fx:include fx:id="onOffWidget" source="onoff_widget.fxml" />
             <GridPane fx:id="spiControlsGridPane" hgap="60.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity"
                       maxWidth="1080.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT"
-                      prefHeight="300.0" prefWidth="1080.0" vgap="10.0" visible="false" AnchorPane.bottomAnchor="461.0"
+                      prefHeight="300.0" prefWidth="1080.0" vgap="60.0" visible="false" AnchorPane.bottomAnchor="461.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
                 <columnConstraints>
                     <ColumnConstraints maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
@@ -30,7 +30,7 @@
          </Label>
             <GridPane fx:id="configControlsGridPane" hgap="60.0" layoutX="8.0" layoutY="410.0" maxHeight="-Infinity"
                       maxWidth="1080.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT"
-                      prefHeight="325.0" prefWidth="1080.0" vgap="10.0" visible="false" AnchorPane.bottomAnchor="39.0"
+                      prefHeight="325.0" prefWidth="1080.0" vgap="60.0" visible="false" AnchorPane.bottomAnchor="39.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="410.0">
                 <columnConstraints>
                     <ColumnConstraints maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />

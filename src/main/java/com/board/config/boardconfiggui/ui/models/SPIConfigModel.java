@@ -8,9 +8,9 @@ import java.util.Objects;
 public class SPIConfigModel {
     private final String label;
     private final List<IpPinConfig> ipPinConfigs;
-    private String result;
+    private IpPinConfig result;
 
-    public SPIConfigModel(String label, List<IpPinConfig> ipPinConfigs, String result) {
+    public SPIConfigModel(String label, List<IpPinConfig> ipPinConfigs, IpPinConfig result) {
         this.label = label;
         this.ipPinConfigs = ipPinConfigs;
         this.result = result;
@@ -24,11 +24,11 @@ public class SPIConfigModel {
         return ipPinConfigs;
     }
 
-    public String getResult() {
+    public IpPinConfig getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(IpPinConfig result) {
         this.result = result;
     }
 
@@ -50,7 +50,7 @@ public class SPIConfigModel {
         return "SPIConfigModel{" +
                 "label='" + label + '\'' +
                 ", ipPinConfigs=" + ipPinConfigs +
-                ", result='" + result + '\'' +
+                ", result=" + result +
                 '}';
     }
 }
