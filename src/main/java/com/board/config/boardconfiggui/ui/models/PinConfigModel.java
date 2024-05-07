@@ -12,6 +12,7 @@ public class PinConfigModel {
     private String selectedExioType;
     private String selectedLevelType;
     private String selectedEdgeType;
+    private String selectedBypassType;
     private boolean pinStatus;
 
     public PinConfigModel(String portName, String pinName) {
@@ -33,6 +34,18 @@ public class PinConfigModel {
 
     public void setSelectedMode(String selectedMode) {
         this.selectedMode = selectedMode;
+    }
+
+    public String getSelectedBypassType() {
+        return selectedBypassType;
+    }
+
+    public String getSelectedIp() {
+        return selectedBypassType.split("_")[0];
+    }
+
+    public void setSelectedBypassType(String selectedValue) {
+        this.selectedBypassType = selectedValue;
     }
 
     public boolean isPinStatus() {

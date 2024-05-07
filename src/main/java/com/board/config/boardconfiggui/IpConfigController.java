@@ -230,36 +230,38 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       return;
     }
 
-    for (IpConfigPort ipConfigPort: ipConfigIp.getPorts()) {
-      String portName = ipConfigPort.getName();
-      for (SignalParam signalParam : ipConfigPort.getSignalParams()) {
-        IpPinConfig ipPinConfig = new IpPinConfig(portName, signalParam.getPin());
-        if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
-          ipConfigModel.setSdaPin(signalParam.getPin());
-          ipConfigModel.setSdaPort(portName);
-          sdaIpConfigModel = ipPinConfig;
-          sdaChoiceBox.valueProperty().setValue(ipPinConfig);
-        } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
-          ipConfigModel.setSclPin(signalParam.getPin());
-          ipConfigModel.setSclPort(portName);
-          sclIpConfigModel = ipPinConfig;
-          sclChoiceBox.valueProperty().setValue(ipPinConfig);
+    if(CollectionUtils.isNotEmpty(ipConfigIp.getPorts()))
+      for (IpConfigPort ipConfigPort: ipConfigIp.getPorts()) {
+        String portName = ipConfigPort.getName();
+        for (SignalParam signalParam : ipConfigPort.getSignalParams()) {
+          IpPinConfig ipPinConfig = new IpPinConfig(portName, signalParam.getPin());
+          if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
+            ipConfigModel.setSdaPin(signalParam.getPin());
+            ipConfigModel.setSdaPort(portName);
+            sdaIpConfigModel = ipPinConfig;
+            sdaChoiceBox.valueProperty().setValue(ipPinConfig);
+          } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
+            ipConfigModel.setSclPin(signalParam.getPin());
+            ipConfigModel.setSclPort(portName);
+            sclIpConfigModel = ipPinConfig;
+            sclChoiceBox.valueProperty().setValue(ipPinConfig);
+          }
         }
       }
-    }
 
-    for (Param param : ipConfigIp.getParams()) {
-      if (StringUtils.equals(param.getName(), Constants.SYS_CLK_PARAM)) {
-        ipConfigModel.setSysClock(param.getValue());
-        sysClockField.setText(param.getValue());
-      } else if (StringUtils.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
-        ipConfigModel.setI2cFreq(param.getValue());
-        i2cFreqField.setText(param.getValue());
-      } else if (StringUtils.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
-        ipConfigModel.setSdrFreq(param.getValue());
-        sdrFreqField.setText(param.getValue());
+    if(CollectionUtils.isNotEmpty(ipConfigIp.getParams()))
+      for (Param param : ipConfigIp.getParams()) {
+        if (StringUtils.equals(param.getName(), Constants.SYS_CLK_PARAM)) {
+          ipConfigModel.setSysClock(param.getValue());
+          sysClockField.setText(param.getValue());
+        } else if (StringUtils.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
+          ipConfigModel.setI2cFreq(param.getValue());
+          i2cFreqField.setText(param.getValue());
+        } else if (StringUtils.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
+          ipConfigModel.setSdrFreq(param.getValue());
+          sdrFreqField.setText(param.getValue());
+        }
       }
-    }
 
     DeviceDescriptor deviceDescriptor = ipConfigIp.getDeviceDescriptor();
     if (Objects.nonNull(deviceDescriptor)) {

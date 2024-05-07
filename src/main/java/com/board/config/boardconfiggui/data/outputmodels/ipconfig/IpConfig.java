@@ -3,6 +3,7 @@ package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,6 +65,12 @@ public class IpConfig {
 
     return null;
   }
+
+    public void addIpConfigIp(IpConfigIp newIpConfigIp) {
+        if (CollectionUtils.isEmpty(ips))
+            ips = new ArrayList<>();
+        ips.add(newIpConfigIp);
+    }
 
     @Override
     public String toString() {
