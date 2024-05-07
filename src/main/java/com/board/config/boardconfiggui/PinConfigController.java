@@ -9,6 +9,7 @@ import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigPara
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.models.PinConfigModel;
+import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.board.config.boardconfiggui.data.Constants.*;
 
@@ -29,27 +29,179 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
     private final String portName;
     private final Pin currentPin;
     private final PinConfigModel pinConfigUiModel;
+    private final List<PinType> pinTypes;
+    final Map<String, PinType> pinMap = new HashMap<>();
+    final List<String> modeTypes = new ArrayList<>();
+
     @FXML
     private OnOffButtonWidgetController onOffWidgetController;
     @FXML
-    private LabelComboBoxWidgetController dropDownWidgetController;
+    private LabelComboBoxWidgetController modeTypesWidgetController;
     @FXML
     private LabelComboBoxWidgetController inPutOutPutWidgetController;
 
     @FXML
-    HBox dropDownWidget;
+    private LabelComboBoxWidgetController inPutWidgetController;
+
+    @FXML
+    private LabelComboBoxWidgetController outPutWidgetController;
+
+    @FXML
+    private LabelComboBoxWidgetController exioWidgetController;
+
+    @FXML
+    private LabelComboBoxWidgetController levelWidgetController;
+
+    @FXML
+    private LabelComboBoxWidgetController edgeWidgetController;
+
+
+    @FXML
+    HBox modeTypesWidget;
 
     @FXML
     HBox inPutOutPutWidget;
 
-    public PinConfigController(String portName, Pin pin) {
+    @FXML
+    HBox inPutWidget;
+
+    @FXML
+    HBox outPutWidget;
+
+    @FXML
+    HBox exioWidget;
+
+    @FXML
+    HBox levelWidget;
+
+    @FXML
+    HBox edgeWidget;
+
+
+    public PinConfigController(String portName, Pin pin, List<PinType> pinTypes) {
         this.portName = portName;
         this.currentPin = pin;
+        this.pinTypes = pinTypes;
         pinConfigUiModel = new PinConfigModel(portName, pin.getName());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        onOffWidgetController.setButtonLabel(PIN_STATUS_LABEL);
+
+        onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
+
+        for (PinType pinType : pinTypes) {
+            pinMap.put(pinType.getName(), pinType);
+        }
+
+        PinType pinType = pinMap.get(MODES_TEXT);
+        if (Objects.nonNull(pinType)) {
+            modeTypes.addAll(pinType.getChildren());
+        }
+
+        populatePreviousData();
+
+        onOffWidgetController.getButton().setOnAction(actionEvent -> {
+
+            if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, ((Button) actionEvent.getSource()).getText())) {
+                pinConfigUiModel.setPinStatus(true);
+                handleButtonOnStatus(modeTypes);
+
+            } else {
+                pinConfigUiModel.setPinStatus(false);
+                handleButtonOffStatus();
+            }
+        });
+
+        modeTypesWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedMode(newValue);
+
+            if (StringUtils.isBlank(newValue)) {
+                return;
+            }
+
+            PinType modePinType = pinMap.get(newValue);
+            List<String> ioOptions = new ArrayList<>();
+            if (Objects.nonNull(modePinType)) {
+                ioOptions = modePinType.getChildren();
+            }
+
+            inPutOutPutWidget.setVisible(true);
+            inPutOutPutWidgetController.setComboBoxLabel(newValue.concat(TYPE), Constants.SELECT);
+            inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(ioOptions));
+
+            //resetting child widgets
+            inPutWidget.setVisible(false);
+            outPutWidget.setVisible(false);
+            exioWidget.setVisible(false);
+            levelWidget.setVisible(false);
+            edgeWidget.setVisible(false);
+
+        });
+
+        inPutOutPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedIOType(newValue);
+            if (BY_PASS.equals(pinConfigUiModel.getSelectedMode())) {
+                return;
+            }
+
+            inPutWidgetController.setItems(null);
+            outPutWidgetController.setItems(null);
+
+            PinType ioPinType = pinMap.get(newValue);
+
+            List<String> inputOrOutputOptions = new ArrayList<>();
+            if (Objects.nonNull(ioPinType)) {
+                inputOrOutputOptions = ioPinType.getChildren();
+            }
+
+            if (INPUT.equals(newValue)) {
+                inPutWidget.setVisible(true);
+                outPutWidget.setVisible(false);
+                pinConfigUiModel.setSelectedOutputType(null);
+                outPutWidget.managedProperty().bind(outPutWidget.visibleProperty());
+                inPutWidgetController.setComboBoxLabel(newValue.concat(TYPE), Constants.SELECT);
+                inPutWidgetController.setItems(FXCollections.observableArrayList(inputOrOutputOptions));
+            } else {
+                outPutWidget.setVisible(true);
+                inPutWidget.setVisible(false);
+                exioWidget.setVisible(false);
+                levelWidget.setVisible(false);
+                edgeWidget.setVisible(false);
+                pinConfigUiModel.setSelectedInputType(null);
+                inPutWidget.managedProperty().bind(inPutWidget.visibleProperty());
+                outPutWidgetController.setComboBoxLabel(newValue.concat(TYPE), Constants.SELECT);
+                outPutWidgetController.setItems(FXCollections.observableArrayList(inputOrOutputOptions));
+            }
+        });
+
+        inPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedInputType(newValue);
+            onInputValueChange(newValue);
+
+        });
+
+        exioWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedExioType(newValue);
+            onExtIValueChange(newValue);
+        });
+
+        levelWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedLevelType(newValue);
+        });
+
+        edgeWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedEdgeType(newValue);
+        });
+
+        outPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
+            pinConfigUiModel.setSelectedOutputType(newValue);
+        });
+    }
+
+    private void populatePreviousData() {
 
         PinConfig pinConfig = BoardResultsRepo.getInstance().getBoardResult().getPinConfig();
         if (Objects.nonNull(pinConfig)) {
@@ -58,116 +210,196 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             if (Objects.nonNull(pinConfigParam)) {
                 if (BooleanUtils.isTrue(pinConfigParam.isByPassMode())) {
                     pinConfigUiModel.setSelectedMode(BY_PASS);
-                    inPutOutPutWidget.setVisible(false);
+
                 } else {
                     pinConfigUiModel.setSelectedMode(GPIO);
 
-                    String value = StringUtils.isEmpty(pinConfigParam.getDirection()) ? pinConfigParam.getIntValue() :
-                            StringUtils.isEmpty(pinConfigParam.getValue()) ? INPUT : pinConfigParam.getValue();
-                    pinConfigUiModel.setSelectedValue(value);
-                    inPutOutPutWidget.setVisible(true);
+                    if (StringUtils.isEmpty(pinConfigParam.getDirection())) {
+
+                        if (pinConfigParam.isIntEnable()) {
+                            String extiValue = pinMap.keySet().stream().filter(s -> s.contains(EXTI)).findFirst().orElse(null);
+                            pinConfigUiModel.setSelectedIOType(INPUT);
+                            pinConfigUiModel.setSelectedInputType(extiValue);
+                            if (EDGE_TRIGGERED.equalsIgnoreCase(pinConfigParam.getIntType())) {
+                                pinConfigUiModel.setSelectedExioType(EDGE);
+                                pinConfigUiModel.setSelectedEdgeType(pinConfigParam.getIntValue());
+                            } else {
+                                pinConfigUiModel.setSelectedExioType(LEVEL);
+                                pinConfigUiModel.setSelectedLevelType(pinConfigParam.getIntValue());
+                            }
+                        }
+                    } else {
+                        if (DIRECTION_INPUT.equalsIgnoreCase(pinConfigParam.getDirection())) {
+                            pinConfigUiModel.setSelectedIOType(INPUT);
+                            pinConfigUiModel.setSelectedInputType(INPUT);
+                        } else {
+                            pinConfigUiModel.setSelectedIOType(OUTPUT);
+                            pinConfigUiModel.setSelectedOutputType(pinConfigParam.getValue());
+                        }
+                    }
                 }
                 pinConfigUiModel.setPinStatus(true);
-            }
 
+                updateUI();
+            }
         }
-        List<String> modeTypes = getModeTypes(currentPin.getValues());
-        List<String> gpioOptions = getGpioOptions(currentPin.getValues());
-
-        if (Objects.nonNull(pinConfigUiModel) && pinConfigUiModel.isPinStatus()) {
-            onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
-            onOffWidgetController.setButtonText(OnOffButtonWidgetController.ON_TXT);
-            dropDownWidget.setVisible(true);
-            dropDownWidgetController.setComboBoxLabel("Mode Type:", Constants.SELECT);
-            dropDownWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
-            dropDownWidgetController.setSelectedMode(pinConfigUiModel.getSelectedMode());
-            inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", Constants.SELECT);
-            inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
-            inPutOutPutWidgetController.setSelectedMode(pinConfigUiModel.getSelectedValue());
-        } else {
-            onOffWidgetController.setButtonText(OnOffButtonWidgetController.OFF_TXT);
-            onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
-            dropDownWidget.setVisible(false);
-            inPutOutPutWidget.setVisible(false);
-            dropDownWidgetController.setItems(null);
-            inPutOutPutWidgetController.setItems(null);
-        }
-        onOffWidgetController.setButtonLabel("PIN Status:");
-
-        onOffWidgetController.getButton().setOnAction(actionEvent -> {
-            if (StringUtils.equals(OnOffButtonWidgetController.OFF_TXT, ((Button) actionEvent.getSource()).getText())) {
-                onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
-                onOffWidgetController.setButtonText("ON");
-                pinConfigUiModel.setPinStatus(true);
-                dropDownWidget.setVisible(true);
-                inPutOutPutWidget.setVisible(false);
-                dropDownWidgetController.setItems(null);
-                dropDownWidgetController.setComboBoxLabel("Mode Type:", Constants.SELECT);
-                dropDownWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
-            } else {
-                onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
-                onOffWidgetController.setButtonText("OFF");
-                dropDownWidget.setVisible(false);
-                inPutOutPutWidget.setVisible(false);
-                pinConfigUiModel.setPinStatus(false);
-                pinConfigUiModel.setSelectedMode(null);
-                pinConfigUiModel.setSelectedValue(null);
-            }
-
-        });
-
-
-        dropDownWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
-            if (GPIO.equals(newValue)) {
-                inPutOutPutWidget.setVisible(true);
-                inPutOutPutWidgetController.setComboBoxLabel("I/O Type:", Constants.SELECT);
-                inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(gpioOptions));
-                pinConfigUiModel.setSelectedMode(inPutOutPutWidgetController.getCmbInfoItem().getValue());
-            } else {
-                inPutOutPutWidget.setVisible(false);
-            }
-            pinConfigUiModel.setSelectedMode(dropDownWidgetController.getCmbInfoItem().getValue());
-
-        });
-
-        inPutOutPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
-            pinConfigUiModel.setSelectedValue(inPutOutPutWidgetController.getCmbInfoItem().getValue());
-        });
-
     }
 
-    private List<String> getModeTypes(String modes) {
-        List<String> options = new ArrayList<>();
-        if (modes.contains("],")) {
-            String[] splitValues = modes.split("],");
-            for (String mode : splitValues) {
-                if (mode.contains(":")) {
-                    String[] split = mode.split(":");
-                    if (!split[0].contains(EXTI)) { //Not adding EXTIO to the list
-                        options.add(split[0].trim());
+    private void updateUI() {
+        if (Objects.nonNull(pinConfigUiModel) && pinConfigUiModel.isPinStatus()) {
+
+            handleButtonOnStatus(modeTypes);
+            String selectedMode = pinConfigUiModel.getSelectedMode();
+            modeTypesWidgetController.setSelectedValue(selectedMode);
+            if (StringUtils.isNotEmpty(selectedMode)) {
+                inPutOutPutWidget.setVisible(true);
+                inPutOutPutWidgetController.setComboBoxLabel(selectedMode.concat(TYPE), Constants.SELECT);
+                inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(pinMap.get(selectedMode).getChildren()));
+
+                String selectedIOType = pinConfigUiModel.getSelectedIOType();
+                inPutOutPutWidgetController.setSelectedValue(selectedIOType);
+                if (StringUtils.isNotEmpty(selectedIOType)) {
+                    List<String> options = pinMap.get(selectedIOType).getChildren();
+
+                    if (INPUT.equals(selectedIOType)) {
+                        inPutWidget.setVisible(true);
+                        outPutWidget.managedProperty().bind(outPutWidget.visibleProperty());
+                        inPutWidgetController.setComboBoxLabel(selectedIOType.concat(TYPE), Constants.SELECT);
+                        inPutWidgetController.setItems(FXCollections.observableArrayList(options));
+
+                        String selectedInputType = pinConfigUiModel.getSelectedInputType();
+                        inPutWidgetController.setSelectedValue(selectedInputType);
+
+                        if (StringUtils.isNotEmpty(selectedInputType) && selectedInputType.contains(EXTI)) {
+                            exioWidget.setVisible(true);
+                            exioWidgetController.setComboBoxLabel(selectedInputType.concat(TYPE), SELECT);
+                            exioWidgetController.setItems(FXCollections.observableArrayList(pinMap.get(selectedInputType).getChildren()));
+
+                            String selectedExioType = pinConfigUiModel.getSelectedExioType();
+                            exioWidgetController.setSelectedValue(selectedExioType);
+
+                            List<String> triggerOptions = pinMap.get(selectedExioType).getChildren();
+                            if(LEVEL.equalsIgnoreCase(selectedExioType)){
+                                levelWidget.setVisible(true);
+                                edgeWidget.managedProperty().bind(edgeWidget.visibleProperty());
+                                levelWidgetController.setComboBoxLabel(selectedExioType.concat(TYPE), SELECT);
+                                levelWidgetController.setItems(FXCollections.observableArrayList(triggerOptions));
+                                levelWidgetController.setSelectedValue(pinConfigUiModel.getSelectedLevelType());
+                            } else {
+                                edgeWidget.setVisible(true);
+                                levelWidget.managedProperty().bind(levelWidget.visibleProperty());
+                                edgeWidgetController.setComboBoxLabel(selectedExioType.concat(TYPE), SELECT);
+                                edgeWidgetController.setItems(FXCollections.observableArrayList(triggerOptions));
+                                edgeWidgetController.setSelectedValue(pinConfigUiModel.getSelectedEdgeType());
+                            }
+                        }
+                    } else {
+                        outPutWidget.setVisible(true);
+                        inPutWidget.managedProperty().bind(inPutWidget.visibleProperty());
+                        outPutWidgetController.setComboBoxLabel(selectedIOType.concat(TYPE), Constants.SELECT);
+                        outPutWidgetController.setItems(FXCollections.observableArrayList(options));
+                        outPutWidgetController.setSelectedValue(pinConfigUiModel.getSelectedOutputType());
                     }
                 }
             }
+        } else {
+            handleButtonOffStatus();
         }
-        return options;
     }
 
-    private List<String> getGpioOptions(String pinData) {
+    private void handleButtonOnStatus(List<String> modeTypes) {
+        onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
+        onOffWidgetController.setButtonText(OnOffButtonWidgetController.ON_TXT);
+        modeTypesWidget.setVisible(true);
+        modeTypesWidgetController.setComboBoxLabel(MODE_TYPE_LABEL, Constants.SELECT);
+        modeTypesWidgetController.setItems(FXCollections.observableArrayList(modeTypes));
+    }
 
-        List<String> options = new ArrayList<>();
-        String[] values = pinData.split("[\\[\\]]");
-        for (String value : values) {
-            if (value.endsWith(":") && !value.contains(BY_PASS)) { //In UI, We have to show only the options of modes other than bypass
-                continue;
-            }
-            if (value.contains(BY_PASS)) { //If we get Bypass value, then we are exiting the loop as we don't need further options as they are sublist of Bypass
-                break;
-            }
-            if (value.contains(",")) {
-                options.addAll(Arrays.stream(value.split(",")).toList());
-            }
+    private void handleButtonOffStatus() {
+        onOffWidgetController.setButtonText(OnOffButtonWidgetController.OFF_TXT);
+        onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
+        clearAllUIData();
+    }
+
+    private void onInputValueChange(String inputValue) {
+
+        pinConfigUiModel.setSelectedExioType(null);
+        onExtIValueChange(null);
+        exioWidget.setVisible(false);
+        exioWidgetController.setItems(null);
+
+        if (StringUtils.isBlank(inputValue)) {
+            pinConfigUiModel.setSelectedInputType(null);
+            return;
         }
-        return options.stream().map(String::trim).collect(Collectors.toList());
+
+        if (pinConfigUiModel.getSelectedInputType().contains(EXTI)) {
+
+            PinType extPin = pinMap.get(inputValue);
+            List<String> ioOptions = new ArrayList<>();
+            if (Objects.nonNull(extPin)) {
+                ioOptions.addAll(extPin.getChildren());
+            }
+
+            exioWidget.setVisible(true);
+            exioWidgetController.setComboBoxLabel(inputValue.concat(TYPE), Constants.SELECT);
+            exioWidgetController.setItems(FXCollections.observableArrayList(ioOptions));
+        }
+    }
+
+    private void clearAllUIData() {
+        modeTypesWidget.setVisible(false);
+        inPutOutPutWidget.setVisible(false);
+        inPutWidget.setVisible(false);
+        outPutWidget.setVisible(false);
+        exioWidget.setVisible(false);
+        levelWidget.setVisible(false);
+        edgeWidget.setVisible(false);
+
+        pinConfigUiModel.setPinStatus(false);
+        pinConfigUiModel.setSelectedMode(null);
+        pinConfigUiModel.setSelectedIOType(null);
+        pinConfigUiModel.setSelectedInputType(null);
+        pinConfigUiModel.setSelectedOutputType(null);
+        pinConfigUiModel.setSelectedExioType(null);
+        pinConfigUiModel.setSelectedLevelType(null);
+        pinConfigUiModel.setSelectedEdgeType(null);
+
+        modeTypesWidgetController.setItems(null);
+    }
+
+    private void onExtIValueChange(String extValue) {
+
+        if (StringUtils.isBlank(extValue)) {
+            pinConfigUiModel.setSelectedEdgeType(null);
+            pinConfigUiModel.setSelectedLevelType(null);
+            edgeWidget.setVisible(false);
+            levelWidget.setVisible(false);
+            levelWidgetController.setItems(null);
+            edgeWidgetController.setItems(null);
+            return;
+        }
+
+        PinType pin = pinMap.get(extValue);
+        List<String> exioOptions = new ArrayList<>();
+
+        if (Objects.nonNull(pin)) {
+            exioOptions.addAll(pin.getChildren());
+        }
+
+        if (pinConfigUiModel.getSelectedExioType().equals(LEVEL)) {
+            levelWidget.setVisible(true);
+            edgeWidget.setVisible(false);
+            edgeWidget.managedProperty().bind(edgeWidget.visibleProperty());
+            levelWidgetController.setComboBoxLabel(extValue.concat(TYPE), Constants.SELECT);
+            levelWidgetController.setItems(FXCollections.observableArrayList(exioOptions));
+        } else {
+            edgeWidget.setVisible(true);
+            levelWidget.setVisible(false);
+            levelWidget.managedProperty().bind(levelWidget.visibleProperty());
+            edgeWidgetController.setComboBoxLabel(extValue.concat(TYPE), Constants.SELECT);
+            edgeWidgetController.setItems(FXCollections.observableArrayList(exioOptions));
+        }
     }
 
     @Override
@@ -183,33 +415,35 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             pinConfigParam.setByPassMode(true);
         } else {
             //If not selected input/output type
-            if(StringUtils.isEmpty(pinConfigUiModel.getSelectedValue())){
+            if (StringUtils.isEmpty(pinConfigUiModel.getSelectedIOType())) {
                 return;
             }
-            switch (pinConfigUiModel.getSelectedValue()) {
-                case INPUT:
+
+            if (INPUT.equalsIgnoreCase(pinConfigUiModel.getSelectedIOType())) {
+                String selectedInputType = pinConfigUiModel.getSelectedInputType();
+                if (StringUtils.isEmpty(selectedInputType)) {
+                    return;
+                }
+                if (INPUT.equalsIgnoreCase(selectedInputType)) {
                     pinConfigParam.setByPassMode(false);
                     pinConfigParam.setDirection(DIRECTION_INPUT);
-                    break;
-                case OUTPUT_LOW:
-                case OUTPUT_HIGH:
-                    pinConfigParam.setByPassMode(false);
-                    pinConfigParam.setDirection(DIRECTION_OUTPUT);
-                    pinConfigParam.setValue(pinConfigUiModel.getSelectedValue());
-                    break;
-                case LEVEL_TRIG_HIGH:
-                case LEVEL_TRIG_LOW:
-                case EDGE_TRIG_FALL:
-                case EDGE_TRIG_RISE:
-                case EDGE_TRIG_ANY:
+                } else {
                     pinConfigParam.setIntEnable(true);
-                    String selectedValue = pinConfigUiModel.getSelectedValue();
-                    pinConfigParam.setIntType(selectedValue.startsWith(LEVEL) ?
-                            LEVEL_TRIGGERED : EDGE_TRIGGERED);
-                    pinConfigParam.setIntValue(pinConfigUiModel.getSelectedValue());
-                    break;
-                default:
-                    break;
+                    String selectedExioType = pinConfigUiModel.getSelectedExioType();
+                    if (StringUtils.isNotEmpty(selectedExioType)) {
+                        if (selectedExioType.equalsIgnoreCase(LEVEL)) {
+                            pinConfigParam.setIntType(LEVEL_TRIGGERED);
+                            pinConfigParam.setIntValue(pinConfigUiModel.getSelectedLevelType());
+                        } else {
+                            pinConfigParam.setIntType(EDGE_TRIGGERED);
+                            pinConfigParam.setIntValue(pinConfigUiModel.getSelectedEdgeType());
+                        }
+                    }
+                }
+            } else {
+                pinConfigParam.setByPassMode(false);
+                pinConfigParam.setDirection(DIRECTION_OUTPUT);
+                pinConfigParam.setValue(pinConfigUiModel.getSelectedOutputType());
             }
         }
         pinConfig.savePinConfig(portName, currentPin.getName(), pinConfigParam);
