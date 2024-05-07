@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui.common;
 
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.enums.DeviceRole;
+import com.board.config.boardconfiggui.data.inputmodels.clockconfig.ClockConfig;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.connectivityconfig.ConnectivityConfig;
@@ -108,8 +109,9 @@ public class Utils {
     public static boolean isInputConfigurationReached(String xmlFolderPath) {
         File hardwareConfigFile = new File(xmlFolderPath, Constants.HARDWARE_CONFIG_FILE_NAME);
         File pinMuxingConfigFile = new File(xmlFolderPath, Constants.PIN_CONFIG_FILE_NAME);
+        File clockConfigFile = new File(xmlFolderPath, Constants.CLOCK_CONFIG_FILE_NAME);
 
-        return hardwareConfigFile.exists() && pinMuxingConfigFile.exists();
+        return hardwareConfigFile.exists() && pinMuxingConfigFile.exists() && clockConfigFile.exists();
     }
 
     /**
@@ -134,6 +136,12 @@ public class Utils {
             Unmarshaller pinConfigUnmarshaller = pinConfigContext.createUnmarshaller();
             PinConfig pinConfig = (PinConfig) pinConfigUnmarshaller.unmarshal(new File(xmlFolderPath, Constants.PIN_CONFIG_FILE_NAME));
             inputConfigRepo.setPinConfig(pinConfig);
+
+            JAXBContext clockConfigContext = JAXBContext.newInstance(ClockConfig.class);
+            Unmarshaller clockConfigUnmarshaller = clockConfigContext.createUnmarshaller();
+            ClockConfig clockConfig = (ClockConfig) clockConfigUnmarshaller.unmarshal(new File(xmlFolderPath, Constants.CLOCK_CONFIG_FILE_NAME));
+            inputConfigRepo.setClockConfig(clockConfig);
+
         } catch (JAXBException e) {
             logger.warning("Input xml files parsing failed" + e);
             return false;

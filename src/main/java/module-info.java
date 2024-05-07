@@ -13,6 +13,7 @@ module com.board.config.boardconfiggui {
   opens com.board.config.boardconfiggui to javafx.fxml;
     opens com.board.config.boardconfiggui.data.inputmodels.ipconfig to java.xml.bind;
     opens com.board.config.boardconfiggui.data.inputmodels.pinconfig to java.xml.bind;
+    opens com.board.config.boardconfiggui.data.inputmodels.clockconfig to java.xml.bind;
     opens com.board.config.boardconfiggui.data.outputmodels to java.xml.bind, com.sun.xml.bind;
     opens com.board.config.boardconfiggui.data.outputmodels.clockconfig to java.xml.bind, com.sun.xml.bind;
     opens com.board.config.boardconfiggui.data.outputmodels.ipconfig to java.xml.bind, com.sun.xml.bind;

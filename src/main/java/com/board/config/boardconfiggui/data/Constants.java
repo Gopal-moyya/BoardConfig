@@ -20,6 +20,8 @@ public class Constants {
 
     public static final String BOARD_CONFIG_FILE_NAME = "board_configuration.xml";
 
+    public static final String CLOCK_CONFIG_FILE_NAME = "clock_configuration.xml";
+
     /**
      * Constant representing the development role.
      */
@@ -75,6 +77,9 @@ public class Constants {
     public static final String BOARD_NAME = "Board Name";
 
     public static final String SELECT = "select";
+
+    public static final String TRUE = "TRUE";
+    public static final String FALSE = "FALSE";
 
     /**
      * Constant for direction output.
