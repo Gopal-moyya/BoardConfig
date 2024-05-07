@@ -2,6 +2,7 @@ package com.board.config.boardconfiggui;
 
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
+import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,13 +24,15 @@ public class PortConfigController implements Initializable {
 
   private final String portName;
   private final Map<String, Pin> currentPins;
+  private final Map<String, List<PinType>> pinTypes;
 
   @FXML
   private Pane portConfigPane;
 
-  public PortConfigController(String portName, Map<String, Pin> currentPins) {
+  public PortConfigController(String portName, Map<String, Pin> currentPins, Map<String, List<PinType>> pinTypes) {
     this.portName = portName;
     this.currentPins = currentPins;
+    this.pinTypes = pinTypes;
   }
 
   @Override
@@ -79,7 +82,7 @@ public class PortConfigController implements Initializable {
 
           FXMLLoader loader = new FXMLLoader(getClass().getResource("pin-config.fxml"));
           Pin pin = currentPins.get(pinName);
-          PinConfigController pinConfigController = new PinConfigController(portName, pin);
+          PinConfigController pinConfigController = new PinConfigController(portName, pin, pinTypes.get(portName+"_"+pinName));
           loader.setController(pinConfigController);
 
           try {
