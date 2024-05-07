@@ -75,6 +75,7 @@ public class Constants {
     public static final String BOARD_NAME = "Board Name";
 
     public static final String SELECT = "select";
+    public static final String OK = "OK";
 
     /**
      * Constant for direction output.
