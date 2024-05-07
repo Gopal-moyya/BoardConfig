@@ -4,6 +4,10 @@ import com.board.config.boardconfiggui.controllers.LabelComboBoxWidgetController
 import com.board.config.boardconfiggui.controllers.OnOffButtonWidgetController;
 import com.board.config.boardconfiggui.data.Constants;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfig;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfigIp;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfigPort;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.SignalParam;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
@@ -17,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -144,6 +149,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         inPutOutPutWidgetController.getCmbInfoItem().addListener((observable, oldValue, newValue) -> {
             pinConfigUiModel.setSelectedIOType(newValue);
             if (BY_PASS.equals(pinConfigUiModel.getSelectedMode())) {
+                pinConfigUiModel.setSelectedBypassType(newValue);
                 return;
             }
 
@@ -209,9 +215,14 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
 
             if (Objects.nonNull(pinConfigParam)) {
                 if (BooleanUtils.isTrue(pinConfigParam.isByPassMode())) {
-                    pinConfigUiModel.setSelectedMode(BY_PASS);
-
-                } else {
+                    if(StringUtils.isNotEmpty(pinConfigParam.getValue())) {
+                        pinConfigUiModel.setPinStatus(true);
+                        pinConfigUiModel.setSelectedMode(BY_PASS);
+                        pinConfigUiModel.setSelectedBypassType(pinConfigParam.getValue());
+                        inPutOutPutWidget.setVisible(true);
+                    }
+                } else{
+                    pinConfigUiModel.setPinStatus(true);
                     pinConfigUiModel.setSelectedMode(GPIO);
 
                     if (StringUtils.isEmpty(pinConfigParam.getDirection())) {
@@ -238,8 +249,6 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                         }
                     }
                 }
-                pinConfigUiModel.setPinStatus(true);
-
                 updateUI();
             }
         }
@@ -256,6 +265,10 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                 inPutOutPutWidgetController.setComboBoxLabel(selectedMode.concat(TYPE), Constants.SELECT);
                 inPutOutPutWidgetController.setItems(FXCollections.observableArrayList(pinMap.get(selectedMode).getChildren()));
 
+                if(BY_PASS.equals(selectedMode)){
+                    inPutOutPutWidgetController.setSelectedValue(pinConfigUiModel.getSelectedBypassType());
+                    return;
+                }
                 String selectedIOType = pinConfigUiModel.getSelectedIOType();
                 inPutOutPutWidgetController.setSelectedValue(selectedIOType);
                 if (StringUtils.isNotEmpty(selectedIOType)) {
@@ -412,7 +425,37 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             return;
         }
         if (pinConfigUiModel.getSelectedMode().equals(BY_PASS)) {
+
+            if(StringUtils.isEmpty(pinConfigUiModel.getSelectedBypassType())){
+                return;
+            }
             pinConfigParam.setByPassMode(true);
+            pinConfigParam.setValue(pinConfigUiModel.getSelectedBypassType());
+            IpConfig ipConfig = BoardResultsRepo.getInstance().getBoardResult().getIpConfig();
+            SignalParam signalParam = new SignalParam(currentPin.getName(), pinConfigUiModel.getSelectedBypassType());
+
+            IpConfigIp selectedIpConfig = ipConfig.getIpConfig(pinConfigUiModel.getSelectedIp());
+            if(ObjectUtils.isEmpty(selectedIpConfig)){
+                IpConfigIp newIpConfigIp = new IpConfigIp(pinConfigUiModel.getSelectedIp());
+
+                IpConfigPort portInfo = new IpConfigPort(portName);
+                portInfo.addSignalParam(signalParam);
+
+                newIpConfigIp.addPort(portInfo);
+                ipConfig.addIpConfigIp(newIpConfigIp);
+            }else {
+                selectedIpConfig.deleteExistingSignalParam(signalParam);
+                IpConfigPort portInfo = selectedIpConfig.getPortInfo(portName);
+
+                if(ObjectUtils.isNotEmpty(portInfo))
+                    portInfo.addSignalParam(signalParam);
+                else {
+                    portInfo = new IpConfigPort(portName);
+                    portInfo.addSignalParam(signalParam);
+
+                    selectedIpConfig.addPort(portInfo);
+                }
+            }
         } else {
             //If not selected input/output type
             if (StringUtils.isEmpty(pinConfigUiModel.getSelectedIOType())) {

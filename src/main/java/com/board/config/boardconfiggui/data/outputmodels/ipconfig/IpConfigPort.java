@@ -1,6 +1,7 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class IpConfigPort {
     String name;
 
     @XmlElement(name = "signalParam")
-    List<SignalParam> signalParams;
+    ArrayList<SignalParam> signalParams;
 
     public IpConfigPort() {
     }
@@ -31,7 +32,11 @@ public class IpConfigPort {
     }
 
     public void setSignalParams(List<SignalParam> signalParams) {
-        this.signalParams = signalParams;
+        for(SignalParam signalParam : signalParams) {
+            if(CollectionUtils.isEmpty(this.signalParams))
+                this.signalParams = new ArrayList<>();
+            this.signalParams.add(signalParam);
+        }
     }
 
     public void addSignalParam(SignalParam signalParam) {
@@ -39,10 +44,10 @@ public class IpConfigPort {
             return;
         }
 
-        if (CollectionUtils.isEmpty(this.signalParams)) {
+        if (CollectionUtils.isEmpty(signalParams))
             this.signalParams = new ArrayList<>();
-        }
-        this.signalParams.add(signalParam);
+
+        CollectionUtils.addAll(signalParams, signalParam);
     }
 
     @Override
@@ -64,5 +69,20 @@ public class IpConfigPort {
     @Override
     public int hashCode() {
         return Objects.hash(name, signalParams);
+    }
+
+    public void deleteExistingSignalParam(SignalParam parameterToBeDeleted) {
+        if(CollectionUtils.isEmpty(signalParams))
+            return;
+        int indexToBeDeleted = -1;
+        for(int i = 0; i < signalParams.size(); i++){
+            if(StringUtils.equals(signalParams.get(i).getName(), parameterToBeDeleted.getName())){
+                indexToBeDeleted = i;
+                break;
+            }
+        }
+        if(indexToBeDeleted != -1)
+            signalParams.remove(indexToBeDeleted);
+
     }
 }
