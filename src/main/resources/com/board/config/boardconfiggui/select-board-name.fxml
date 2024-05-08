@@ -12,7 +12,7 @@
    <children>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" maxWidth="100.0" prefWidth="80.0" text="Chiplet Name:">
+            <Label maxWidth="100.0" prefWidth="80.0" text="Chiplet Name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
@@ -28,7 +28,7 @@
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" maxWidth="100.0" prefWidth="80.0" text="Core name:">
+            <Label maxWidth="100.0" prefWidth="80.0" text="Core name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
@@ -41,7 +41,7 @@
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" maxWidth="100.0" prefWidth="80.0" text="Board Name:">
+            <Label maxWidth="100.0" prefWidth="80.0" text="Board Name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
