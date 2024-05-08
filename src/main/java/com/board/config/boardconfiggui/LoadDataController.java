@@ -199,7 +199,7 @@ public class LoadDataController  {
 
             GeneralConfig generalConfig = boardResultsRepo.getBoardResult().getGeneralConfig();
             if (ObjectUtils.isNotEmpty(generalConfig)) {
-                String boardName = generalConfig.getOption().getValue();
+                String boardName = generalConfig.getOption(Constants.BOARD).getValue();
                 controller.setTxtBoardName(boardName);
             }
 
@@ -213,7 +213,8 @@ public class LoadDataController  {
                 String boardName = controller.getBoardName();
 
                 //set the board name information
-                generalConfig = new GeneralConfig(new Option(boardName));
+                generalConfig = new GeneralConfig();
+                generalConfig.addConfig(new Option(Constants.BOARD, boardName));
                 boardResultsRepo.getBoardResult().setGeneralConfig(generalConfig);
 
                 homeViewController.onConfigureClick(xmlFolderPath);
