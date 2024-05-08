@@ -186,15 +186,19 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       pinConfig = boardResultsRepo.getBoardResult().getPinConfig();
 
       Map<String, List<String>> bypassDisabledPins = pinConfig.getBypassDisabledPins();
+      Map<String, List<String>> pinsUsedByOtherIps = pinConfig.getPinsUsedByOtherIps(ipName);
 
       for (Port port : ports) {
         List<String> byPassDisabledPortPins = Objects.isNull(bypassDisabledPins.get(port.getName()))
                 ? new ArrayList<>() : bypassDisabledPins.get(port.getName());
+        List<String> pinsUsedByOtherIpsPortPins = Objects.isNull(pinsUsedByOtherIps.get(port.getName()))
+                ? new ArrayList<>() : pinsUsedByOtherIps.get(port.getName());
         for (Pin pin : port.getPinList()) {
           if (pin.getValues().contains(getSCLParam()) || pin.getValues().contains(getSDAParam())) {
             IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
             ipPinConfig.setClock(pin.getValues().contains(getSCLParam()));
-            ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()));
+            ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()) ||
+                  CollectionUtils.containsAny(pinsUsedByOtherIpsPortPins, pin.getName()));
             ipPinConfigs.add(ipPinConfig);
           }
         }

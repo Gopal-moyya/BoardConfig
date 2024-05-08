@@ -108,6 +108,7 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         pinConfig = boardResultsRepo.getBoardResult().getPinConfig();
 
         Map<String, List<String>> bypassDisabledPins = pinConfig.getBypassDisabledPins();
+        Map<String, List<String>> pinsUsedByOtherIps = pinConfig.getPinsUsedByOtherIps(ipName);
 
         Map<String, List<IpPinConfig>> spiConfigMap = new HashMap<>();
         spiConfigModels = new ArrayList<>();
@@ -119,6 +120,8 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         for (Port port : ports) {
             List<String> byPassDisabledPortPins = Objects.isNull(bypassDisabledPins.get(port.getName()))
                     ? new ArrayList<>() : bypassDisabledPins.get(port.getName());
+            List<String> pinsUsedByOtherIpsPortPins = Objects.isNull(pinsUsedByOtherIps.get(port.getName()))
+                    ? new ArrayList<>() : pinsUsedByOtherIps.get(port.getName());
             for (Pin pin : port.getPinList()) {
                 Matcher matcher = pattern.matcher(pin.getValues());
                 if (matcher.find()) {
@@ -126,7 +129,8 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
                     List<IpPinConfig> ipPinConfigs = spiConfigMap.computeIfAbsent(matchedString, k -> new ArrayList<>());
 
                     IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
-                    ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()));
+                    ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()) ||
+                          CollectionUtils.containsAny(pinsUsedByOtherIpsPortPins, pin.getName()));
                     ipPinConfigs.add(ipPinConfig);
                 }
             }
