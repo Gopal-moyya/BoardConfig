@@ -3,6 +3,7 @@ package com.board.config.boardconfiggui.data.outputmodels.pinconfig;
 import com.sun.istack.NotNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -116,6 +117,9 @@ public class PinConfig {
                     .orElse(null);
             if (Objects.nonNull(pinConfigPort)) {
                 pinConfigPort.removePinConfigParamData(pinNumber);
+                if (CollectionUtils.isEmpty(pinConfigPort.getConfigParams())) {
+                    removePort(pinConfigPort);
+                }
             }
 
         }
@@ -141,5 +145,30 @@ public class PinConfig {
         bypassDisabledPins.put(pinConfigPort.getName(), pins);
       }
       return bypassDisabledPins;
+    }
+
+  /**
+   * Method to get all the pins that are configured for Ips that are other than current Ip.
+   *
+   * @param currentIpName current ip name for reference
+   *
+   * @return pins used by other ips
+   */
+    public Map<String, List<String>> getPinsUsedByOtherIps(String currentIpName) {
+      if (CollectionUtils.isEmpty(ports)) {
+        return new HashMap<>();
+      }
+      Map<String, List<String>> pinsUsedByOtherIps = new HashMap<>();
+      for (PinConfigPort pinConfigPort : ports) {
+        List<String> pins = new ArrayList<>();
+        for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
+          String ipName = pinConfigParam.getValue().split("_")[0];
+          if (!StringUtils.equals(currentIpName, ipName)) {
+            pins.add(pinConfigParam.getPin());
+          }
+        }
+        pinsUsedByOtherIps.put(pinConfigPort.getName(), pins);
+      }
+      return pinsUsedByOtherIps;
     }
 }
