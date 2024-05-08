@@ -89,6 +89,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         this.pinTypes = pinTypes;
         pinConfigUiModel = new PinConfigModel(portName, pin.getName());
     }
+    IpConfig ipConfig = BoardResultsRepo.getInstance().getBoardResult().getIpConfig();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -170,7 +171,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                 outPutWidget.managedProperty().bind(outPutWidget.visibleProperty());
                 inPutWidgetController.setComboBoxLabel(newValue.concat(TYPE), Constants.SELECT);
                 inPutWidgetController.setItems(FXCollections.observableArrayList(inputOrOutputOptions));
-            } else {
+            } else if (OUTPUT.equals(newValue)){
                 outPutWidget.setVisible(true);
                 inPutWidget.setVisible(false);
                 exioWidget.setVisible(false);
@@ -331,6 +332,8 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
     private void handleButtonOffStatus() {
         onOffWidgetController.setButtonText(OnOffButtonWidgetController.OFF_TXT);
         onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
+        IpConfigIp selectedIpConfig = ipConfig.getIpConfig(pinConfigUiModel.getSelectedIp());
+        selectedIpConfig.deleteExistingSignalParam(new SignalParam(currentPin.getName(), pinConfigUiModel.getSelectedBypassType()));
         clearAllUIData();
     }
 
@@ -379,6 +382,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         pinConfigUiModel.setSelectedEdgeType(null);
 
         modeTypesWidgetController.setItems(null);
+        inPutOutPutWidgetController.setItems(null);
     }
 
     private void onExtIValueChange(String extValue) {
@@ -431,7 +435,6 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
             }
             pinConfigParam.setByPassMode(true);
             pinConfigParam.setValue(pinConfigUiModel.getSelectedBypassType());
-            IpConfig ipConfig = BoardResultsRepo.getInstance().getBoardResult().getIpConfig();
             SignalParam signalParam = new SignalParam(currentPin.getName(), pinConfigUiModel.getSelectedBypassType());
 
             IpConfigIp selectedIpConfig = ipConfig.getIpConfig(pinConfigUiModel.getSelectedIp());

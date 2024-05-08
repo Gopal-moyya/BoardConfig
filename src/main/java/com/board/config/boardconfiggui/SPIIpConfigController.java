@@ -108,6 +108,7 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         pinConfig = boardResultsRepo.getBoardResult().getPinConfig();
 
         Map<String, List<String>> bypassDisabledPins = pinConfig.getBypassDisabledPins();
+        Map<String, List<String>> pinsUsedByOtherIps = pinConfig.getPinsUsedByOtherIps(ipName);
 
         Map<String, List<IpPinConfig>> spiConfigMap = new HashMap<>();
         spiConfigModels = new ArrayList<>();
@@ -119,6 +120,8 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         for (Port port : ports) {
             List<String> byPassDisabledPortPins = Objects.isNull(bypassDisabledPins.get(port.getName()))
                     ? new ArrayList<>() : bypassDisabledPins.get(port.getName());
+            List<String> pinsUsedByOtherIpsPortPins = Objects.isNull(pinsUsedByOtherIps.get(port.getName()))
+                    ? new ArrayList<>() : pinsUsedByOtherIps.get(port.getName());
             for (Pin pin : port.getPinList()) {
                 Matcher matcher = pattern.matcher(pin.getValues());
                 if (matcher.find()) {
@@ -126,7 +129,8 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
                     List<IpPinConfig> ipPinConfigs = spiConfigMap.computeIfAbsent(matchedString, k -> new ArrayList<>());
 
                     IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
-                    ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()));
+                    ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()) ||
+                          CollectionUtils.containsAny(pinsUsedByOtherIpsPortPins, pin.getName()));
                     ipPinConfigs.add(ipPinConfig);
                 }
             }
@@ -155,7 +159,7 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
             return;
         }
         IpConfigIp ipConfigIp = boardResult.getIpConfig().getIpConfig(ipName);
-        if (Objects.isNull(ipConfigIp)) {
+        if (Objects.isNull(ipConfigIp) || CollectionUtils.isEmpty(ipConfigIp.getPorts())) {
             return;
         }
 
@@ -174,15 +178,15 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
             }
         }
 
-        if (ipConfigIp.getWriteCompletionConfig() == null ||
-                CollectionUtils.isEmpty(ipConfigIp.getWriteCompletionConfig().getConfigParams())) {
-            return;
-        }
+        if (Objects.nonNull(ipConfigIp.getWriteCompletionConfig()) &&
+                CollectionUtils.isNotEmpty(ipConfigIp.getWriteCompletionConfig().getConfigParams())) {
 
-        for (WriteCompletionConfigParam param : ipConfigIp.getWriteCompletionConfig().getConfigParams()) {
-            configParamModels.stream()
-                    .filter(configParamModel -> StringUtils.equals(configParamModel.getConfigParam().getParam(), param.getName()))
-                    .findFirst().ifPresent(configParamModel -> configParamModel.setResult(param.getValue()));
+            for (WriteCompletionConfigParam param : ipConfigIp.getWriteCompletionConfig().getConfigParams()) {
+                configParamModels.stream()
+                        .filter(configParamModel -> StringUtils.equals(configParamModel.getConfigParam().getParam(), param.getName()))
+                        .findFirst().ifPresent(configParamModel -> configParamModel.setResult(param.getValue()));
+            }
+
         }
 
         enableIP();
@@ -308,8 +312,7 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         IpConfig ipConfig = boardResultsRepo.getBoardResult().getIpConfig();
         if (Objects.nonNull(ipConfig)) {
             boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
-            spiConfigModels.forEach(spiConfigModel -> {
-                IpPinConfig ipPinConfig = spiConfigModel.getResult();
+            prefilledIpPinConfigs.forEach((label, ipPinConfig) -> {
                 if (Objects.nonNull(ipPinConfig)) {
                     pinConfig.removePinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName());
                 }
@@ -368,16 +371,24 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
     }
 
     private void prepareIpPinConfigData() {
+        Map<String, IpPinConfig> savedIpPinConfigMap = new HashMap<>();
+
         spiConfigModels.forEach(spiConfigModel -> {
             IpPinConfig ipPinConfig = spiConfigModel.getResult();
             if (Objects.nonNull(ipPinConfig)) {
-                IpPinConfig prefilledIpPinConfig = prefilledIpPinConfigs.get(spiConfigModel.getLabel());
-                if (prefilledIpPinConfig != null && ipPinConfig != prefilledIpPinConfig) {
-                    pinConfig.removePinConfig(prefilledIpPinConfig.getPortName(), prefilledIpPinConfig.getPinName());
-                }
+                savedIpPinConfigMap.putIfAbsent(spiConfigModel.getLabel(), ipPinConfig);
                 prepareAndSaveIpPinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName(), spiConfigModel.getLabel());
             }
         });
+
+        //Remove prefilled pin configs if it is not in saved ip config map
+        prefilledIpPinConfigs.forEach((label, ipPinConfig) -> {
+            IpPinConfig savedIpPinConfig = savedIpPinConfigMap.get(label);
+            if (Objects.isNull(savedIpPinConfig) || savedIpPinConfig != ipPinConfig) {
+                pinConfig.removePinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName());
+            }
+        });
+
     }
 
     /**

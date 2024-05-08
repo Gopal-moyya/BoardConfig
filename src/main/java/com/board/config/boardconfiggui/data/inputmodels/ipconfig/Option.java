@@ -1,4 +1,4 @@
-package com.board.config.boardconfiggui.data.outputmodels.genralconfig;
+package com.board.config.boardconfiggui.data.inputmodels.ipconfig;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -6,26 +6,28 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
-@XmlRootElement(name = "option")
+/**
+ * POJO class holds the information related to the parameter
+ */
+@XmlRootElement(name = "Option")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Option {
 
-    @XmlAttribute(name = "Name")
+    @XmlAttribute(name = "name")
     String name;
 
-    @XmlAttribute(name = "value")
+    @XmlAttribute(name = "value", required = false)
     String value;
 
     public Option() {
-        //For serialization
+    }
+
+    public Option(String name) {
+        this.name = name;
     }
 
     public Option(String name, String value) {
         this.name = name;
-        this.value = value;
-    }
-
-    public Option(String value) {
         this.value = value;
     }
 
@@ -39,9 +41,9 @@ public class Option {
 
     @Override
     public String toString() {
-        return "Option{" +
+        return "Param{" +
                 "name='" + name + '\'' +
-                ", value='" + value + '\'' +
+                ", value=" + value +
                 '}';
     }
 
@@ -49,8 +51,8 @@ public class Option {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Option option = (Option) o;
-        return Objects.equals(name, option.name) && Objects.equals(value, option.value);
+        Option param = (Option) o;
+        return Objects.equals(value, param.value) && Objects.equals(name, param.name);
     }
 
     @Override

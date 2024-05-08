@@ -75,9 +75,17 @@ public class Constants {
     public static final String EXTI = "EXTI";
     public static final String EDGE = "Edge";
 
-    public static final String BOARD_NAME = "Board Name";
+    public static final String GENERAL_CONFIGURATION = "General Configuration";
+    public static final String BOARD = "Board";
+    public static final String CHIPLET = "Chiplet";
+    public static final String CORE = "Core";
 
     public static final String SELECT = "select";
+    public static final String OK = "OK";
+
+    public static final String TYPE = " Type:";
+    public static final String PIN_STATUS_LABEL = "PIN Status:";
+    public static final String MODE_TYPE_LABEL = "Mode Type:";
 
     public static final String TYPE = " Type:";
     public static final String PIN_STATUS_LABEL = "PIN Status:";
