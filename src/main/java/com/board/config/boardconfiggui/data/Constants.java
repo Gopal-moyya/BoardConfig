@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.data;
 
+import com.board.config.boardconfiggui.data.enums.ConfigParam;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +33,11 @@ public class Constants {
     public static final String QSPI_IP_NAME = "QSPI";
 
     /**
+     * Constant representing the I3C IP name
+     */
+    public static final String I3C_IP_NAME = "I3C";
+
+    /**
      * Constant representing the write completion config name
      */
     public static final String WRITE_COMPLETION_CONFIG_NAME = "writeCompletionConfig";
@@ -58,29 +65,34 @@ public class Constants {
 
     //Strings related to the Pin configuration
     public static final String INPUT = "input";
-    public static final String OUTPUT_HIGH = "output_high";
-    public static final String OUTPUT_LOW = "output_low";
-    public static final String EDGE_TRIG_RISE = "Edge_trig_rise";
-    public static final String EDGE_TRIG_FALL = "Edge_trig_fall";
-    public static final String EDGE_TRIG_ANY = "Edge_trigger_any";
-    public static final String LEVEL_TRIG_HIGH = "Level_trig_high";
-    public static final String LEVEL_TRIG_LOW = "Level_trig_low";
+    public static final String OUTPUT = "output";
     public static final String LEVEL = "Level";
     public static final String LEVEL_TRIGGERED = "LevelTriggered";
     public static final String EDGE_TRIGGERED = "EdgeTriggered";
+    public static final String MODES_TEXT = "Modes";
     public static final String BY_PASS = "Bypass";
     public static final String GPIO = "GPIO";
     public static final String EXTI = "EXTI";
+    public static final String EDGE = "Edge";
 
     public static final String BOARD_NAME = "Board Name";
 
     public static final String SELECT = "select";
+
+    public static final String TYPE = " Type:";
+    public static final String PIN_STATUS_LABEL = "PIN Status:";
+    public static final String MODE_TYPE_LABEL = "Mode Type:";
 
     /**
      * Constant for direction output.
      */
     public static final String DIRECTION_OUTPUT = "Output";
     public static final String DIRECTION_INPUT = "Input";
+
+    /**
+     * Constant representing the value '0'.
+     */
+    public static final String ZERO = "0";
 
     /**
      * Constant representing the value '1'.
@@ -165,5 +177,29 @@ public class Constants {
     public static final String SYS_CLK_PARAM = "sysClk";
     public static final String I2C_FREQ_PARAM = "i2cFreq";
     public static final String SDR_FREQ_PARAM = "sdrFreq";
+
+    // load data controller strings
+    public static final String SELECT_FOLDER = "Select Folder";
+    public static final String XML_BUTTON_TYPE = "xmlBtn";
+    public static final String REPO_BUTTON_TYPE = "repoBtn";
+    public static final String TOOL_CHAIN_BUTTON_TYPE = "toolChainBtn";
+    public static final String OUTPUT_BUTTON_TYPE = "outputBtn";
+
+    /**
+     * Constant representing write completion config header to show in UI.
+     */
+    public static final String WRITE_COMPLETION_CONFIG_HEADER = "Write completion config controls";
+
+    /**
+     * Constant representing the list of ConfigParam for write completion config controls
+     */
+    public static final List<ConfigParam> QSPI_WRITE_COMPLETION_CONFIG_CONTROLS = Arrays.asList(
+            ConfigParam.POOL_COUNT,
+            ConfigParam.POLLING_BIT_INDEX,
+            ConfigParam.OPCODE,
+            ConfigParam.IS_DISABLED,
+            ConfigParam.POLLING_POLARITY,
+            ConfigParam.REPETITION_DELAY
+    );
 }
 

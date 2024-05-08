@@ -32,6 +32,22 @@ public class SignalParam {
         return name;
     }
 
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isClock(){
+      return name.split("_")[1].equals("SCL");
+    }
+
+    public boolean isData(){
+        return name.split("_")[1].equals("SDA");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

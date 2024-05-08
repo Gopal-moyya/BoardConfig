@@ -13,11 +13,13 @@ import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.Param;
 import com.board.config.boardconfiggui.data.outputmodels.ipconfig.*;
 import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfig;
+import com.board.config.boardconfiggui.data.outputmodels.pinconfig.PinConfigParam;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.models.IpConfigModel;
 import com.board.config.boardconfiggui.ui.models.SlaveDeviceConfigModel;
+import com.board.config.boardconfiggui.ui.utils.IpPinConfigListCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +28,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,9 +43,9 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   @FXML
   private GridPane gridpaneWidget;
   @FXML
-  private ComboBox<String> sclChoiceBox;
+  private ComboBox<IpPinConfig> sclChoiceBox;
   @FXML
-  private ComboBox<String> sdaChoiceBox;
+  private ComboBox<IpPinConfig> sdaChoiceBox;
   @FXML
   private TextField sysClockField;
   @FXML
@@ -66,24 +67,33 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
 
   private BoardResultsRepo boardResultsRepo;
 
+  private PinConfig pinConfig;
+
+  private IpPinConfig sclIpConfigModel,
+          sdaIpConfigModel;
+
   private final List<IpPinConfig> ipPinConfigs = new ArrayList<>();
 
   private final List<SlaveWidgetController> slaveWidgetControllers = new ArrayList<>();
 
   @FXML
   private void onSCLPinUpdate() {
-    String sclPin = sclChoiceBox.getValue();
-    Pair<String, String> sclPinPair = getPinPortPair(sclPin);
-    ipConfigModel.setSclPort(sclPinPair.getKey());
-    ipConfigModel.setSclPin(sclPinPair.getValue());
+    IpPinConfig ipPinConfig = sclChoiceBox.getValue();
+    if (Objects.isNull(ipPinConfig)) {
+      return;
+    }
+    ipConfigModel.setSclPort(ipPinConfig.getPortName());
+    ipConfigModel.setSclPin(ipPinConfig.getPinName());
   }
 
   @FXML
   private void onSDAPinUpdate() {
-    String sdaPin = sdaChoiceBox.getValue();
-    Pair<String, String> sdaPinPair = getPinPortPair(sdaPin);
-    ipConfigModel.setSdaPort(sdaPinPair.getKey());
-    ipConfigModel.setSdaPin(sdaPinPair.getValue());
+    IpPinConfig ipPinConfig = sdaChoiceBox.getValue();
+    if (Objects.isNull(ipPinConfig)) {
+      return;
+    }
+    ipConfigModel.setSdaPort(ipPinConfig.getPortName());
+    ipConfigModel.setSdaPin(ipPinConfig.getPinName());
   }
 
   @FXML
@@ -108,20 +118,23 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   private void onNoOfSlavesUpdate() {
     try {
       Integer noOfSlaves = noOfSlavesField.getValue();
-      ipConfigModel.setNoOfSlaves(String.valueOf(noOfSlaves));
-      ipConfigVBox.getChildren().clear();
-      slaveWidgetControllers.clear();
-      if (noOfSlaves > 0) {
-        slavesInfoLabel.setVisible(true);
-        for (int i = 0; i < noOfSlaves; i++) {
+      String prevSlaves = ipConfigModel.getNoOfSlaves();
+      int prevSlavesCount = StringUtils.isNotBlank(prevSlaves) ? Integer.parseInt(prevSlaves) : 0;
+      if (noOfSlaves > prevSlavesCount) {
+        for (int i = 0; i < (noOfSlaves - prevSlavesCount); i++) {
           FXMLLoader loader = new FXMLLoader(getClass().getResource("slave-widget.fxml"));
           ipConfigVBox.getChildren().add(loader.load());
           SlaveWidgetController slaveWidgetController = loader.getController();
           slaveWidgetControllers.add(slaveWidgetController);
         }
-      } else {
-        slavesInfoLabel.setVisible(false);
+      } else if (noOfSlaves < prevSlavesCount) {
+        for (int i = 0; i < (prevSlavesCount - noOfSlaves); i++) {
+          ipConfigVBox.getChildren().removeLast();
+          slaveWidgetControllers.removeLast();
+        }
       }
+      slavesInfoLabel.setVisible(noOfSlaves > 0);
+      ipConfigModel.setNoOfSlaves(String.valueOf(noOfSlaves));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -154,6 +167,11 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
         }
 
       });
+      // Set how to display custom objects in the ComboBox
+      sclChoiceBox.setCellFactory(param -> new IpPinConfigListCell());
+      sclChoiceBox.setButtonCell(new IpPinConfigListCell());
+      sdaChoiceBox.setCellFactory(param -> new IpPinConfigListCell());
+      sdaChoiceBox.setButtonCell(new IpPinConfigListCell());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -165,124 +183,99 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       List<Port> ports = inputConfigRepo.getPinConfig().getPorts();
 
       boardResultsRepo = BoardResultsRepo.getInstance();
-      PinConfig pinConfig = boardResultsRepo.getBoardResult().getPinConfig();
+      pinConfig = boardResultsRepo.getBoardResult().getPinConfig();
 
-      Map<String, List<String>> bypassConfiguredPins = pinConfig.getBypassConfiguredPins();
+      Map<String, List<String>> bypassDisabledPins = pinConfig.getBypassDisabledPins();
 
       for (Port port : ports) {
-        List<String> byPassSupportedPortPins = Objects.isNull(bypassConfiguredPins.get(port.getName()))
-                ? new ArrayList<>() : bypassConfiguredPins.get(port.getName());
+        List<String> byPassDisabledPortPins = Objects.isNull(bypassDisabledPins.get(port.getName()))
+                ? new ArrayList<>() : bypassDisabledPins.get(port.getName());
         for (Pin pin : port.getPinList()) {
           if (pin.getValues().contains(getSCLParam()) || pin.getValues().contains(getSDAParam())) {
             IpPinConfig ipPinConfig = new IpPinConfig(port.getName(), pin.getName());
             ipPinConfig.setClock(pin.getValues().contains(getSCLParam()));
-            ipPinConfig.setEnabled(CollectionUtils.containsAny(byPassSupportedPortPins, pin.getName()));
+            ipPinConfig.setDisabled(CollectionUtils.containsAny(byPassDisabledPortPins, pin.getName()));
             ipPinConfigs.add(ipPinConfig);
           }
         }
       }
-      sdaChoiceBox.setItems(FXCollections.observableList(getPinDataDisplayValues()));
-      sclChoiceBox.setItems(FXCollections.observableList(getPinClockDisplayValues()));
+      sdaChoiceBox.setItems(FXCollections.observableList(getDataPins()));
+      sclChoiceBox.setItems(FXCollections.observableList(getClockPins()));
 
       prefillData(boardResultsRepo.getBoardResult());
-      setDisabledPins();
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private List<String> getPinClockDisplayValues() {
+  private List<IpPinConfig> getClockPins() {
     return ipPinConfigs.stream()
-            .filter(ipPinConfig -> ipPinConfig.isEnabled() && ipPinConfig.isClock())
-            .map(IpPinConfig::getDisplayValue)
+            .filter(IpPinConfig::isClock)
             .toList();
   }
 
-  private List<String> getPinDataDisplayValues() {
+  private List<IpPinConfig> getDataPins() {
     return ipPinConfigs.stream()
-            .filter(ipPinConfig -> ipPinConfig.isEnabled() && !ipPinConfig.isClock())
-            .map(IpPinConfig::getDisplayValue)
+            .filter(ipPinConfig -> !ipPinConfig.isClock())
             .toList();
-  }
-  private List<String> getDisabledPinDisplayValues() {
-    return ipPinConfigs.stream()
-            .filter(ipPinConfig -> !ipPinConfig.isEnabled())
-            .map(IpPinConfig::getDisplayValue)
-            .toList();
-  }
-
-  private Pair<String, String> getPinPortPair(String data) {
-    if (Objects.isNull(data)) {
-      return new Pair<>(null, null);
-    }
-    String[] strings = data.split(" Pin: ");
-    return new Pair<>(strings[0], strings[1]);
-  }
-
-  private String getPinDisplayValue(String portName, String pinName) {
-    return ipPinConfigs.stream()
-            .filter(ipPinConfig -> StringUtils.equals(portName, ipPinConfig.getPortName()) &&
-                    StringUtils.equals(pinName, ipPinConfig.getPinName()))
-            .map(IpPinConfig::getDisplayValue)
-            .findFirst().orElse("");
   }
 
   private void prefillData(BoardResult boardResult) {
-    if (boardResult.getIpConfig() == null) {
+    if (Objects.isNull(boardResult.getIpConfig())) {
       return;
     }
-    for (IpConfigIp ip : boardResult.getIpConfig().getIps()) {
-      if (ip.getName().equals(ipName)) {
-        for (IpConfigPort ipConfigPort: ip.getPorts()) {
-          String portName = ipConfigPort.getName();
-          for (SignalParam signalParam : ipConfigPort.getSignalParams()) {
-            if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
-              ipConfigModel.setSdaPin(signalParam.getPin());
-              ipConfigModel.setSdaPort(portName);
-              String sdaPin = getPinDisplayValue(portName, signalParam.getPin());
-              sdaChoiceBox.valueProperty().setValue(sdaPin);
-            } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
-              ipConfigModel.setSclPin(signalParam.getPin());
-              ipConfigModel.setSclPort(portName);
-              String sclPin = getPinDisplayValue(portName, signalParam.getPin());
-              sclChoiceBox.valueProperty().setValue(sclPin);
-            }
-          }
-        }
-
-        for (Param param : ip.getParams()) {
-          if (StringUtils.equals(param.getName(), Constants.SYS_CLK_PARAM)) {
-            ipConfigModel.setSysClock(param.getValue());
-            sysClockField.setText(param.getValue());
-          } else if (StringUtils.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
-            ipConfigModel.setI2cFreq(param.getValue());
-            i2cFreqField.setText(param.getValue());
-          } else if (StringUtils.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
-            ipConfigModel.setSdrFreq(param.getValue());
-            sdrFreqField.setText(param.getValue());
-          }
-        }
-
-        DeviceDescriptor deviceDescriptor = ip.getDeviceDescriptor();
-        if (Objects.nonNull(deviceDescriptor)) {
-          List<DeviceConfiguration> deviceConfigurations = deviceDescriptor.getDeviceConfigurations();
-          noOfSlavesField.getValueFactory().setValue(deviceConfigurations.size());
-          onNoOfSlavesUpdate();
-          for (int i = 0; i < deviceConfigurations.size(); i++) {
-            slaveWidgetControllers.get(i).setDeviceConfiguration(deviceConfigurations.get(i));
-          }
-        }
-        onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
-        onOffWidgetController.setButtonText("ON");
-        gridpaneWidget.setVisible(true);
-        ipConfigVBox.setVisible(true);      }
+    IpConfigIp ipConfigIp = boardResult.getIpConfig().getIpConfig(ipName);
+    if (Objects.isNull(ipConfigIp)) {
+      return;
     }
-  }
 
-  private void setDisabledPins() {
-    List<String> displayValues = getDisabledPinDisplayValues();
-    disabledPinsTextArea.setText(String.join(", ", displayValues));
+    if(CollectionUtils.isNotEmpty(ipConfigIp.getPorts()))
+      for (IpConfigPort ipConfigPort: ipConfigIp.getPorts()) {
+        String portName = ipConfigPort.getName();
+        for (SignalParam signalParam : ipConfigPort.getSignalParams()) {
+          IpPinConfig ipPinConfig = new IpPinConfig(portName, signalParam.getPin());
+          if (StringUtils.equals(signalParam.getName(), getSDAParam())) {
+            ipConfigModel.setSdaPin(signalParam.getPin());
+            ipConfigModel.setSdaPort(portName);
+            sdaIpConfigModel = ipPinConfig;
+            sdaChoiceBox.valueProperty().setValue(ipPinConfig);
+          } else if (StringUtils.equals(signalParam.getName(), getSCLParam())) {
+            ipConfigModel.setSclPin(signalParam.getPin());
+            ipConfigModel.setSclPort(portName);
+            sclIpConfigModel = ipPinConfig;
+            sclChoiceBox.valueProperty().setValue(ipPinConfig);
+          }
+        }
+      }
+
+    if(CollectionUtils.isNotEmpty(ipConfigIp.getParams()))
+      for (Param param : ipConfigIp.getParams()) {
+        if (StringUtils.equals(param.getName(), Constants.SYS_CLK_PARAM)) {
+          ipConfigModel.setSysClock(param.getValue());
+          sysClockField.setText(param.getValue());
+        } else if (StringUtils.equals(param.getName(), Constants.I2C_FREQ_PARAM)) {
+          ipConfigModel.setI2cFreq(param.getValue());
+          i2cFreqField.setText(param.getValue());
+        } else if (StringUtils.equals(param.getName(), Constants.SDR_FREQ_PARAM)) {
+          ipConfigModel.setSdrFreq(param.getValue());
+          sdrFreqField.setText(param.getValue());
+        }
+      }
+
+    DeviceDescriptor deviceDescriptor = ipConfigIp.getDeviceDescriptor();
+    if (Objects.nonNull(deviceDescriptor)) {
+      List<DeviceConfiguration> deviceConfigurations = deviceDescriptor.getDeviceConfigurations();
+      noOfSlavesField.getValueFactory().setValue(deviceConfigurations.size());
+      onNoOfSlavesUpdate();
+      for (int i = 0; i < deviceConfigurations.size(); i++) {
+        slaveWidgetControllers.get(i).setDeviceConfiguration(deviceConfigurations.get(i));
+      }
+    }
+    onOffWidgetController.setButtonTextColor(Color.valueOf("#008000"));
+    onOffWidgetController.setButtonText("ON");
+    gridpaneWidget.setVisible(true);
+    ipConfigVBox.setVisible(true);
   }
 
   private String getSDAParam() {
@@ -304,6 +297,8 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
       checkForEmptyIps(boardResult);
 
       IpConfigIp ipConfigIp = prepareIpConfigData();
+
+      prepareIpPinConfigData();
 
       for (IpConfigIp ip : boardResult.getIpConfig().getIps()) {
         if (ip.getName().equals(ipName)) {
@@ -410,16 +405,16 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
   }
 
   private void clearUi() {
-    sdaChoiceBox.setItems(null);
-    sdaChoiceBox.setItems(FXCollections.observableList(getPinDataDisplayValues()));
-    sdaChoiceBox.setPromptText("select");
-    sclChoiceBox.setItems(null);
-    sclChoiceBox.setItems(FXCollections.observableList(getPinClockDisplayValues()));
-    sclChoiceBox.setPromptText("select");
+    sdaChoiceBox.setValue(null);
+    sdaChoiceBox.setPromptText(Constants.SELECT);
+    sclChoiceBox.setValue(null);
+    sclChoiceBox.setPromptText(Constants.SELECT);
     sysClockField.textProperty().setValue(null);
     i2cFreqField.textProperty().setValue(null);
     sdrFreqField.textProperty().setValue(null);
     noOfSlavesField.getValueFactory().setValue(0);
+    ipConfigVBox.getChildren().clear();
+    slaveWidgetControllers.clear();
     onNoOfSlavesUpdate();
   }
 
@@ -427,6 +422,72 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     IpConfig ipConfig = boardResultsRepo.getBoardResult().getIpConfig();
     if (Objects.nonNull(ipConfig)) {
       boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
+      if (Objects.nonNull(sclIpConfigModel)) {
+        pinConfig.removePinConfig(sclIpConfigModel.getPortName(), sclIpConfigModel.getPinName());
+      }
+      if (Objects.nonNull(sdaIpConfigModel)) {
+        pinConfig.removePinConfig(sdaIpConfigModel.getPortName(), sdaIpConfigModel.getPinName());
+      }
     }
   }
+
+  /**
+   * Prepares and manages IP PIN configurations based on the provided IP configuration model.
+   * If a PIN configuration does not exist, it creates and saves it. If an existing PIN
+   * configuration has a different PIN, it updates the configuration.
+   */
+  private void prepareIpPinConfigData() {
+    // Get the SCL port and PIN from the IP configuration model
+    String sclPortName = ipConfigModel.getSclPort();
+    String sclPinName = ipConfigModel.getSclPin();
+
+    if (StringUtils.isNotEmpty(sclPortName) && StringUtils.isNotEmpty(sclPinName)) {
+
+      if (Objects.nonNull(sclIpConfigModel) &&
+              (!StringUtils.equals(sclIpConfigModel.getPortName(), sclPortName)
+                      || !StringUtils.equals(sclIpConfigModel.getPinName(), sclPinName))) {
+        // remove the pin configuration of the existing port.
+        pinConfig.removePinConfig(sclIpConfigModel.getPortName(), sclIpConfigModel.getPinName());
+      }
+
+      // If no existing configuration, create and save a new one
+      prepareAndSaveIpPinConfig(sclPortName, sclPinName, getSCLParam());
+    }
+
+    // Get the SDA port and PIN from the IP configuration model
+    String sdaPortName = ipConfigModel.getSdaPort();
+    String sdaPinName = ipConfigModel.getSdaPin();
+    if (StringUtils.isNotEmpty(sdaPortName) && StringUtils.isNotEmpty(sdaPinName)) {
+
+      if (Objects.nonNull(sdaIpConfigModel) &&
+              (!StringUtils.equals(sdaIpConfigModel.getPortName(), sdaPortName) ||
+                      !StringUtils.equals(sdaIpConfigModel.getPinName(), sdaPinName))) {
+        // remove the pin configuration of the existing port.
+        pinConfig.removePinConfig(sdaIpConfigModel.getPortName(), sdaIpConfigModel.getPinName());
+      }
+
+      // If no existing configuration, create and save a new one
+      prepareAndSaveIpPinConfig(sdaPortName, sdaPinName, getSDAParam());
+
+    }
+  }
+
+  /**
+   * Prepares and saves an IP PIN configuration.
+   *
+   * @param portNumber   The port number associated with the IP PIN configuration.
+   * @param pinNumber    The pinNumber for the IP PIN configuration.
+   * @param pinParamValue The value of the IP PIN parameter (e.g., SDA, SCL).
+   */
+  private void prepareAndSaveIpPinConfig(String portNumber, String pinNumber, String pinParamValue) {
+    // Create a PinConfigParam object using the IP pin from ipConfigModel
+    PinConfigParam pinConfigParam = new PinConfigParam(pinNumber);
+    // Set bypass mode to true (if applicable)
+    pinConfigParam.setByPassMode(true);
+    // Set pinParamValue to pinConfigParam
+    pinConfigParam.setValue(pinParamValue);
+    // Save the IP PIN configuration
+    pinConfig.savePinConfig(portNumber, pinNumber, pinConfigParam);
+  }
+
 }

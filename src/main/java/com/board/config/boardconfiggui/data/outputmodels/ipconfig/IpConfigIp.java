@@ -1,8 +1,11 @@
 package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 
 import com.board.config.boardconfiggui.data.outputmodels.Param;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,6 +69,25 @@ public class IpConfigIp {
 
     public void setDeviceDescriptor(DeviceDescriptor deviceDescriptor) {
         this.deviceDescriptor = deviceDescriptor;
+    }
+
+    public IpConfigPort getPortInfo(String portName) {
+        if(CollectionUtils.isEmpty(ports))
+            return null;
+        return ports.stream().filter(ipConfigPort -> StringUtils.equals(portName, ipConfigPort.getName())).findFirst().orElse(null);
+    }
+
+    public void addPort(IpConfigPort portInfo) {
+        if(CollectionUtils.isEmpty(ports))
+            ports = new ArrayList<>();
+        ports.add(portInfo);
+    }
+
+    public void deleteExistingSignalParam(SignalParam signalParam) {
+        if(CollectionUtils.isEmpty(ports))
+            return;
+        for(IpConfigPort ipConfigPort : ports)
+            ipConfigPort.deleteExistingSignalParam(signalParam);
     }
 
     @Override

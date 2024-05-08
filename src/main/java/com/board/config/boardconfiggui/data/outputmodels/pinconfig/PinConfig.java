@@ -122,24 +122,24 @@ public class PinConfig {
     }
 
     /**
-     * Method to get all the bypass enabled pin configurations of the current port.
+     * Method to get all the bypass disabled pin configurations of the current port.
      *
-     * @return bypass supported pin configurations
+     * @return bypass disabled pin configurations
      */
-    public Map<String, List<String>> getBypassConfiguredPins() {
+    public Map<String, List<String>> getBypassDisabledPins() {
       if (CollectionUtils.isEmpty(ports)) {
         return new HashMap<>();
       }
-      Map<String, List<String>> bypassConfiguredPins = new HashMap<>();
+      Map<String, List<String>> bypassDisabledPins = new HashMap<>();
       for (PinConfigPort pinConfigPort : ports) {
         List<String> pins = new ArrayList<>();
         for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
-          if (BooleanUtils.isTrue(pinConfigParam.byPassMode)) {
+          if (BooleanUtils.isFalse(pinConfigParam.byPassMode)) {
             pins.add(pinConfigParam.getPin());
           }
         }
-        bypassConfiguredPins.put(pinConfigPort.getName(), pins);
+        bypassDisabledPins.put(pinConfigPort.getName(), pins);
       }
-      return bypassConfiguredPins;
+      return bypassDisabledPins;
     }
 }

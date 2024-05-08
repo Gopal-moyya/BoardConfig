@@ -10,6 +10,7 @@ import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.dialogs.CustomAlert;
+import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,6 +37,7 @@ public class BoardConfigController implements Initializable{
 
     private final List<String> ipNames = new ArrayList<>();
     private final Map<String, Map<String, Pin>> portPinsMap = new HashMap<>();
+    private final Map<String,List<PinType>> pinTypeList = new HashMap<>();
     private Object currentController;
 
     @FXML
@@ -62,6 +64,7 @@ public class BoardConfigController implements Initializable{
     private void clearData() {
         portPinsMap.clear();
         ipNames.clear();
+        pinTypeList.clear();
     }
 
     private void initializeData() {
@@ -72,15 +75,14 @@ public class BoardConfigController implements Initializable{
             Map<String, Pin> pinsMap = new HashMap<>();
             for(Pin pin : port.getPinList()) {
                 pinsMap.put(pin.getName(), pin);
+                List<PinType> pinTypes = Utils.getPinTypesFromXml(pin);
+                pinTypeList.put(port.getName()+"_"+pin.getName(), pinTypes);
             }
             portPinsMap.put(port.getName(), pinsMap);
         }
 
         List<Ip> ipList = inputConfigRepo.getIpConfig().getIpList();
         for(Ip ip : ipList){
-            if(ip.getName().equals(Constants.QSPI_IP_NAME)){ //For now we are not adding QSPI IP name in UI
-                continue;
-            }
             List<Instance> instanceList = ip.getInstanceList();
             for(Instance instance: instanceList){
                 ipNames.add(instance.getName());
@@ -168,6 +170,7 @@ public class BoardConfigController implements Initializable{
 
         String PIN_CONFIG_FXML_NAME = "pin-config.fxml";
         String IP_CONFIG_FXML_NAME = "ip-config.fxml";
+        String QSPI_IP_CONFIG_FXML_NAME = "spi-ip-config.fxml";
         String CLOCK_CONFIG_FXML_NAME = "clock-config.fxml";
 
         Parent fxml = null;
@@ -181,15 +184,23 @@ public class BoardConfigController implements Initializable{
                 loader.setController(clockConfigController);
                 fxml = loader.load();
             } else if (item.getParent().getValue().equals(IP_CONFIG_NAME)) {
-                loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
-                IpConfigController ipConfigController = new IpConfigController(item.getValue());
-                currentController = ipConfigController;
-                loader.setController(ipConfigController);
+                if (item.getValue().equals(Constants.QSPI_IP_NAME)) {
+                    loader = new FXMLLoader(getClass().getResource(QSPI_IP_CONFIG_FXML_NAME));
+                    SPIIpConfigController spiIpConfigController = new SPIIpConfigController(item.getValue());
+                    currentController = spiIpConfigController;
+                    loader.setController(spiIpConfigController);
+                } else {
+                    loader = new FXMLLoader(getClass().getResource(IP_CONFIG_FXML_NAME));
+                    IpConfigController ipConfigController = new IpConfigController(item.getValue());
+                    currentController = ipConfigController;
+                    loader.setController(ipConfigController);
+                }
                 fxml = loader.load();
             }else{
                 loader = new FXMLLoader(getClass().getResource(PIN_CONFIG_FXML_NAME));
                 Pin pin = portPinsMap.get(item.getParent().getValue()).get(item.getValue());
-                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin);
+                PinConfigController pinConfigController = new PinConfigController(item.getParent().getValue(), pin,
+                        pinTypeList.get(item.getParent().getValue()+"_"+pin.getName()));
                 currentController = pinConfigController;
                 loader.setController(pinConfigController);
                 fxml = loader.load();

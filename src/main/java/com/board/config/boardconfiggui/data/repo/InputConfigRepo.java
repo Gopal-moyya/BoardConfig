@@ -1,7 +1,15 @@
 package com.board.config.boardconfiggui.data.repo;
 
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.IpConfig;
+import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.PinConfig;
+import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The InputConfigRepo class represents a repository for storing input configuration data,
@@ -69,5 +77,35 @@ public class InputConfigRepo {
      */
     public void setPinConfig(PinConfig pinConfig) {
         this.pinConfig = pinConfig;
+    }
+
+    /**
+     * Method to get the IP controls available for all Pins
+     * @param ipName IP Name to be checked
+     * @return list of controls for the given ip name
+     */
+    public List<String> getIPControls(String ipName) {
+        if (StringUtils.isEmpty(ipName)) {
+            return new ArrayList<>();
+        }
+
+        List<String> ipControls = new ArrayList<>();
+        List<Port> ports = instance.getPinConfig().getPorts();
+
+        // Pattern to match IP param from the pin values
+        Pattern pattern = Pattern.compile("("+ ipName + "\\w+)");
+
+        for (Port port : ports) {
+            for (Pin pin : port.getPinList()) {
+                Matcher matcher = pattern.matcher(pin.getValues());
+                if (matcher.find()) {
+                    String matchedString = matcher.group(1);
+                    if (!ipControls.contains(matchedString)) {
+                        ipControls.add(matchedString);
+                    }
+                }
+            }
+        }
+        return ipControls;
     }
 }

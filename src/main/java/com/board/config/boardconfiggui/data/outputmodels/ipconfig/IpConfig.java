@@ -3,6 +3,7 @@ package com.board.config.boardconfiggui.data.outputmodels.ipconfig;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,6 +48,29 @@ public class IpConfig {
       }
     }
   }
+
+  /**
+   * Method to get {@link IpConfigIp} based on ip name
+   * @param ipName for reference
+   * @return {@link IpConfigIp}
+   */
+  public IpConfigIp getIpConfig(String ipName) {
+
+    if (CollectionUtils.isNotEmpty(ips)) {
+      return ips.stream()
+        .filter(ipConfigIpInstance -> ipConfigIpInstance.getName().equals(ipName))
+        .findFirst()
+        .orElse(null);
+    }
+
+    return null;
+  }
+
+    public void addIpConfigIp(IpConfigIp newIpConfigIp) {
+        if (CollectionUtils.isEmpty(ips))
+            ips = new ArrayList<>();
+        ips.add(newIpConfigIp);
+    }
 
     @Override
     public String toString() {
