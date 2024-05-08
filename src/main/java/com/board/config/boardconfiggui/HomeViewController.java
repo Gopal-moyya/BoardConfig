@@ -1,9 +1,14 @@
 package com.board.config.boardconfiggui;
 
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -16,11 +21,25 @@ public class HomeViewController {
 
     @FXML
     public Pane contentArea;
+    @FXML
+    private ImageView loaderImg;
+    @FXML
+    private Label loaderInfo;
+
+    Timeline rotateAnimation;
+
 
 
     @FXML
     public void initialize() {
         loadDataView();
+        Image loadingImage = new Image("loader.png");
+        loaderImg.setImage(loadingImage);
+        loaderImg.setOpacity(0);
+        rotateAnimation = new Timeline(new javafx.animation.KeyFrame(
+                Duration.millis(50),
+                event -> loaderImg.setRotate(loaderImg.getRotate() + 30)));
+        rotateAnimation.setCycleCount(Timeline.INDEFINITE);
     }
 
 
@@ -60,4 +79,15 @@ public class HomeViewController {
         contentArea.getChildren().setAll(fxml);
     }
 
+    public void showAnimation(){
+        loaderInfo.setText("Generating the code....");
+        loaderImg.setOpacity(0.8);
+        rotateAnimation.play();
+    }
+
+    public void stopAnimation(){
+        loaderInfo.setText("");
+        loaderImg.setOpacity(0);
+        rotateAnimation.stop();
+    }
 }

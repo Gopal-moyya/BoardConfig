@@ -8,6 +8,8 @@ import com.board.config.boardconfiggui.data.outputmodels.genralconfig.GeneralCon
 import com.board.config.boardconfiggui.data.outputmodels.genralconfig.Option;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.invecas.CodeGenerator;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -126,6 +128,7 @@ public class LoadDataController  {
     }
 
     public void onSubmit() {
+        System.out.println("onSubmit clicked");
         Map<String, Object> folderPaths = new LinkedHashMap<>();
         folderPaths.put("xml",xmlPathField.getText());
         folderPaths.put("repository",repoPathField.getText());
@@ -135,21 +138,42 @@ public class LoadDataController  {
             folderPaths.put("output",outputPath);
         }
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-        try {
-            CodeGenerator generator = new CodeGenerator(folderPaths);
-            generator.initiate();
-            successAlert.setTitle("Success Message");
-            successAlert.setHeaderText(null);
-            successAlert.setContentText("Code generated successful!");
-            successAlert.getDialogPane().getStyleClass().add("success-dialog");
-            successAlert.showAndWait();
+        Task<Void> codeGenerationTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                CodeGenerator generator = new CodeGenerator(folderPaths);
+                generator.initiate();
+                return null;
+            }
 
-        }catch (Exception e){
-            successAlert.setTitle("Failure Message");
-            successAlert.setHeaderText(null);
-            successAlert.setContentText("Something went wrong..!" + e.getMessage());
-            successAlert.showAndWait();
-        }
+            @Override
+            public void succeeded() {
+                super.succeeded();
+                Platform.runLater(() -> {
+                    homeViewController.stopAnimation();
+                    successAlert.setTitle("Success Message");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("Code generated successfully!");
+                    successAlert.showAndWait();
+                });
+            }
+
+            @Override
+            public void failed() {
+                super.failed();
+                Platform.runLater(() -> {
+                    homeViewController.stopAnimation();
+                    successAlert.setTitle("Failure Message");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("Something went wrong..! " + getException().getMessage());
+                    successAlert.showAndWait();
+                });
+            }
+        };
+
+        homeViewController.showAnimation();
+        new Thread(codeGenerationTask).start();
+
     }
 
     public void onConfigureClick(ActionEvent actionEvent) {
