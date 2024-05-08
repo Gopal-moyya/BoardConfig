@@ -13,8 +13,15 @@ public class IpConfig {
     @XmlElement(name = "IP")
     List<Ip> ipList;
 
+    @XmlElement(name = "ChipInfo")
+    ChipInfo chipInfo;
+
     public List<Ip> getIpList() {
         return ipList;
+    }
+
+    public ChipInfo getChipInfo() {
+        return chipInfo;
     }
 
     @Override
@@ -22,18 +29,19 @@ public class IpConfig {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IpConfig ipConfig = (IpConfig) o;
-        return Objects.equals(ipList, ipConfig.ipList);
+        return Objects.equals(ipList, ipConfig.ipList) && Objects.equals(chipInfo, ipConfig.chipInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ipList);
+        return Objects.hash(ipList, chipInfo);
     }
 
     @Override
     public String toString() {
-        return "Ips{" +
+        return "IpConfig{" +
                 "ipList=" + ipList +
+                ", chipInfo=" + chipInfo +
                 '}';
     }
 }
