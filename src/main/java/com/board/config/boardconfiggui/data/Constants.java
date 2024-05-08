@@ -75,8 +75,10 @@ public class Constants {
     public static final String EXTI = "EXTI";
     public static final String EDGE = "Edge";
 
-    public static final String BOARD = "Board";
     public static final String GENERAL_CONFIGURATION = "General Configuration";
+    public static final String BOARD = "Board";
+    public static final String CHIPLET = "Chiplet";
+    public static final String CORE = "Core";
 
     public static final String SELECT = "select";
 

@@ -170,7 +170,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
                 outPutWidget.managedProperty().bind(outPutWidget.visibleProperty());
                 inPutWidgetController.setComboBoxLabel(newValue.concat(TYPE), Constants.SELECT);
                 inPutWidgetController.setItems(FXCollections.observableArrayList(inputOrOutputOptions));
-            } else {
+            } else if (OUTPUT.equals(newValue)){
                 outPutWidget.setVisible(true);
                 inPutWidget.setVisible(false);
                 exioWidget.setVisible(false);
@@ -379,6 +379,7 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
         pinConfigUiModel.setSelectedEdgeType(null);
 
         modeTypesWidgetController.setItems(null);
+        inPutOutPutWidgetController.setItems(null);
     }
 
     private void onExtIValueChange(String extValue) {

@@ -91,8 +91,21 @@ public class SelectBoardNameController implements Initializable {
         return txtBoardName.getText();
     }
 
+    public String getChipletName() {
+        return txtChipletName.getText();
+    }
+
+    public String getCoreName() {
+        return coreSpinner.getSelectionModel().getSelectedItem();
+    }
+
     @FXML
     public void onCoreNameChange() {
+        updateContinueButtonStatus();
+    }
+
+    public void setCoreName(String coreName) {
+        coreSpinner.valueProperty().setValue(coreName);
         updateContinueButtonStatus();
     }
 }

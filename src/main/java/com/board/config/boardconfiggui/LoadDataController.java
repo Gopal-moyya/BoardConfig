@@ -200,7 +200,9 @@ public class LoadDataController  {
             GeneralConfig generalConfig = boardResultsRepo.getBoardResult().getGeneralConfig();
             if (ObjectUtils.isNotEmpty(generalConfig)) {
                 String boardName = generalConfig.getOption(Constants.BOARD).getValue();
+                Option coreOption = generalConfig.getOption(Constants.CORE);
                 controller.setTxtBoardName(boardName);
+                controller.setCoreName(Objects.isNull(coreOption) ? null : coreOption.getValue());
             }
 
             stage.setScene(new Scene(root));
@@ -215,6 +217,8 @@ public class LoadDataController  {
                 //set the board name information
                 generalConfig = new GeneralConfig();
                 generalConfig.addConfig(new Option(Constants.BOARD, boardName));
+                generalConfig.addConfig(new Option(Constants.CHIPLET, controller.getChipletName()));
+                generalConfig.addConfig(new Option(Constants.CORE, controller.getCoreName()));
                 boardResultsRepo.getBoardResult().setGeneralConfig(generalConfig);
 
                 homeViewController.onConfigureClick(xmlFolderPath);
