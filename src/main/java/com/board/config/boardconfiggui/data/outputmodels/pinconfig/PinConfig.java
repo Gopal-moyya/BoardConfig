@@ -116,6 +116,9 @@ public class PinConfig {
                     .orElse(null);
             if (Objects.nonNull(pinConfigPort)) {
                 pinConfigPort.removePinConfigParamData(pinNumber);
+                if (CollectionUtils.isEmpty(pinConfigPort.getConfigParams())) {
+                    removePort(pinConfigPort);
+                }
             }
 
         }
