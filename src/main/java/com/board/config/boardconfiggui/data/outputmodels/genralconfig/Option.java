@@ -11,12 +11,13 @@ import java.util.Objects;
 public class Option {
 
     @XmlAttribute(name = "Name")
-    String name = "Board";
+    String name;
 
     @XmlAttribute(name = "value")
     String value;
 
     public Option() {
+        //For serialization
     }
 
     public Option(String name, String value) {

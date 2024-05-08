@@ -76,6 +76,7 @@ public class Constants {
     public static final String EDGE = "Edge";
 
     public static final String BOARD_NAME = "Board Name";
+    public static final String BOARD = "Board";
 
     public static final String SELECT = "select";
 
