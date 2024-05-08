@@ -1,10 +1,17 @@
 package com.board.config.boardconfiggui.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class SelectBoardNameController {
+
+    @FXML
+    public Label txtChipletName;
+    @FXML
+    public ComboBox coreSpinner;
     @FXML
     private TextField txtBoardName;
     private Stage dialogStage;

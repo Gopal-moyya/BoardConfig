@@ -206,7 +206,7 @@ public class LoadDataController  {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initStyle(StageStyle.UTILITY);
-            stage.setTitle(Constants.BOARD_NAME);
+            stage.setTitle(Constants.GENERAL_CONFIGURATION);
             stage.showAndWait();
 
             if (controller.isContinueSelected()) {
