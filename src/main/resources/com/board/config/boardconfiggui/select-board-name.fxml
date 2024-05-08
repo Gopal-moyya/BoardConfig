@@ -12,12 +12,15 @@
    <children>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" text="Chiplet Name:">
+            <Label alignment="CENTER" maxWidth="100.0" prefWidth="80.0" text="Chiplet Name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
             </Label>
-            <Label fx:id="txtChipletName" />
+            <Label fx:id="txtChipletName" prefWidth="150.0">
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin></Label>
          </children>
          <VBox.margin>
             <Insets top="20.0" />
@@ -25,12 +28,12 @@
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" text="Select Core:">
+            <Label alignment="CENTER" maxWidth="100.0" prefWidth="80.0" text="Core name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
             </Label>
-            <ComboBox fx:id="coreSpinner" prefWidth="150.0" />
+            <ComboBox fx:id="coreSpinner" onAction="#onCoreNameChange" prefWidth="150.0" promptText="Select" />
          </children>
          <VBox.margin>
             <Insets top="10.0" />
@@ -38,7 +41,7 @@
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
          <children>
-            <Label alignment="CENTER" text="Board Name:">
+            <Label alignment="CENTER" maxWidth="100.0" prefWidth="80.0" text="Board Name:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
