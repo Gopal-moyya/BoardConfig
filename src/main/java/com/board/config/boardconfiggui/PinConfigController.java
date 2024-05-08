@@ -332,8 +332,12 @@ public class PinConfigController implements Initializable, BoardPageDataSaverInt
     private void handleButtonOffStatus() {
         onOffWidgetController.setButtonText(OnOffButtonWidgetController.OFF_TXT);
         onOffWidgetController.setButtonTextColor(Color.valueOf("#ff0000"));
-        IpConfigIp selectedIpConfig = ipConfig.getIpConfig(pinConfigUiModel.getSelectedIp());
-        selectedIpConfig.deleteExistingSignalParam(new SignalParam(currentPin.getName(), pinConfigUiModel.getSelectedBypassType()));
+        if (BY_PASS.equals(pinConfigUiModel.getSelectedMode()) && StringUtils.isNotEmpty(pinConfigUiModel.getSelectedIp())) {
+            IpConfigIp selectedIpConfig = ipConfig.getIpConfig(pinConfigUiModel.getSelectedIp());
+            if(Objects.nonNull(selectedIpConfig)) {
+                selectedIpConfig.deleteExistingSignalParam(new SignalParam(currentPin.getName(), pinConfigUiModel.getSelectedBypassType()));
+            }
+        }
         clearAllUIData();
     }
 
