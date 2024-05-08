@@ -1,5 +1,7 @@
 package com.board.config.boardconfiggui.ui.models;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 public class PinConfigModel {
@@ -41,7 +43,7 @@ public class PinConfigModel {
     }
 
     public String getSelectedIp() {
-        return selectedBypassType.split("_")[0];
+        return StringUtils.isBlank(selectedBypassType) ? null : selectedBypassType.split("_")[0];
     }
 
     public void setSelectedBypassType(String selectedValue) {
