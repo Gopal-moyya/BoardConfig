@@ -81,6 +81,7 @@ public class Constants {
     public static final String CORE = "Core";
 
     public static final String SELECT = "select";
+    public static final String OK = "OK";
 
     public static final String TYPE = " Type:";
     public static final String PIN_STATUS_LABEL = "PIN Status:";
