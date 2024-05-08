@@ -154,21 +154,23 @@ public class PinConfig {
    *
    * @return pins used by other ips
    */
-    public Map<String, List<String>> getPinsUsedByOtherIps(String currentIpName) {
+  public Map<String, List<String>> getPinsUsedByOtherIps(String currentIpName) {
       if (CollectionUtils.isEmpty(ports)) {
-        return new HashMap<>();
+          return new HashMap<>();
       }
       Map<String, List<String>> pinsUsedByOtherIps = new HashMap<>();
       for (PinConfigPort pinConfigPort : ports) {
-        List<String> pins = new ArrayList<>();
-        for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
-          String ipName = pinConfigParam.getValue().split("_")[0];
-          if (!StringUtils.equals(currentIpName, ipName)) {
-            pins.add(pinConfigParam.getPin());
+          List<String> pins = new ArrayList<>();
+          for (PinConfigParam pinConfigParam : pinConfigPort.getConfigParams()) {
+              if(StringUtils.isNotEmpty(pinConfigParam.getValue())){
+                  String ipName = pinConfigParam.getValue().split("_")[0];
+                  if (!StringUtils.equals(currentIpName, ipName)) {
+                      pins.add(pinConfigParam.getPin());
+                  }
+              }
           }
-        }
-        pinsUsedByOtherIps.put(pinConfigPort.getName(), pins);
+          pinsUsedByOtherIps.put(pinConfigPort.getName(), pins);
       }
       return pinsUsedByOtherIps;
-    }
+  }
 }
