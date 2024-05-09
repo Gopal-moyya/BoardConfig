@@ -18,6 +18,9 @@ public class HomeViewController {
     private static final Logger logger = Logger.getLogger(HomeViewController.class.getName());
 
     private String xmlFolderPath = null;
+    private String repositoryFolderPath;
+    private String toolChainFolderPath;
+    private String outputLocationFolderPath;
 
     @FXML
     public Pane contentArea;
@@ -61,6 +64,12 @@ public class HomeViewController {
         contentArea.getChildren().setAll(fxml);
     }
 
+    public void savePathData(String repositoryFolderPath, String toolChainFolderPath, String outputLocationFolderPath) {
+        this.repositoryFolderPath = repositoryFolderPath;
+        this.outputLocationFolderPath = outputLocationFolderPath;
+        this.toolChainFolderPath = toolChainFolderPath;
+    }
+
     public void onOutputGenerateClick() {
         loadDataView();
     }
@@ -68,7 +77,7 @@ public class HomeViewController {
     private void loadDataView() {
         Parent fxml = null;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("load-data-view.fxml"));
-        LoadDataController loadDataController = new LoadDataController(this, xmlFolderPath);
+        LoadDataController loadDataController = new LoadDataController(this, xmlFolderPath, repositoryFolderPath, toolChainFolderPath, outputLocationFolderPath);
         loader.setController(loadDataController);
         try {
             fxml = loader.load();

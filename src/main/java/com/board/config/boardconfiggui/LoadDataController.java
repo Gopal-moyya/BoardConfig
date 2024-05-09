@@ -63,9 +63,20 @@ public class LoadDataController  {
         this.xmlFolderPath = xmlFolderPath;
     }
 
+    public LoadDataController(HomeViewController homeViewController, String xmlFolderPath,
+                              String repositoryFolderPath, String toolChainFolderPath, String outputLocationFolderPath) {
+        this.homeViewController = homeViewController;
+        this.xmlFolderPath = xmlFolderPath;
+        this.repositoryFolderPath = repositoryFolderPath;
+        this.toolChainFolderPath = toolChainFolderPath;
+        this.outputLocationFolderPath = outputLocationFolderPath;
+    }
+
     @FXML
     public void initialize() {
-        submitBtn.setDisable(true);
+        boolean allFields = StringUtils.isNotEmpty(xmlFolderPath) && StringUtils.isNotEmpty(repositoryFolderPath) && StringUtils.isNotEmpty(toolChainFolderPath) && StringUtils.isNotEmpty(outputLocationFolderPath);
+        submitBtn.setDisable(!allFields);
+
         boardResultsRepo = BoardResultsRepo.getInstance();
 
         if (StringUtils.isNotEmpty(xmlFolderPath)) {
@@ -81,6 +92,32 @@ public class LoadDataController  {
 
         if (StringUtils.isNotEmpty(outputLocationFolderPath)) {
             outputPathField.setText(outputLocationFolderPath);
+        }
+    }
+
+    @FXML
+    protected void handleTextFieldAction(Event event)
+    {
+        Node sourceNode = (Node) event.getSource();
+        switch (sourceNode.getId().toString()){
+            case "xmlPathField":
+                this.xmlFolderPath = xmlPathField.getText();
+                break;
+            case "repoPathField":
+                this.repositoryFolderPath = repoPathField.getText();
+                break;
+            case "toolChainPathField":
+                this.toolChainFolderPath = toolChainPathField.getText();
+                break;
+            case "outputPathField":
+                this.outputLocationFolderPath = outputPathField.getText();
+                break;
+            default:
+                break;
+        }
+        boolean allFields = !xmlPathField.getText().isEmpty() && !repoPathField.getText().isEmpty() && !toolChainPathField.getText().isEmpty() && !outputPathField.getText().isEmpty();
+        if (allFields){
+            submitBtn.setDisable(false);
         }
     }
 
@@ -137,6 +174,7 @@ public class LoadDataController  {
         if (!outputPath.isEmpty()){
             folderPaths.put("output",outputPath);
         }
+
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
         Task<Void> codeGenerationTask = new Task<>() {
             @Override
@@ -165,7 +203,7 @@ public class LoadDataController  {
                     homeViewController.stopAnimation();
                     successAlert.setTitle("Failure Message");
                     successAlert.setHeaderText(null);
-                    successAlert.setContentText("Something went wrong..! " + getException().getMessage());
+                    successAlert.setContentText("Something went wrong..! " );
                     successAlert.showAndWait();
                 });
             }
@@ -246,6 +284,7 @@ public class LoadDataController  {
                 boardResultsRepo.getBoardResult().setGeneralConfig(generalConfig);
 
                 homeViewController.onConfigureClick(xmlFolderPath);
+                homeViewController.savePathData(repositoryFolderPath, toolChainFolderPath, outputLocationFolderPath);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
