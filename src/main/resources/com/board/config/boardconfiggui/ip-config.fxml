@@ -5,23 +5,23 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane maxHeight="810.0" maxWidth="1080.0" prefHeight="810.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
-  <ScrollPane style="-fx-background-color: #ffffff;">
-    <AnchorPane prefHeight="810.0" prefWidth="1080.0">
+<Pane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+  <ScrollPane maxHeight="450" fitToWidth="true" fitToHeight="true" style="-fx-background-color: #ffffff;">
+    <AnchorPane>
       <children>
         <fx:include fx:id="onOffWidget" source="onoff_widget.fxml" />
-        <GridPane fx:id="gridpaneWidget" alignment="TOP_CENTER" hgap="10.0" layoutX="8.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="1075.0" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="318.0" prefWidth="1075.0" vgap="10.0" visible="false" AnchorPane.bottomAnchor="480.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
+        <GridPane fx:id="gridpaneWidget" hgap="10.0" vgap="10.0" alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" visible="false" AnchorPane.bottomAnchor="260.0" AnchorPane.topAnchor="30.0">
           <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="310.0" minWidth="10.0" prefWidth="228.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" prefWidth="227.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0"  />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="310.0" minWidth="10.0"/>
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="100.0" minWidth="100.0"  />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="200.0" minWidth="10.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="255.0" minWidth="10.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0"  />
+            <RowConstraints maxHeight="60.0" minHeight="10.0"/>
                   <RowConstraints />
           </rowConstraints>
           <children>
@@ -47,7 +47,7 @@
             <Insets left="60.0" right="60.0" top="40.0" />
           </padding>
         </GridPane>
-        <VBox fx:id="ipConfigVBox" layoutX="80.0" layoutY="400.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="1075.0" visible="false" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="380.0" />
+        <VBox fx:id="ipConfigVBox" visible="false" AnchorPane.topAnchor="180.0" AnchorPane.bottomAnchor="3.0" />
       </children>
     </AnchorPane>
   </ScrollPane>

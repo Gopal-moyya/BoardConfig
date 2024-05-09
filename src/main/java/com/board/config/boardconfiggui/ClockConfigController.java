@@ -11,9 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -62,10 +60,17 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setPadding(new Insets(60));
-        gridPane.setVgap(40); // Set vertical gap between rows
-        gridPane.setHgap(40);
+        gridPane.setPadding(new Insets(40));
+        gridPane.setVgap(20); // Set vertical gap between rows
+        gridPane.setHgap(20);
 
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+        columnConstraints.setHgrow(Priority.ALWAYS);
+        gridPane.getColumnConstraints().add(columnConstraints);
+
+        RowConstraints rowConstraints = new RowConstraints();
+        rowConstraints.setVgrow(Priority.ALWAYS);
+        gridPane.getRowConstraints().add(rowConstraints);
 
         int col = 0;
         int row = 0;
@@ -74,7 +79,7 @@ public class ClockConfigController implements Initializable, BoardPageDataSaverI
             String label = viewData.getLabel();
 
             Label labelControl = new Label(label + ":");
-            Font myFont = Font.font("", FontWeight.BOLD, 14);
+            Font myFont = Font.font("", FontWeight.BOLD, 10);
             labelControl.setFont(myFont);
 
             gridPane.add(labelControl, col, row);
