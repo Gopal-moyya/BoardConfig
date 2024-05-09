@@ -227,7 +227,6 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
             String label = spiConfigModel.getLabel();
 
             Label labelControl = new Label(label);
-            labelControl.setAlignment(Pos.BASELINE_CENTER);
             spiControlsGridPane.add(labelControl, col, row);
 
             ComboBox<IpPinConfig> comboBox = new ComboBox<>();
@@ -312,11 +311,12 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         IpConfig ipConfig = boardResultsRepo.getBoardResult().getIpConfig();
         if (Objects.nonNull(ipConfig)) {
             boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
-            prefilledIpPinConfigs.forEach((label, ipPinConfig) -> {
-                if (Objects.nonNull(ipPinConfig)) {
-                    pinConfig.removePinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName());
-                }
-            });
+            if(prefilledIpPinConfigs != null && !prefilledIpPinConfigs.isEmpty())
+                prefilledIpPinConfigs.forEach((label, ipPinConfig) -> {
+                    if (Objects.nonNull(ipPinConfig)) {
+                        pinConfig.removePinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName());
+                    }
+                });
         }
     }
 

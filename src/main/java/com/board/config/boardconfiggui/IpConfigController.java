@@ -237,6 +237,8 @@ public class IpConfigController implements Initializable, BoardPageDataSaverInte
     if(CollectionUtils.isNotEmpty(ipConfigIp.getPorts()))
       for (IpConfigPort ipConfigPort: ipConfigIp.getPorts()) {
         String portName = ipConfigPort.getName();
+        if(CollectionUtils.isEmpty(ipConfigPort.getSignalParams()))
+          continue;
         for (SignalParam signalParam : ipConfigPort.getSignalParams()) {
           IpPinConfig ipPinConfig = new IpPinConfig(portName, signalParam.getPin());
           if (StringUtils.equals(signalParam.getName(), getSDAParam())) {

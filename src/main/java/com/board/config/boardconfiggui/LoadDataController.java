@@ -7,6 +7,7 @@ import com.board.config.boardconfiggui.data.outputmodels.BoardResult;
 import com.board.config.boardconfiggui.data.outputmodels.genralconfig.GeneralConfig;
 import com.board.config.boardconfiggui.data.outputmodels.genralconfig.Option;
 import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
+import com.board.config.boardconfiggui.ui.models.ConfigPathsModel;
 import com.invecas.CodeGenerator;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -50,48 +51,42 @@ public class LoadDataController  {
     private Button submitBtn;
 
     private final HomeViewController homeViewController;
-    private String xmlFolderPath,
-            repositoryFolderPath,
-            toolChainFolderPath,
-            outputLocationFolderPath;
+    private ConfigPathsModel configPathsModel;
 
     private BoardResultsRepo boardResultsRepo;
 
 
-    public LoadDataController(HomeViewController homeViewController, String xmlFolderPath) {
+    public LoadDataController(HomeViewController homeViewController, ConfigPathsModel configPathsModel)
+    {
         this.homeViewController = homeViewController;
-        this.xmlFolderPath = xmlFolderPath;
-    }
+        this.configPathsModel = configPathsModel;
 
-    public LoadDataController(HomeViewController homeViewController, String xmlFolderPath,
-                              String repositoryFolderPath, String toolChainFolderPath, String outputLocationFolderPath) {
-        this.homeViewController = homeViewController;
-        this.xmlFolderPath = xmlFolderPath;
-        this.repositoryFolderPath = repositoryFolderPath;
-        this.toolChainFolderPath = toolChainFolderPath;
-        this.outputLocationFolderPath = outputLocationFolderPath;
     }
 
     @FXML
     public void initialize() {
-        boolean allFields = StringUtils.isNotEmpty(xmlFolderPath) && StringUtils.isNotEmpty(repositoryFolderPath) && StringUtils.isNotEmpty(toolChainFolderPath) && StringUtils.isNotEmpty(outputLocationFolderPath);
+        boolean allFields = StringUtils.isNotEmpty(configPathsModel.getXmlPath()) &&
+                StringUtils.isNotEmpty(configPathsModel.getRepoPath()) &&
+                StringUtils.isNotEmpty(configPathsModel.getToolchainPath())
+                && StringUtils.isNotEmpty(configPathsModel.getOutputPath());
+
         submitBtn.setDisable(!allFields);
 
         boardResultsRepo = BoardResultsRepo.getInstance();
 
-        if (StringUtils.isNotEmpty(xmlFolderPath)) {
-            xmlPathField.setText(xmlFolderPath);
+        if (StringUtils.isNotEmpty(configPathsModel.getXmlPath())) {
+            xmlPathField.setText(configPathsModel.getXmlPath());
         }
-        if (StringUtils.isNotEmpty(repositoryFolderPath)) {
-            repoPathField.setText(repositoryFolderPath);
-        }
-
-        if (StringUtils.isNotEmpty(toolChainFolderPath)) {
-            toolChainPathField.setText(toolChainFolderPath);
+        if (StringUtils.isNotEmpty(configPathsModel.getRepoPath())) {
+            repoPathField.setText(configPathsModel.getRepoPath());
         }
 
-        if (StringUtils.isNotEmpty(outputLocationFolderPath)) {
-            outputPathField.setText(outputLocationFolderPath);
+        if (StringUtils.isNotEmpty(configPathsModel.getToolchainPath())) {
+            toolChainPathField.setText(configPathsModel.getToolchainPath());
+        }
+
+        if (StringUtils.isNotEmpty(configPathsModel.getOutputPath())) {
+            outputPathField.setText(configPathsModel.getOutputPath());
         }
     }
 
@@ -101,24 +96,26 @@ public class LoadDataController  {
         Node sourceNode = (Node) event.getSource();
         switch (sourceNode.getId().toString()){
             case "xmlPathField":
-                this.xmlFolderPath = xmlPathField.getText();
+                configPathsModel.setXmlPath(xmlPathField.getText());
                 break;
             case "repoPathField":
-                this.repositoryFolderPath = repoPathField.getText();
+                configPathsModel.setRepoPath(repoPathField.getText());
                 break;
             case "toolChainPathField":
-                this.toolChainFolderPath = toolChainPathField.getText();
+                configPathsModel.setToolchainPath(toolChainPathField.getText());
                 break;
             case "outputPathField":
-                this.outputLocationFolderPath = outputPathField.getText();
+                configPathsModel.setOutputPath(outputPathField.getText());
                 break;
             default:
                 break;
         }
-        boolean allFields = !xmlPathField.getText().isEmpty() && !repoPathField.getText().isEmpty() && !toolChainPathField.getText().isEmpty() && !outputPathField.getText().isEmpty();
-        if (allFields){
-            submitBtn.setDisable(false);
-        }
+        boolean allFields = StringUtils.isNotEmpty(configPathsModel.getXmlPath()) &&
+                StringUtils.isNotEmpty(configPathsModel.getRepoPath()) &&
+                StringUtils.isNotEmpty(configPathsModel.getToolchainPath())
+                && StringUtils.isNotEmpty(configPathsModel.getOutputPath());
+
+        submitBtn.setDisable(!allFields);
     }
 
     @FXML
@@ -139,29 +136,31 @@ public class LoadDataController  {
             switch (sourceNode.getUserData().toString()){
                 case Constants.XML_BUTTON_TYPE:
                     xmlPathField.setText(selectedFolder.getAbsolutePath());
-                    this.xmlFolderPath = xmlPathField.getText();
+                    configPathsModel.setXmlPath(xmlPathField.getText());
                     break;
                 case Constants.REPO_BUTTON_TYPE:
                     repoPathField.setText(selectedFolder.getAbsolutePath());
-                    this.repositoryFolderPath = repoPathField.getText();
+                    configPathsModel.setRepoPath(repoPathField.getText());
                     break;
                 case Constants.TOOL_CHAIN_BUTTON_TYPE:
                     toolChainPathField.setText(selectedFolder.getAbsolutePath());
-                    this.toolChainFolderPath = toolChainPathField.getText();
+                    configPathsModel.setToolchainPath(toolChainPathField.getText());
                     break;
                 case Constants.OUTPUT_BUTTON_TYPE:
                     outputPathField.setText(selectedFolder.getAbsolutePath());
-                    this.outputLocationFolderPath = outputPathField.getText();
+                    configPathsModel.setOutputPath(outputPathField.getText());
                     break;
                 default:
                     break;
             }
         }
 
-        boolean allFields = !xmlPathField.getText().isEmpty() && !repoPathField.getText().isEmpty() && !toolChainPathField.getText().isEmpty() && !outputPathField.getText().isEmpty();
-        if (allFields){
-            submitBtn.setDisable(false);
-        }
+        boolean allFields = StringUtils.isNotEmpty(configPathsModel.getXmlPath()) &&
+                StringUtils.isNotEmpty(configPathsModel.getRepoPath()) &&
+                StringUtils.isNotEmpty(configPathsModel.getToolchainPath())
+                && StringUtils.isNotEmpty(configPathsModel.getOutputPath());
+
+        submitBtn.setDisable(!allFields);
     }
 
     public void onSubmit() {
@@ -179,7 +178,7 @@ public class LoadDataController  {
         Task<Void> codeGenerationTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                CodeGenerator generator = new CodeGenerator(folderPaths);
+                CodeGenerator generator = new CodeGenerator(folderPaths,homeViewController);
                 generator.initiate();
                 return null;
             }
@@ -217,26 +216,26 @@ public class LoadDataController  {
     public void onConfigureClick(ActionEvent actionEvent) {
 
         // checking the directory path is selected or not
-        if (StringUtils.isEmpty(xmlFolderPath)) {
-            logger.info("The Selected folder path is null or empty" + xmlFolderPath);
+        if (StringUtils.isEmpty(configPathsModel.getXmlPath())) {
+            logger.info("The Selected folder path is null or empty" + configPathsModel.getXmlPath());
             Utils.alertDialog(Alert.AlertType.INFORMATION, "Select directory",null, "Please select the xml directory.");
             return;
         }
 
         // checking the input configuration files availability from selected directory
-        if (!Utils.isInputConfigurationReached(xmlFolderPath)) {
+        if (!Utils.isInputConfigurationReached(configPathsModel.getXmlPath())) {
             Utils.alertDialog(Alert.AlertType.ERROR, "No files found", null, "Configuration files are not available in the selected directory.");
             return;
         }
 
         // checking the parsing status of input configuration files
-        if(BooleanUtils.isFalse(Utils.parseInputXmlFiles(xmlFolderPath))) {
+        if(BooleanUtils.isFalse(Utils.parseInputXmlFiles(configPathsModel.getXmlPath()))) {
             Utils.alertDialog(Alert.AlertType.ERROR, "Parsing failed", null,"An issue occurred while parsing the input XML files.");
             return;
         }
 
         //Fetching the BoardResult object if the Board configuration file is available.
-        BoardResult boardResult = Utils.getBoardConfigResult(xmlFolderPath);
+        BoardResult boardResult = Utils.getBoardConfigResult(configPathsModel.getXmlPath());
         if (Objects.isNull(boardResult)) {
             //Creating new instance
             boardResultsRepo.createBoardResult();
@@ -283,8 +282,8 @@ public class LoadDataController  {
                 generalConfig.addConfig(new Option(Constants.CORE, controller.getCoreName()));
                 boardResultsRepo.getBoardResult().setGeneralConfig(generalConfig);
 
-                homeViewController.onConfigureClick(xmlFolderPath);
-                homeViewController.savePathData(repositoryFolderPath, toolChainFolderPath, outputLocationFolderPath);
+                homeViewController.onConfigureClick(configPathsModel.getXmlPath());
+                homeViewController.savePathData(configPathsModel);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -311,10 +310,10 @@ public class LoadDataController  {
         }
 
         return switch (sourceNodeType) {
-            case Constants.XML_BUTTON_TYPE -> xmlFolderPath;
-            case Constants.REPO_BUTTON_TYPE -> repositoryFolderPath;
-            case Constants.TOOL_CHAIN_BUTTON_TYPE -> toolChainFolderPath;
-            case Constants.OUTPUT_BUTTON_TYPE -> outputLocationFolderPath;
+            case Constants.XML_BUTTON_TYPE -> configPathsModel.getXmlPath();
+            case Constants.REPO_BUTTON_TYPE -> configPathsModel.getRepoPath();
+            case Constants.TOOL_CHAIN_BUTTON_TYPE -> configPathsModel.getToolchainPath();
+            case Constants.OUTPUT_BUTTON_TYPE -> configPathsModel.getOutputPath();
             default -> null;
         };
     }

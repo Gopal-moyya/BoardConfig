@@ -1,6 +1,9 @@
 package com.board.config.boardconfiggui;
 
+import com.board.config.boardconfiggui.ui.models.ConfigPathsModel;
+import com.invecas.interfaces.IUpdateListener;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,7 +16,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class HomeViewController {
+public class HomeViewController implements IUpdateListener {
 
     private static final Logger logger = Logger.getLogger(HomeViewController.class.getName());
 
@@ -21,6 +24,8 @@ public class HomeViewController {
     private String repositoryFolderPath;
     private String toolChainFolderPath;
     private String outputLocationFolderPath;
+
+    ConfigPathsModel configPathsModel;
 
     @FXML
     public Pane contentArea;
@@ -33,8 +38,11 @@ public class HomeViewController {
 
 
 
+
     @FXML
     public void initialize() {
+
+        configPathsModel = new ConfigPathsModel();
         loadDataView();
         Image loadingImage = new Image("loader.png");
         loaderImg.setImage(loadingImage);
@@ -48,7 +56,7 @@ public class HomeViewController {
 
     public void onConfigureClick(String xmlFolderPath) {
 
-        this.xmlFolderPath = xmlFolderPath;
+        configPathsModel.setXmlPath(xmlFolderPath);
 
         Parent fxml = null;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("board-config.fxml"));
@@ -64,10 +72,8 @@ public class HomeViewController {
         contentArea.getChildren().setAll(fxml);
     }
 
-    public void savePathData(String repositoryFolderPath, String toolChainFolderPath, String outputLocationFolderPath) {
-        this.repositoryFolderPath = repositoryFolderPath;
-        this.outputLocationFolderPath = outputLocationFolderPath;
-        this.toolChainFolderPath = toolChainFolderPath;
+    public void savePathData(ConfigPathsModel configPathsModel) {
+        this.configPathsModel = configPathsModel;
     }
 
     public void onOutputGenerateClick() {
@@ -77,7 +83,7 @@ public class HomeViewController {
     private void loadDataView() {
         Parent fxml = null;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("load-data-view.fxml"));
-        LoadDataController loadDataController = new LoadDataController(this, xmlFolderPath, repositoryFolderPath, toolChainFolderPath, outputLocationFolderPath);
+        LoadDataController loadDataController = new LoadDataController(this,configPathsModel);
         loader.setController(loadDataController);
         try {
             fxml = loader.load();
@@ -98,5 +104,23 @@ public class HomeViewController {
         loaderInfo.setText("");
         loaderImg.setOpacity(0);
         rotateAnimation.stop();
+    }
+
+    @Override
+    public void onUpdate(String s) {
+        try {
+            updateLoaderText(s);
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void updateLoaderText(String str){
+        Platform.runLater(()->{
+            System.out.println("STR : "+str);
+            loaderInfo.setText(str);
+        });
     }
 }
