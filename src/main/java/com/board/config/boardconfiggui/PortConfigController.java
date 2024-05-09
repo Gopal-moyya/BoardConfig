@@ -40,9 +40,17 @@ public class PortConfigController implements Initializable {
 
     GridPane gridPane = new GridPane();
     gridPane.setAlignment(Pos.CENTER);
-    gridPane.setPadding(new Insets(60));
+    gridPane.setPadding(new Insets(40));
     gridPane.setHgap(10);
     gridPane.setVgap(10);
+
+    ColumnConstraints columnConstraints = new ColumnConstraints();
+    columnConstraints.setHgrow(Priority.ALWAYS);
+    gridPane.getColumnConstraints().add(columnConstraints);
+
+    RowConstraints rowConstraints = new RowConstraints();
+    rowConstraints.setVgrow(Priority.ALWAYS);
+    gridPane.getRowConstraints().add(rowConstraints);
 
     int row = 0;
     int col = 0;
@@ -51,10 +59,10 @@ public class PortConfigController implements Initializable {
     for(String pinName : pinNames){
 
       Button button = new Button(pinName);
-      Font myFont = Font.font("", FontWeight.BOLD, 14);
+      Font myFont = Font.font("", FontWeight.BOLD, 10);
       button.setFont(myFont);
-      button.setPrefWidth(110);
-      button.setPrefHeight(95);
+      button.setMinWidth(75);
+      button.setMinHeight(45);
 
       gridPane.add(button, col, row);
 

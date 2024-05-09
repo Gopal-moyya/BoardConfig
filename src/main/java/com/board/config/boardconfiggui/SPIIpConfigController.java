@@ -227,7 +227,6 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
             String label = spiConfigModel.getLabel();
 
             Label labelControl = new Label(label);
-            labelControl.setAlignment(Pos.BASELINE_CENTER);
             spiControlsGridPane.add(labelControl, col, row);
 
             ComboBox<IpPinConfig> comboBox = new ComboBox<>();
