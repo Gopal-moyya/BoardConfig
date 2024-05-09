@@ -131,46 +131,46 @@ public class PinConfig {
      * @return bypass disabled pin configurations
      */
     public Map<String, List<String>> getBypassDisabledPins() {
-      if (CollectionUtils.isEmpty(ports)) {
-        return new HashMap<>();
-      }
-      Map<String, List<String>> bypassDisabledPins = new HashMap<>();
-      for (PinConfigPort pinConfigPort : ports) {
-        List<String> pins = new ArrayList<>();
-        for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
-          if (BooleanUtils.isFalse(pinConfigParam.byPassMode)) {
-            pins.add(pinConfigParam.getPin());
-          }
+        if (CollectionUtils.isEmpty(ports)) {
+            return new HashMap<>();
         }
-        bypassDisabledPins.put(pinConfigPort.getName(), pins);
-      }
-      return bypassDisabledPins;
+        Map<String, List<String>> bypassDisabledPins = new HashMap<>();
+        for (PinConfigPort pinConfigPort : ports) {
+            List<String> pins = new ArrayList<>();
+            for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
+                if (BooleanUtils.isFalse(pinConfigParam.byPassMode)) {
+                    pins.add(pinConfigParam.getPin());
+                }
+            }
+            bypassDisabledPins.put(pinConfigPort.getName(), pins);
+        }
+        return bypassDisabledPins;
     }
 
-  /**
-   * Method to get all the pins that are configured for Ips that are other than current Ip.
-   *
-   * @param currentIpName current ip name for reference
-   *
-   * @return pins used by other ips
-   */
+    /**
+     * Method to get all the pins that are configured for Ips that are other than current Ip.
+     *
+     * @param currentIpName current ip name for reference
+     *
+     * @return pins used by other ips
+     */
     public Map<String, List<String>> getPinsUsedByOtherIps(String currentIpName) {
-      if (CollectionUtils.isEmpty(ports)) {
-        return new HashMap<>();
-      }
-      Map<String, List<String>> pinsUsedByOtherIps = new HashMap<>();
-      for (PinConfigPort pinConfigPort : ports) {
-        List<String> pins = new ArrayList<>();
-        for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
-            if(StringUtils.isEmpty(pinConfigParam.getValue()))
-                continue;
-          String ipName = pinConfigParam.getValue().split("_")[0];
-          if (!StringUtils.equals(currentIpName, ipName)) {
-            pins.add(pinConfigParam.getPin());
-          }
+        if (CollectionUtils.isEmpty(ports)) {
+            return new HashMap<>();
         }
-        pinsUsedByOtherIps.put(pinConfigPort.getName(), pins);
-      }
-      return pinsUsedByOtherIps;
+        Map<String, List<String>> pinsUsedByOtherIps = new HashMap<>();
+        for (PinConfigPort pinConfigPort : ports) {
+            List<String> pins = new ArrayList<>();
+            for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
+                if(StringUtils.isEmpty(pinConfigParam.getValue()))
+                    continue;
+                String ipName = pinConfigParam.getValue().split("_")[0];
+                if (!StringUtils.equals(currentIpName, ipName)) {
+                    pins.add(pinConfigParam.getPin());
+                }
+            }
+            pinsUsedByOtherIps.put(pinConfigPort.getName(), pins);
+        }
+        return pinsUsedByOtherIps;
     }
 }
