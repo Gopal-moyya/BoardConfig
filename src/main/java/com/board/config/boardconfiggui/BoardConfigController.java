@@ -7,6 +7,9 @@ import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Instance;
 import com.board.config.boardconfiggui.data.inputmodels.ipconfig.Ip;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Pin;
 import com.board.config.boardconfiggui.data.inputmodels.pinconfig.Port;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfig;
+import com.board.config.boardconfiggui.data.outputmodels.ipconfig.IpConfigIp;
+import com.board.config.boardconfiggui.data.repo.BoardResultsRepo;
 import com.board.config.boardconfiggui.data.repo.InputConfigRepo;
 import com.board.config.boardconfiggui.interfaces.BoardPageDataSaverInterface;
 import com.board.config.boardconfiggui.ui.dialogs.CustomAlert;
@@ -14,12 +17,13 @@ import com.board.config.boardconfiggui.ui.models.PinType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -103,6 +107,7 @@ public class BoardConfigController implements Initializable{
             Collections.sort(pinNames);
             for(String pin : pinNames){
                 TreeItem<String> pinTree = new TreeItem<>(pin);
+
                 portTree.getChildren().add(pinTree);
             }
             pinConfig.getChildren().add(portTree);
@@ -133,6 +138,35 @@ public class BoardConfigController implements Initializable{
                 loadContentArea(item);
             }
 
+        });
+
+        treeView.setStyle(
+                "  -fx-base: #242424 ;\n" +
+                        "  -fx-control-inner-background: derive(-fx-base,20%);\n" +
+                        "  -fx-control-inner-background-alt: derive(-fx-control-inner-background,-10%);\n" +
+                        "  -fx-accent: #006689;\n" +
+                        "  -fx-focus-color: #036E83;\n" +
+                        " -fx-faint-focus-color: gray;");
+
+        treeView.setCellFactory(tv -> new TreeCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    // update for empty cell / cell containing null
+                    setText("");
+                } else {
+                    // update for filled cell
+                    setText(item);
+                    if(item.startsWith("I3") || item.startsWith("QS")) {
+                        saveCurrentControllerData();
+                        IpConfig ipConfig = BoardResultsRepo.getInstance().getBoardResult().getIpConfig();
+                        IpConfigIp ipConfigIp = ipConfig.getIpConfig(item);
+                        setStyle(ObjectUtils.isEmpty(ipConfigIp) ? null : "-fx-background-color: green;");
+                    } else
+                        setStyle(null);
+                }
+            }
         });
     }
 

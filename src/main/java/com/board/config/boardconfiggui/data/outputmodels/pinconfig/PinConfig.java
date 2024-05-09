@@ -162,6 +162,8 @@ public class PinConfig {
       for (PinConfigPort pinConfigPort : ports) {
         List<String> pins = new ArrayList<>();
         for (PinConfigParam pinConfigParam: pinConfigPort.getConfigParams()) {
+            if(StringUtils.isEmpty(pinConfigParam.getValue()))
+                continue;
           String ipName = pinConfigParam.getValue().split("_")[0];
           if (!StringUtils.equals(currentIpName, ipName)) {
             pins.add(pinConfigParam.getPin());

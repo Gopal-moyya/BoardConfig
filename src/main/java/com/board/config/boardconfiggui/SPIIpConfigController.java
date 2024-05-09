@@ -312,11 +312,12 @@ public class SPIIpConfigController implements Initializable, BoardPageDataSaverI
         IpConfig ipConfig = boardResultsRepo.getBoardResult().getIpConfig();
         if (Objects.nonNull(ipConfig)) {
             boardResultsRepo.getBoardResult().getIpConfig().removeIpConfig(ipName);
-            prefilledIpPinConfigs.forEach((label, ipPinConfig) -> {
-                if (Objects.nonNull(ipPinConfig)) {
-                    pinConfig.removePinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName());
-                }
-            });
+            if(prefilledIpPinConfigs != null && !prefilledIpPinConfigs.isEmpty())
+                prefilledIpPinConfigs.forEach((label, ipPinConfig) -> {
+                    if (Objects.nonNull(ipPinConfig)) {
+                        pinConfig.removePinConfig(ipPinConfig.getPortName(), ipPinConfig.getPinName());
+                    }
+                });
         }
     }
 
