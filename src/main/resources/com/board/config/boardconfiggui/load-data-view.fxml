@@ -21,26 +21,26 @@
     <RowConstraints maxHeight="25.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES"/>
   </rowConstraints>
   <Label text="Xml"/>
-  <TextField focusTraversable="false" promptText="Choose the xnls folder path*" GridPane.columnIndex="1"
-             fx:id="xmlPathField"/>
+  <TextField focusTraversable="false" promptText="Choose the xml folder path*" GridPane.columnIndex="1"
+             fx:id="xmlPathField" onKeyTyped="#handleTextFieldAction"/>
   <Button onAction="#onButtonClick" styleClass="btn-bg" text="Browse" userData="xmlBtn" GridPane.columnIndex="2"/>
   <Button onAction="#onConfigureClick" styleClass="btn-bg" text="Configure" GridPane.columnIndex="3"/>
   <Label text="Repository" GridPane.rowIndex="1"/>
   <TextField fx:id="repoPathField" promptText="Choose the repository folder path*"
-             GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+             GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyTyped="#handleTextFieldAction"/>
   <Button onAction="#onButtonClick" styleClass="btn-bg" text="Browse" userData="repoBtn" GridPane.columnIndex="2"
           GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
   <Label text="Tool chain" GridPane.rowIndex="2"/>
-  <TextField fx:id="toolChainPathField"
-             promptText="Choose the arm tool chain bin folder path*" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+  <TextField fx:id="toolChainPathField" promptText="Choose the arm tool chain bin folder path*" GridPane.columnIndex="1"
+             GridPane.rowIndex="2" onKeyTyped="#handleTextFieldAction"/>
   <Button onAction="#onButtonClick" styleClass="btn-bg" text="Browse" userData="toolChainBtn" GridPane.columnIndex="2"
           GridPane.rowIndex="2"/>
   <Label  text="Output location" GridPane.rowIndex="3"/>
   <TextField fx:id="outputPathField" promptText="Choose the output folder path"
-             GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+             GridPane.columnIndex="1" GridPane.rowIndex="3" onKeyTyped="#handleTextFieldAction"/>
   <Button onAction="#onButtonClick" styleClass="btn-bg" text="Browse" userData="outputBtn" GridPane.columnIndex="2"
           GridPane.rowIndex="3"/>
-  <Button fx:id="submitBtn" onAction="#onSubmit" minHeight="25.0" minWidth="104.0" styleClass="btn-bg"
+  <Button fx:id="submitBtn" onAction="#onSubmit"  minHeight="25.0" minWidth="104.0" styleClass="btn-bg" GridPane.halignment="CENTER"
           text="Generate code" GridPane.columnIndex="1" GridPane.rowIndex="6">
   </Button>
 </GridPane>
