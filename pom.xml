@@ -56,13 +56,20 @@
       <artifactId>commons-collections4</artifactId>
       <version>4.4</version> <!-- Or the latest version -->
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.invecas</groupId>-->
-<!--      <artifactId>CodeGeneration</artifactId>-->
-<!--      <version>1.0</version>-->
-<!--      <scope>system</scope>-->
-<!--      <systemPath>${basedir}/libs/CodeGeneration_jar/CodeGeneration.jar</systemPath>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>com.invecas</groupId>
+      <artifactId>CodeGeneration</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/CodeGeneration_jar/CodeGeneration.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.invecas</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>2.3.32</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/libs/CodeGeneration_jar/freemarker-2.3.32.jar</systemPath>
+    </dependency>
   </dependencies>
 
   <build>

@@ -20,11 +20,6 @@ public class HomeViewController implements IUpdateListener {
 
     private static final Logger logger = Logger.getLogger(HomeViewController.class.getName());
 
-    private String xmlFolderPath = null;
-    private String repositoryFolderPath;
-    private String toolChainFolderPath;
-    private String outputLocationFolderPath;
-
     ConfigPathsModel configPathsModel;
 
     @FXML
@@ -110,7 +105,7 @@ public class HomeViewController implements IUpdateListener {
     public void onUpdate(String s) {
         try {
             updateLoaderText(s);
-            Thread.sleep(700);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -119,7 +114,6 @@ public class HomeViewController implements IUpdateListener {
 
     public void updateLoaderText(String str){
         Platform.runLater(()->{
-            System.out.println("STR : "+str);
             loaderInfo.setText(str);
         });
     }

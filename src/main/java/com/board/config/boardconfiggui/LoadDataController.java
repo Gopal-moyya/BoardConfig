@@ -51,7 +51,7 @@ public class LoadDataController  {
     private Button submitBtn;
 
     private final HomeViewController homeViewController;
-    private ConfigPathsModel configPathsModel;
+    private final ConfigPathsModel configPathsModel;
 
     private BoardResultsRepo boardResultsRepo;
 
@@ -164,7 +164,6 @@ public class LoadDataController  {
     }
 
     public void onSubmit() {
-        System.out.println("onSubmit clicked");
         Map<String, Object> folderPaths = new LinkedHashMap<>();
         folderPaths.put("xml",xmlPathField.getText());
         folderPaths.put("repository",repoPathField.getText());
@@ -174,7 +173,7 @@ public class LoadDataController  {
             folderPaths.put("output",outputPath);
         }
 
-        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         Task<Void> codeGenerationTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
@@ -188,10 +187,10 @@ public class LoadDataController  {
                 super.succeeded();
                 Platform.runLater(() -> {
                     homeViewController.stopAnimation();
-                    successAlert.setTitle("Success Message");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("Code generated successfully!");
-                    successAlert.showAndWait();
+                    alert.setTitle("Success Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Code generated successfully!");
+                    alert.showAndWait();
                 });
             }
 
@@ -200,10 +199,10 @@ public class LoadDataController  {
                 super.failed();
                 Platform.runLater(() -> {
                     homeViewController.stopAnimation();
-                    successAlert.setTitle("Failure Message");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("Something went wrong..! " );
-                    successAlert.showAndWait();
+                    alert.setTitle("Failure Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Something went wrong..! " );
+                    alert.showAndWait();
                 });
             }
         };
